@@ -28,7 +28,7 @@ public class CourtEntity {
     private Long idCourt;
 
     @Column(name = "n_court", nullable = false, length = 255)
-    private String nCourt;
+    private String nameCourt;
 
     @Column(name = "img_court", length = 255)
     private String imgCourt;
@@ -58,9 +58,9 @@ public class CourtEntity {
     private List<CourtHourEntity> courtsHours = new ArrayList<>();
 
     @Builder
-    public CourtEntity(Long idCourt, String nCourt, String imgCourt, String slugCourt) {
+    public CourtEntity(Long idCourt, String nameCourt, String imgCourt, String slugCourt) {
         this.idCourt = idCourt;
-        this.nCourt = nCourt;
+        this.nameCourt = nameCourt;
         this.imgCourt = imgCourt;
         this.slugCourt = slugCourt;
     }
