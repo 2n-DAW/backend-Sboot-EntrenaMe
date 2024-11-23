@@ -2,7 +2,9 @@ package com.springboot.entrename.domain.court.entity;
 
 import com.springboot.entrename.domain.sport.entity.SportEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;
@@ -21,6 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "courts")
+// Identificador único. Hace que otras entidades puedan referenciar a esta y viceversa sin entrar en bucle en la serialización
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idCourt")
 public class CourtEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,7 +52,6 @@ public class CourtEntity {
         joinColumns = @JoinColumn(name = "id_court"),
         inverseJoinColumns = @JoinColumn(name = "id_sport")
     )
-    @JsonManagedReference // Marca este lado como "propietario"
     private Set<SportEntity> sports = new HashSet<>();
 
     // mappedBy desgina propietario de la relación

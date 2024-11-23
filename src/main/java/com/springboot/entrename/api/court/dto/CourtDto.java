@@ -5,7 +5,7 @@ import com.springboot.entrename.api.sport.dto.SportDto;
 import lombok.*;
 import javax.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
@@ -19,8 +19,9 @@ public class CourtDto {
     private String nameCourt;
     private String imgCourt;
     private String slugCourt;
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
-    private List<SportDto.SportWrapper> sports;
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<SportDto> sports;
 
     @Getter
     @Builder
@@ -28,6 +29,7 @@ public class CourtDto {
     @AllArgsConstructor
     public static class CourtWrapper {
         private List<CourtDto> courts;
+        private int courtsCount;
     }
 
     @Getter

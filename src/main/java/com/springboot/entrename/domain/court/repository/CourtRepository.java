@@ -17,7 +17,6 @@ public interface CourtRepository extends JpaRepository<CourtEntity, Long>, JpaSp
     // List<CourtEntity> findAll();
     List<CourtEntity> findAllByOrderByIdCourtAsc();
 
-
     // @Query("SELECT c FROM CourtEntity c WHERE c.slugCourt = :slug")
     // CourtEntity findBySlug(@Param("slug") String slug);
     // Optional<CourtEntity> findBySlug(@Param("slug") String slug);
