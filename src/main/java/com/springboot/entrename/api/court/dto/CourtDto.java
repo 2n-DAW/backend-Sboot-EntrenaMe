@@ -1,8 +1,12 @@
-package com.springboot.entrename.domain.court.dto;
+package com.springboot.entrename.api.court.dto;
+
+import com.springboot.entrename.api.sport.dto.SportDto;
 
 import lombok.*;
-
 import javax.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.List;
 
 @Getter
@@ -10,35 +14,32 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CourtDto {
+    private Long idCourt;
     @NotNull
     private String nameCourt;
-
     private String imgCourt;
     private String slugCourt;
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+    private List<SportDto.SportWrapper> sports;
 
     @Getter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
-    public static class SingleCourt<T> {
-        private T court;
-    }
-
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class MultipleCourt {
+    public static class CourtWrapper {
         private List<CourtDto> courts;
     }
 
     @Getter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
-    public static class Update {
+    public static class CourtUpdate {
+        @Nullable
         private String nameCourt;
+        @Nullable
         private String imgCourt;
+        @Nullable
         private String slugCourt;
     }
 }
