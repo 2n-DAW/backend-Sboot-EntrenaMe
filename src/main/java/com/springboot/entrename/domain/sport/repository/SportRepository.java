@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-// import java.util.Optional;
+import java.util.Optional;
 
 @Repository
 public interface SportRepository extends JpaRepository<SportEntity, Long>, JpaSpecificationExecutor<SportEntity> {
     List<SportEntity> findAllByOrderByIdSportAsc();
 
-    SportEntity findBySlugSport(String slugSport);
-    
+    Optional<SportEntity> findBySlugSport(String slugSport);
 }

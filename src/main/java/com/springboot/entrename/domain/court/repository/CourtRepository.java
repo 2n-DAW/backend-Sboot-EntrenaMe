@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-// import java.util.Optional;
+import java.util.Optional;
 
 @Repository
 public interface CourtRepository extends JpaRepository<CourtEntity, Long>, JpaSpecificationExecutor<CourtEntity> {
@@ -19,7 +19,6 @@ public interface CourtRepository extends JpaRepository<CourtEntity, Long>, JpaSp
 
     // @Query("SELECT c FROM CourtEntity c WHERE c.slugCourt = :slug")
     // CourtEntity findBySlug(@Param("slug") String slug);
-    // Optional<CourtEntity> findBySlug(@Param("slug") String slug);
-    CourtEntity findBySlugCourt(String slugCourt);
+    Optional<CourtEntity> findBySlugCourt(String slugCourt);
     
 }

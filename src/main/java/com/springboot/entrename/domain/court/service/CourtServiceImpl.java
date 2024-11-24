@@ -2,9 +2,9 @@ package com.springboot.entrename.domain.court.service;
 
 import com.springboot.entrename.domain.court.repository.CourtRepository;
 import com.springboot.entrename.domain.court.entity.CourtEntity;
+import com.springboot.entrename.domain.exception.AppException;
+import com.springboot.entrename.domain.exception.Error;
 
-// import com.springboot.entrename.exception.AppException;
-// import com.springboot.entrename.exception.Error;
 import lombok.RequiredArgsConstructor;
 // import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,9 +26,7 @@ public class CourtServiceImpl implements CourtService {
     @Transactional(readOnly = true)
     @Override // Indica que este método implementa la definición de la interfaz
     public CourtEntity getCourt(String slug) {
-        return courtRepository.findBySlugCourt(slug);
-
-        // CourtEntity found = courtRepository.findBySlug(slug)
-        //     .orElseThrow(() -> new AppException(Error.COURT_NOT_FOUND));
+        return courtRepository.findBySlugCourt(slug)
+            .orElseThrow(() -> new AppException(Error.COURT_NOT_FOUND));
     }
 }
