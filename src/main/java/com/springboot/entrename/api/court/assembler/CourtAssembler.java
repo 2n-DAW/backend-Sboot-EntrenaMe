@@ -45,6 +45,7 @@ public class CourtAssembler {
             .imgCourt(entity.getImgCourt())
             .slugCourt(entity.getSlugCourt())
             .sports(entity.getSports().stream()
+                .sorted((sport1, sport2) -> sport1.getIdSport().compareTo(sport2.getIdSport())) // Orden ascendente por id
                 .map(sportEntity -> SportDto.builder()
                     .idSport(sportEntity.getIdSport())
                     .nameSport(sportEntity.getNameSport())
