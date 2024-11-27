@@ -1,6 +1,4 @@
-package com.springboot.entrename.domain.sport.service;
-
-import com.springboot.entrename.domain.sport.entity.SportEntity;
+package com.springboot.entrename.domain.sport;
 
 import java.util.List;
 

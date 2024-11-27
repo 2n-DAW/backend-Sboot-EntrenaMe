@@ -1,11 +1,9 @@
-package com.springboot.entrename.api.court.controller;
-
-import com.springboot.entrename.api.court.dto.CourtDto;
-import com.springboot.entrename.api.court.assembler.CourtAssembler;
-import com.springboot.entrename.domain.court.service.CourtService;
+package com.springboot.entrename.api.court;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import com.springboot.entrename.domain.court.CourtService;
 
 @RestController
 @RequestMapping("/courts")

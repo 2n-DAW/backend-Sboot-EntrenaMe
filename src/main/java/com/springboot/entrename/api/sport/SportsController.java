@@ -1,11 +1,9 @@
-package com.springboot.entrename.api.sport.controller;
-
-import com.springboot.entrename.api.sport.dto.SportDto;
-import com.springboot.entrename.api.sport.assembler.SportAssembler;
-import com.springboot.entrename.domain.sport.service.SportService;
+package com.springboot.entrename.api.sport;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import com.springboot.entrename.domain.sport.SportService;
 
 @RestController
 @RequestMapping("/sports")

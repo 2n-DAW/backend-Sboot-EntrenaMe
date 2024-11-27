@@ -1,6 +1,4 @@
-package com.springboot.entrename.domain.court.repository;
-
-import com.springboot.entrename.domain.court.entity.CourtEntity;
+package com.springboot.entrename.domain.court;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

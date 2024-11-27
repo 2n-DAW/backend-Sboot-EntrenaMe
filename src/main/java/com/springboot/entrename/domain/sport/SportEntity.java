@@ -1,9 +1,11 @@
-package com.springboot.entrename.domain.sport.entity;
+package com.springboot.entrename.domain.sport;
 
-import com.springboot.entrename.domain.court.entity.CourtEntity;
-// import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.springboot.entrename.domain.court.CourtEntity;
+import com.springboot.entrename.domain.activity.ActivityEntity;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;
@@ -12,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Builder;
 
 import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias para trabajar con JPA
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -46,6 +50,12 @@ public class SportEntity {
         }
     )
     private Set<CourtEntity> courts = new HashSet<>();
+
+    // mappedBy desgina propietario de la relación
+    // cascade mantiene la integridad referencial entre tablas
+    @OneToMany(mappedBy = "idSport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference // Marca este lado como "referencia inversa"
+    private List<ActivityEntity> activities = new ArrayList<>();
 
     @Builder
     public SportEntity(Long idSport, String nameSport, String imgSport, String slugSport) {

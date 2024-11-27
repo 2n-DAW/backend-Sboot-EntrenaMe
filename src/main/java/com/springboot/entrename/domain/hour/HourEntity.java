@@ -1,6 +1,7 @@
-package com.springboot.entrename.domain.hour.entity;
+package com.springboot.entrename.domain.hour;
 
-import com.springboot.entrename.domain.court.entity.CourtHourEntity;
+import com.springboot.entrename.domain.court.CourtHourEntity;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo

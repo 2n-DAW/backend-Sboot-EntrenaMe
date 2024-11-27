@@ -1,10 +1,11 @@
-package com.springboot.entrename.domain.court.entity;
+package com.springboot.entrename.domain.court;
 
-import com.springboot.entrename.domain.sport.entity.SportEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.springboot.entrename.domain.sport.SportEntity;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-// import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;

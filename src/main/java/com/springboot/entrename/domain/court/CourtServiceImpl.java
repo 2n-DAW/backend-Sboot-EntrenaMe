@@ -1,7 +1,5 @@
-package com.springboot.entrename.domain.court.service;
+package com.springboot.entrename.domain.court;
 
-import com.springboot.entrename.domain.court.repository.CourtRepository;
-import com.springboot.entrename.domain.court.entity.CourtEntity;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 

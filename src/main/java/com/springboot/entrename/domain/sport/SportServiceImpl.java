@@ -1,7 +1,5 @@
-package com.springboot.entrename.domain.sport.service;
+package com.springboot.entrename.domain.sport;
 
-import com.springboot.entrename.domain.sport.repository.SportRepository;
-import com.springboot.entrename.domain.sport.entity.SportEntity;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 

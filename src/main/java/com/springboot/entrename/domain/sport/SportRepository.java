@@ -1,6 +1,4 @@
-package com.springboot.entrename.domain.sport.repository;
-
-import com.springboot.entrename.domain.sport.entity.SportEntity;
+package com.springboot.entrename.domain.sport;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

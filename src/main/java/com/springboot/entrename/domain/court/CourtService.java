@@ -1,6 +1,4 @@
-package com.springboot.entrename.domain.court.service;
-
-import com.springboot.entrename.domain.court.entity.CourtEntity;
+package com.springboot.entrename.domain.court;
 
 import java.util.List;
 

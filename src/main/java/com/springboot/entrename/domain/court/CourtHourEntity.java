@@ -1,6 +1,7 @@
-package com.springboot.entrename.domain.court.entity;
+package com.springboot.entrename.domain.court;
 
-import com.springboot.entrename.domain.hour.entity.HourEntity;
+import com.springboot.entrename.domain.hour.HourEntity;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
@@ -41,8 +42,10 @@ public class CourtHourEntity {
     private String slugCourtHour;
     
     @Builder
-    public CourtHourEntity(Long idCourtHour, int dayNumber, String slugCourtHour) {
+    public CourtHourEntity(Long idCourtHour, CourtEntity court, HourEntity hour, int dayNumber, String slugCourtHour) {
         this.idCourtHour = idCourtHour;
+        this.court = court;
+        this.hour = hour;
         this.dayNumber = dayNumber;
         this.slugCourtHour = slugCourtHour;
     }

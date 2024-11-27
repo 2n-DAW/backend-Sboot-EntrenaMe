@@ -1,11 +1,10 @@
-package com.springboot.entrename.api.sport.dto;
-
-import com.springboot.entrename.api.court.dto.CourtDto;
+package com.springboot.entrename.api.sport;
 
 import lombok.*;
 import javax.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.springboot.entrename.api.court.CourtDto;
 
 import java.util.List;
 
@@ -14,11 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class SportDto {
-    private Long idSport;
+    private Long id_sport;
     @NotNull
-    private String nameSport;
-    private String imgSport;
-    private String slugSport;
+    private String n_sport;
+    private String img_sport;
+    private String slug_sport;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CourtDto> courts;
@@ -29,19 +28,19 @@ public class SportDto {
     @AllArgsConstructor
     public static class SportWrapper {
         private List<SportDto> sports;
-        private int sportsCount;
+        private int sports_count;
     }
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SportUpdate {
+    public static class Update {
         @Nullable
-        private String nameSport;
+        private String n_sport;
         @Nullable
-        private String imgSport;
+        private String img_sport;
         @Nullable
-        private String slugSport;
+        private String slug_sport;
     }
 }
