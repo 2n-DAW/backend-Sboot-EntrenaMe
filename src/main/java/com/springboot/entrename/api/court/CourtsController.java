@@ -1,0 +1,32 @@
+package com.springboot.entrename.api.court;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import com.springboot.entrename.domain.court.CourtService;
+
+@RestController
+@RequestMapping("/courts")
+@RequiredArgsConstructor
+public class CourtsController {
+    private final CourtService courtService;
+    private final CourtAssembler courtAssembler;
+
+    @GetMapping
+    public CourtDto.CourtWrapper getAllCourts() {
+        var courts = courtService.getAllCourts();
+        return courtAssembler.toCourtsList(courts);
+    }
+
+    @GetMapping("/&sports")
+    public CourtDto.CourtWrapper getAllCourtsWithSport() {
+        var courts = courtService.getAllCourts();
+        return courtAssembler.toCourtsListWithSport(courts);
+    }
+
+    @GetMapping("/{slug}")
+    public CourtDto getCourt(@PathVariable String slug) {
+        var court = courtService.getCourt(slug);
+        return courtAssembler.toCourtResponse(court);
+    }
+}

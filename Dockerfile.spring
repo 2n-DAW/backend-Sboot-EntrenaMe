@@ -12,7 +12,7 @@ COPY pom.xml .
 COPY src ./src
 
 # # Instala dependencias
-# RUN mvn clean install -e
+# RUN mvn clean install
 
 # Instala dependencias
 RUN mvn dependency:go-offline
