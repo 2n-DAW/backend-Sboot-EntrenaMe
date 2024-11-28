@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override // Indica que se sobreescribe un metodo de la interfaz WebMvcConfigurer
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Rutas permitidas
-                .allowedOrigins("http://localhost:3000") // Dominios permitidos Ej: http://localhost:3000, https://mi-dominio.com
+                .allowedOrigins("http://localhost:5173") // Dominios permitidos Ej: http://localhost:3000, https://mi-dominio.com
                 .allowedMethods("*") // Métodos HTTP permitidos
                 .allowedHeaders("*") // Headers permitidos
                 .exposedHeaders("Authorization") // Encabezados adicionales expuestos al cliente

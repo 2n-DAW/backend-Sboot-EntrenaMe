@@ -1,12 +1,12 @@
 package com.springboot.entrename.api.user;
 
-// import com.fasterxml.jackson.annotation.JsonTypeInfo;
-// import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.springboot.entrename.domain.user.UserEntity.UserType;
+import com.springboot.entrename.domain.user.UserEntity.TypeUser;
 
 import lombok.*;
 import jakarta.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonInclude;
+// import com.fasterxml.jackson.annotation.JsonTypeInfo;
+// import com.fasterxml.jackson.annotation.JsonTypeName;
 
 // import java.util.List;
 import javax.validation.constraints.*;
@@ -25,14 +25,61 @@ public class UserDto {
     @NotNull
     private String password;
     @NotNull
-    // @JsonInclude(JsonInclude.Include.NON_NULL)
-    private UserType typeUser;
+    private TypeUser type_user;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ClientDto client;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private InstructorDto instructor;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    public static class Client {
+        private Long id_user;
+        private String img_user;
+        @NotNull
+        private String email;
+        @NotNull
+        private String username;
+        @NotNull
+        private String password;
+        @NotNull
+        private TypeUser type_user;
+        @NotNull
+        private Long id_client;
+        @Nullable
+        private String nif;
+        @Nullable
+        private String tlf;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    public static class Instructor {
+        private Long id_user;
+        private String img_user;
+        @NotNull
+        private String email;
+        @NotNull
+        private String username;
+        @NotNull
+        private String password;
+        @NotNull
+        private TypeUser type_user;
+        @NotNull
+        private Long id_instructor;
+        @Nullable
+        private String nif;
+        @Nullable
+        private String tlf;
+        @Nullable
+        private String address;
+    }
 
     @Getter
     @AllArgsConstructor
@@ -57,7 +104,7 @@ public class UserDto {
         private String password;
 
         @NotNull
-        private UserType typeUser;
+        private TypeUser typeUser;
     }
 
     @Getter

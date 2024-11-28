@@ -19,9 +19,8 @@ public class UserAssembler {
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
             .password(userEntity.getPassword())
-            .typeUser(userEntity.getTypeUser())
-            .client(userEntity.getIdClient() != null ? toClientResponse(userEntity.getIdClient()) : null) // Mapear datos del cliente
-            // .client(toClientResponse(userEntity.getIdClient())) 
+            .type_user(userEntity.getTypeUser())
+            .client(userEntity.getIdClient() != null ? toClientResponse(userEntity.getIdClient()) : null) // Mapear datos del cliente 
             .build();
     }
 
@@ -32,4 +31,6 @@ public class UserAssembler {
             .tlf(clientEntity.getTlf())
             .build();
     }
+
+    
 }

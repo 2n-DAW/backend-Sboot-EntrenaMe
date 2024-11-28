@@ -43,7 +43,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type_user", nullable = false)
-    private UserType typeUser;
+    private TypeUser typeUser;
 
     @OneToOne(
         mappedBy = "idUser",
@@ -59,8 +59,8 @@ public class UserEntity {
         orphanRemoval = true)
     private InstructorEntity idInstructor;
 
-    public enum UserType {
-        admin, client, instructor;
+    public enum TypeUser {
+        admin, client, instructor
     }
 
     // mappedBy desgina propietario de la relación
@@ -70,7 +70,7 @@ public class UserEntity {
     private List<ActivityEntity> activities = new ArrayList<>();
 
     @Builder
-    public UserEntity(Long idUser, String imgUser, String email, String username, String password, UserType typeUser) {
+    public UserEntity(Long idUser, String imgUser, String email, String username, String password, TypeUser typeUser) {
         this.idUser = idUser;
         this.imgUser = imgUser;
         this.email = email;

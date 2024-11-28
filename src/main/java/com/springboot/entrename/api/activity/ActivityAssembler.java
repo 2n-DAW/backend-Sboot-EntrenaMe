@@ -2,10 +2,8 @@ package com.springboot.entrename.api.activity;
 
 import com.springboot.entrename.domain.activity.ActivityEntity;
 import com.springboot.entrename.domain.user.UserEntity;
-import com.springboot.entrename.domain.user.InstructorEntity;
 import com.springboot.entrename.domain.sport.SportEntity;
 import com.springboot.entrename.api.user.UserDto;
-import com.springboot.entrename.api.user.InstructorDto;
 import com.springboot.entrename.api.sport.SportDto;
 
 import lombok.RequiredArgsConstructor;
@@ -72,16 +70,22 @@ public class ActivityAssembler {
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
             .password(userEntity.getPassword())
-            // .instructor(toInstructorResponse(userEntity.getIdInstructor())) // Mapear datos del cliente
+            .type_user(userEntity.getTypeUser())
             .build();
     }
 
-    // private InstructorDto toInstructorResponse(InstructorEntity instructorEntity) {
-    //     return InstructorDto.builder()
-    //         .id_instructor(instructorEntity.getIdInstructor())
-    //         .nif(instructorEntity.getNif())
-    //         .tlf(instructorEntity.getTlf())
-    //         .address(instructorEntity.getAddress())
+    // private UserDto.Instructor toUserResponse(UserEntity userEntity) {
+    //     return UserDto.Instructor.builder()
+    //         .id_user(userEntity.getIdUser())
+    //         .img_user(userEntity.getImgUser())
+    //         .email(userEntity.getEmail())
+    //         .username(userEntity.getUsername())
+    //         .password(userEntity.getPassword())
+    //         .type_user(userEntity.getTypeUser())
+    //         .id_instructor(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getIdInstructor() : null)
+    //         .nif(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getNif() : null)
+    //         .tlf(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getTlf() : null)
+    //         .address(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getAddress() : null)
     //         .build();
     // }
 
@@ -97,7 +101,7 @@ public class ActivityAssembler {
     private ActivityDto.CourtWrapper buildResponse(List<ActivityDto> activities) {
         return ActivityDto.CourtWrapper.builder()
                 .activities(activities)
-                .count_activities(activities.size()) 
+                .activities_count(activities.size()) 
                 .build();
     }
 }

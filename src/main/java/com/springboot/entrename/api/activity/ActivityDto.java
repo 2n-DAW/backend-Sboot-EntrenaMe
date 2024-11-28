@@ -30,6 +30,8 @@ public class ActivityDto {
     private String slug_activity;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserDto instructor;
+    // @JsonInclude(JsonInclude.Include.NON_NULL)
+    // private UserDto.Instructor instructor;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private SportDto sport;
 
@@ -39,7 +41,7 @@ public class ActivityDto {
     @AllArgsConstructor
     public static class CourtWrapper {
         private List<ActivityDto> activities;
-        private int count_activities;
+        private int activities_count;
     }
 
     @Getter
