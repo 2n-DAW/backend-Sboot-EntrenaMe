@@ -8,6 +8,7 @@ import com.springboot.entrename.api.sport.SportDto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class ActivityAssembler {
-    public ActivityDto.CourtWrapper toActivitiesList(List<ActivityEntity> activityEntities) {
+    public ActivityDto.ActivityWrapper toActivitiesList(List<ActivityEntity> activityEntities) {
         var content = activityEntities.stream()
             .map(this::toActivityResponse)
             .collect(Collectors.toList());
@@ -23,7 +24,23 @@ public class ActivityAssembler {
         return buildResponse(content);
     }
 
-    public ActivityDto.CourtWrapper toActivitiesListWithInstructorAndSport(List<ActivityEntity> activityEntities) {
+    public ActivityDto.ActivityWrapper toActivitiesListWithInstructorAndSport(List<ActivityEntity> activityEntities) {
+        var content = activityEntities.stream()
+            .map(this::toActivityWithInstructorAndSportResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content);
+    }
+
+    public ActivityDto.ActivityWrapper toActivitiesListFiltered(Page<ActivityEntity> activityEntities) {
+        var content = activityEntities.stream()
+            .map(this::toActivityResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content);
+    }
+
+    public ActivityDto.ActivityWrapper toActivitiesListWithInstructorAndSportFiltered(Page<ActivityEntity> activityEntities) {
         var content = activityEntities.stream()
             .map(this::toActivityWithInstructorAndSportResponse)
             .collect(Collectors.toList());
@@ -98,8 +115,8 @@ public class ActivityAssembler {
             .build();
     }
 
-    private ActivityDto.CourtWrapper buildResponse(List<ActivityDto> activities) {
-        return ActivityDto.CourtWrapper.builder()
+    private ActivityDto.ActivityWrapper buildResponse(List<ActivityDto> activities) {
+        return ActivityDto.ActivityWrapper.builder()
                 .activities(activities)
                 .activities_count(activities.size()) 
                 .build();

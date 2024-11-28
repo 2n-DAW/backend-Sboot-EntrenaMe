@@ -4,7 +4,9 @@ import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 
 import lombok.RequiredArgsConstructor;
-// import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional(readOnly = true)
     @Override  // Indica que este método implementa la definición de la interfaz
     public List<ActivityEntity> getAllActivities() {
-        return activityRepository.findAllByOrderByIdActivityAsc();
+        return activityRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -26,5 +28,11 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityEntity getActivity(String slug) {
         return activityRepository.findBySlugActivity(slug)
             .orElseThrow(() -> new AppException(Error.ACTIVITY_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    @Override  // Indica que este método implementa la definición de la interfaz
+    public Page<ActivityEntity> getAllActivitiesFiltered(Specification<ActivityEntity> filter, Pageable pageable) {
+        return activityRepository.findAll(filter, pageable);
     }
 }

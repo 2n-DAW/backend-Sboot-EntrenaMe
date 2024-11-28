@@ -15,7 +15,7 @@ public enum Error {
     USER_NOT_FOUND("Usuario no encontrado", HttpStatus.NOT_FOUND),
     COURT_NOT_FOUND("Pista no encontrada", HttpStatus.NOT_FOUND),
     SPORT_NOT_FOUND("Deporte no encontrado", HttpStatus.NOT_FOUND),
-    ACTIVITY_NOT_FOUND("Actividad no encontrado", HttpStatus.NOT_FOUND),
+    ACTIVITY_NOT_FOUND("Actividad no encontrada", HttpStatus.NOT_FOUND),
     FOLLOW_NOT_FOUND("such follow not found", HttpStatus.NOT_FOUND),
     FAVORITE_NOT_FOUND("favorite not found", HttpStatus.NOT_FOUND),
     ;

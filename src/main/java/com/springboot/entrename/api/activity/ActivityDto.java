@@ -39,7 +39,7 @@ public class ActivityDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CourtWrapper {
+    public static class ActivityWrapper {
         private List<ActivityDto> activities;
         private int activities_count;
     }
