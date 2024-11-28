@@ -1,10 +1,11 @@
 package com.springboot.entrename.api.sport;
 
-import com.springboot.entrename.api.court.CourtDto;
 import com.springboot.entrename.domain.sport.SportEntity;
+import com.springboot.entrename.api.court.CourtDto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,22 @@ public class SportAssembler {
     }
 
     public SportDto.SportWrapper toSportsListWithCourts(List<SportEntity> sportEntities) {
+        var content = sportEntities.stream()
+            .map(this::toSportWithCourtResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content);
+    }
+
+    public SportDto.SportWrapper toSportsListFiltered(Page<SportEntity> sportEntities) {
+        var content = sportEntities.stream()
+            .map(this::toSportResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content);
+    }
+
+    public SportDto.SportWrapper toSportsListWithCourtsFiltered(Page<SportEntity> sportEntities) {
         var content = sportEntities.stream()
             .map(this::toSportWithCourtResponse)
             .collect(Collectors.toList());
