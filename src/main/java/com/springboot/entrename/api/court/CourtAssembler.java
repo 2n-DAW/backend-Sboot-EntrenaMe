@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CourtAssembler {
-    public CourtDto.CourtWrapper toCourtsList(Page<CourtEntity> pageCourts) {
+    public CourtDto.CourtWrapper toCourtsList(List<CourtEntity> pageCourts) {
         var content = pageCourts.stream()
             .map(this::toCourtResponse)
             .collect(Collectors.toList());
@@ -21,7 +21,23 @@ public class CourtAssembler {
         return buildResponse(content);
     }
 
-    public CourtDto.CourtWrapper toCourtsListWithSport(Page<CourtEntity> pageCourts) {
+    public CourtDto.CourtWrapper toCourtsListWithSport(List<CourtEntity> pageCourts) {
+        var content = pageCourts.stream()
+            .map(this::toCourtWithSportResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content);
+    }
+
+    public CourtDto.CourtWrapper toCourtsListFiltered(Page<CourtEntity> pageCourts) {
+        var content = pageCourts.stream()
+            .map(this::toCourtResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content);
+    }
+
+    public CourtDto.CourtWrapper toCourtsListWithSportFiltered(Page<CourtEntity> pageCourts) {
         var content = pageCourts.stream()
             .map(this::toCourtWithSportResponse)
             .collect(Collectors.toList());
