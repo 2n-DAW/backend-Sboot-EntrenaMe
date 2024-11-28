@@ -30,7 +30,7 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-		<!-- Desarrollo aplicaciones web -->
+		<!-- Desarrollo aplicaciones web con Spring MVC -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -45,6 +45,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<!-- Filtros dinámicos en JPA -->
+		<dependency>
+			<groupId>net.kaczmarzyk</groupId>
+			<artifactId>specification-arg-resolver</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 		<!-- Genera automáticamente getters, setters, constructores... @Getter, @Setter, @NoArgsConstructor, @AllArgsConstructor, @Data -->
 		<dependency>
