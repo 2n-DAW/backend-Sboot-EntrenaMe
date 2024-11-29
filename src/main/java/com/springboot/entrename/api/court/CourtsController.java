@@ -50,6 +50,7 @@ public class CourtsController {
             @Join(path = "sports", alias = "s")
             @And({
                 @Spec(path = "s.nameSport", params = "sport", spec = Like.class),
+                @Spec(path = "nameCourt", params = "court", spec = Like.class),
             }) Specification<CourtEntity> filter,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_OFFSET) int offset) {
@@ -65,6 +66,7 @@ public class CourtsController {
             @Join(path = "sports", alias = "s")
             @And({
                 @Spec(path = "s.nameSport", params = "sport", spec = Like.class),
+                @Spec(path = "nameCourt", params = "court", spec = Like.class),
             }) Specification<CourtEntity> filter,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_OFFSET) int offset) {

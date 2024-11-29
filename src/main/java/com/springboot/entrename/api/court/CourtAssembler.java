@@ -1,6 +1,7 @@
 package com.springboot.entrename.api.court;
 
 import com.springboot.entrename.domain.court.CourtEntity;
+import com.springboot.entrename.domain.sport.SportEntity;
 import com.springboot.entrename.api.sport.SportDto;
 
 import lombok.RequiredArgsConstructor;
@@ -62,13 +63,17 @@ public class CourtAssembler {
             .slug_court(courtEntity.getSlugCourt())
             .sports(courtEntity.getSports().stream()
                 .sorted((sport1, sport2) -> sport1.getIdSport().compareTo(sport2.getIdSport())) // Orden ascendente por id
-                .map(sportEntity -> SportDto.builder()
-                    .id_sport(sportEntity.getIdSport())
-                    .n_sport(sportEntity.getNameSport())
-                    .img_sport(sportEntity.getImgSport())
-                    .slug_sport(sportEntity.getSlugSport())
-                    .build())
+                .map(this::toSportResponse)
                 .toList())
+            .build();
+    }
+
+    private SportDto toSportResponse(SportEntity sportEntity) {
+        return SportDto.builder()
+            .id_sport(sportEntity.getIdSport())
+            .n_sport(sportEntity.getNameSport())
+            .img_sport(sportEntity.getImgSport())
+            .slug_sport(sportEntity.getSlugSport())
             .build();
     }
 
