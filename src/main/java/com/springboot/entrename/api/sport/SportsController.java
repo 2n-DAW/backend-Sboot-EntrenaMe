@@ -30,10 +30,10 @@ public class SportsController {
         return sportAssembler.toSportsList(sports);
     }
 
-    @GetMapping("/&courts")
+    @GetMapping("/courts&activities")
     public SportDto.SportWrapper getAllSportsWithCourts() {
         var sports = sportService.getAllSports();
-        return sportAssembler.toSportsListWithCourts(sports);
+        return sportAssembler.toSportsListWithCourtsAndActivities(sports);
     }
 
     @GetMapping("/{slug}")
@@ -47,6 +47,7 @@ public class SportsController {
             @Join(path = "courts", alias = "c")
             @And({
                 @Spec(path = "c.nameCourt", params = "court", spec = Like.class),
+                @Spec(path = "nameSport", params = "sport", spec = Like.class),
             }) Specification<SportEntity> filter,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_OFFSET) int offset) {
@@ -56,17 +57,18 @@ public class SportsController {
         return sportAssembler.toSportsListFiltered(sports);
     }
 
-    @GetMapping("/&courts/filtered")
-    public SportDto.SportWrapper getAllSportsWithCourtsFiltered(
+    @GetMapping("/courts&activities/filtered")
+    public SportDto.SportWrapper getAllSportsWithCourtsAndActivitiesFiltered(
         @Join(path = "courts", alias = "c")
             @And({
                 @Spec(path = "c.nameCourt", params = "court", spec = Like.class),
+                @Spec(path = "nameSport", params = "sport", spec = Like.class),
             }) Specification<SportEntity> filter,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_OFFSET) int offset) {
         
         Pageable pageable = PageRequest.of(offset, limit);
         var sports = sportService.getAllSportsFiltered(filter, pageable);
-        return sportAssembler.toSportsListWithCourtsFiltered(sports);
+        return sportAssembler.toSportsListWithCourtsAndActivitiesFiltered(sports);
     }
 }

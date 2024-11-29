@@ -1,5 +1,7 @@
 package com.springboot.entrename.api.sport;
 
+import com.springboot.entrename.api.activity.ActivityDto;
+
 import lombok.*;
 import javax.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
@@ -21,6 +23,9 @@ public class SportDto {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CourtDto> courts;
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<ActivityDto> activities;
 
     @Getter
     @Builder

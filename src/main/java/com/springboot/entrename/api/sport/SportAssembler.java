@@ -1,7 +1,10 @@
 package com.springboot.entrename.api.sport;
 
 import com.springboot.entrename.domain.sport.SportEntity;
+import com.springboot.entrename.domain.court.CourtEntity;
+import com.springboot.entrename.domain.activity.ActivityEntity;
 import com.springboot.entrename.api.court.CourtDto;
+import com.springboot.entrename.api.activity.ActivityDto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,9 +24,9 @@ public class SportAssembler {
         return buildResponse(content);
     }
 
-    public SportDto.SportWrapper toSportsListWithCourts(List<SportEntity> sportEntities) {
+    public SportDto.SportWrapper toSportsListWithCourtsAndActivities(List<SportEntity> sportEntities) {
         var content = sportEntities.stream()
-            .map(this::toSportWithCourtResponse)
+            .map(this::toSportWithCourtsAndActivitiesResponse)
             .collect(Collectors.toList());
 
         return buildResponse(content);
@@ -37,9 +40,9 @@ public class SportAssembler {
         return buildResponse(content);
     }
 
-    public SportDto.SportWrapper toSportsListWithCourtsFiltered(Page<SportEntity> sportEntities) {
+    public SportDto.SportWrapper toSportsListWithCourtsAndActivitiesFiltered(Page<SportEntity> sportEntities) {
         var content = sportEntities.stream()
-            .map(this::toSportWithCourtResponse)
+            .map(this::toSportWithCourtsAndActivitiesResponse)
             .collect(Collectors.toList());
 
         return buildResponse(content);
@@ -54,21 +57,44 @@ public class SportAssembler {
             .build();
     }
 
-    public SportDto toSportWithCourtResponse(SportEntity entity) {
+    public SportDto toSportWithCourtsAndActivitiesResponse(SportEntity sportEntity) {
         return SportDto.builder()
-            .id_sport(entity.getIdSport())
-            .n_sport(entity.getNameSport())
-            .img_sport(entity.getImgSport())
-            .slug_sport(entity.getSlugSport())
-            .courts(entity.getCourts().stream()
+            .id_sport(sportEntity.getIdSport())
+            .n_sport(sportEntity.getNameSport())
+            .img_sport(sportEntity.getImgSport())
+            .slug_sport(sportEntity.getSlugSport())
+            .courts(sportEntity.getCourts().stream()
                 .sorted((court1, court2) -> court1.getIdCourt().compareTo(court2.getIdCourt())) // Orden ascendente por id
-                .map(courtEntity -> CourtDto.builder()
-                    .id_court(courtEntity.getIdCourt())
-                    .n_court(courtEntity.getNameCourt())
-                    .img_court(courtEntity.getImgCourt())
-                    .slug_court(courtEntity.getSlugCourt())
-                    .build())
+                .map(this::toCourtResponse)
                 .toList())
+            .activities(sportEntity.getActivities().stream()
+                .sorted((activity1, activity2) -> activity1.getIdActivity().compareTo(activity2.getIdActivity())) // Orden ascendente por id
+                .map(this::toActivityResponse)
+                .toList())
+            .build();
+    }
+
+    private CourtDto toCourtResponse(CourtEntity courtEntity) {
+        return CourtDto.builder()
+            .id_court(courtEntity.getIdCourt())
+            .n_court(courtEntity.getNameCourt())
+            .img_court(courtEntity.getImgCourt())
+            .slug_court(courtEntity.getSlugCourt())
+            .build();
+    }
+
+    private ActivityDto toActivityResponse(ActivityEntity activityEntity) {
+        return ActivityDto.builder()
+            .id_activity(activityEntity.getIdActivity())
+            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
+            .id_sport(activityEntity.getIdSport().getIdSport())
+            .n_activity(activityEntity.getNameActivity())
+            .description(activityEntity.getDescription())
+            .week_day(activityEntity.getWeekDay())
+            .slot_hour(activityEntity.getSlotHour())
+            .img_activity(activityEntity.getImgActivity())
+            .spots(activityEntity.getSpots())
+            .slug_activity(activityEntity.getSlugActivity())
             .build();
     }
 

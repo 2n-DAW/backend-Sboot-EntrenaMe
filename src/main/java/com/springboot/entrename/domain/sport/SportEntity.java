@@ -14,9 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Builder;
 
 import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias para trabajar con JPA
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -51,11 +49,13 @@ public class SportEntity {
     )
     private Set<CourtEntity> courts = new HashSet<>();
 
-    // mappedBy desgina propietario de la relación
-    // cascade mantiene la integridad referencial entre tablas
-    @OneToMany(mappedBy = "idSport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(
+        mappedBy = "idSport", // mappedBy desgina propietario de la relación
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL // cascade mantiene la integridad referencial entre tablas
+    )
     @JsonBackReference // Marca este lado como "referencia inversa"
-    private List<ActivityEntity> activities = new ArrayList<>();
+    private Set<ActivityEntity> activities = new HashSet<>();
 
     @Builder
     public SportEntity(Long idSport, String nameSport, String imgSport, String slugSport) {
