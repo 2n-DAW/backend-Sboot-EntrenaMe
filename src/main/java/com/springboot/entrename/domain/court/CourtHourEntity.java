@@ -1,6 +1,7 @@
 package com.springboot.entrename.domain.court;
 
 import com.springboot.entrename.domain.hour.HourEntity;
+import com.springboot.entrename.domain.month.MonthEntity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -23,17 +24,20 @@ public class CourtHourEntity {
     @Column(name = "id_court_hour")
     private Long idCourtHour;
 
-    // @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_court", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private CourtEntity court;
+    private CourtEntity idCourt;
 
-    // @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hour", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private HourEntity hour;
+    private HourEntity idHour;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_month", nullable = false)
+    @JsonManagedReference // Marca este lado como "propietario"
+    private MonthEntity idMonth;
 
     @Column(name = "day_number", nullable = false)
     private int dayNumber;
@@ -42,10 +46,11 @@ public class CourtHourEntity {
     private String slugCourtHour;
     
     @Builder
-    public CourtHourEntity(Long idCourtHour, CourtEntity court, HourEntity hour, int dayNumber, String slugCourtHour) {
+    public CourtHourEntity(Long idCourtHour, CourtEntity idCourt, HourEntity idHour, MonthEntity idMonth, int dayNumber, String slugCourtHour) {
         this.idCourtHour = idCourtHour;
-        this.court = court;
-        this.hour = hour;
+        this.idCourt = idCourt;
+        this.idHour = idHour;
+        this.idMonth = idMonth;
         this.dayNumber = dayNumber;
         this.slugCourtHour = slugCourtHour;
     }

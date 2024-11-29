@@ -16,8 +16,8 @@ import lombok.Builder;
 import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias para trabajar con JPA
 import java.util.HashSet;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
 @Getter
 @Setter
@@ -55,11 +55,14 @@ public class CourtEntity {
     )
     private Set<SportEntity> sports = new HashSet<>();
 
-    // mappedBy desgina propietario de la relación
-    // cascade mantiene la integridad referencial entre tablas
-    @OneToMany(mappedBy = "court", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(
+        mappedBy = "idCourt", // mappedBy desgina propietario de la relación
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL // cascade mantiene la integridad referencial entre tablas
+    )
     @JsonBackReference // Marca este lado como "referencia inversa"
-    private List<CourtHourEntity> courtsHours = new ArrayList<>();
+    private Set<CourtHourEntity> courtsHours = new HashSet<>();
+    // private List<CourtHourEntity> courtsHours = new ArrayList<>();
 
     @Builder
     public CourtEntity(Long idCourt, String nameCourt, String imgCourt, String slugCourt) {

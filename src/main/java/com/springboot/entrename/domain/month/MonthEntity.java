@@ -1,4 +1,4 @@
-package com.springboot.entrename.domain.hour;
+package com.springboot.entrename.domain.month;
 
 import com.springboot.entrename.domain.court.CourtHourEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -19,18 +19,21 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "hours")
-public class HourEntity {
+@Table(name = "months")
+public class MonthEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_hour")
-    private Long idHour;
+    @Column(name = "id_month")
+    private Long idMonth;
 
-    @Column(name = "slot_hour", nullable = false, length = 255)
-    private String slotHour;
+    @Column(name = "n_month", nullable = false, length = 255)
+    private String nameMonth;
+
+    @Column(name = "slug_month", length = 255)
+    private String slugMonth;
 
     @OneToMany(
-        mappedBy = "idHour",
+        mappedBy = "idMonth",
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL
     )
@@ -39,8 +42,9 @@ public class HourEntity {
     // private List<CourtHourEntity> courtsHours = new ArrayList<>();
 
     @Builder
-    public HourEntity(Long idHour, String slotHour) {
-        this.idHour = idHour;
-        this.slotHour = slotHour;
+    public MonthEntity(Long idMonth, String nameMonth, String slugMonth) {
+        this.idMonth = idMonth;
+        this.nameMonth = nameMonth;
+        this.slugMonth = slugMonth;
     }
 }
