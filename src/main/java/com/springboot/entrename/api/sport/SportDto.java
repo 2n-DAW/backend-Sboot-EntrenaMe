@@ -33,7 +33,7 @@ public class SportDto {
     @AllArgsConstructor
     public static class SportWrapper {
         private List<SportDto> sports;
-        private int sports_count;
+        private Number sports_count;
     }
 
     @Getter

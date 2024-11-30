@@ -28,7 +28,7 @@ public class CourtDto {
     @AllArgsConstructor
     public static class CourtWrapper {
         private List<CourtDto> courts;
-        private int courts_count;
+        private Number courts_count;
     }
 
     @Getter

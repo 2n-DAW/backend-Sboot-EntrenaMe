@@ -21,7 +21,7 @@ public class ActivityController {
     private final ActivityService activityService;
     private final ActivityAssembler activityAssembler;
 
-    private static final String DEFAULT_FILTER_LIMIT = "5";
+    private static final String DEFAULT_FILTER_LIMIT = "2";
     private static final String DEFAULT_FILTER_OFFSET = "0";
 
     @GetMapping

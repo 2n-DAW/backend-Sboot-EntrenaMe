@@ -21,7 +21,7 @@ public class SportsController {
     private final SportService sportService;
     private final SportAssembler sportAssembler;
 
-    private static final String DEFAULT_FILTER_LIMIT = "5";
+    private static final String DEFAULT_FILTER_LIMIT = "2";
     private static final String DEFAULT_FILTER_OFFSET = "0";
 
     @GetMapping

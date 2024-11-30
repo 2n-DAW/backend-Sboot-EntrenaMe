@@ -41,7 +41,7 @@ public class ActivityDto {
     @AllArgsConstructor
     public static class ActivityWrapper {
         private List<ActivityDto> activities;
-        private int activities_count;
+        private Number activities_count;
     }
 
     @Getter

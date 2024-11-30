@@ -23,7 +23,7 @@ public class CourtsController {
     private final CourtService courtService;
     private final CourtAssembler courtAssembler;
 
-    private static final String DEFAULT_FILTER_LIMIT = "5";
+    private static final String DEFAULT_FILTER_LIMIT = "2";
     private static final String DEFAULT_FILTER_OFFSET = "0";
 
     @GetMapping

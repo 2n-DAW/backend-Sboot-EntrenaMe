@@ -21,7 +21,7 @@ public class ActivityAssembler {
             .map(this::toActivityResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, activityEntities.size());
     }
 
     public ActivityDto.ActivityWrapper toActivitiesListWithInstructorAndSport(List<ActivityEntity> activityEntities) {
@@ -29,23 +29,23 @@ public class ActivityAssembler {
             .map(this::toActivityWithInstructorAndSportResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, activityEntities.size());
     }
 
-    public ActivityDto.ActivityWrapper toActivitiesListFiltered(Page<ActivityEntity> activityEntities) {
-        var content = activityEntities.stream()
+    public ActivityDto.ActivityWrapper toActivitiesListFiltered(Page<ActivityEntity> pageActivities) {
+        var content = pageActivities.stream()
             .map(this::toActivityResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, pageActivities.getTotalElements());
     }
 
-    public ActivityDto.ActivityWrapper toActivitiesListWithInstructorAndSportFiltered(Page<ActivityEntity> activityEntities) {
-        var content = activityEntities.stream()
+    public ActivityDto.ActivityWrapper toActivitiesListWithInstructorAndSportFiltered(Page<ActivityEntity> pageActivities) {
+        var content = pageActivities.stream()
             .map(this::toActivityWithInstructorAndSportResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, pageActivities.getTotalElements());
     }
 
     public ActivityDto toActivityResponse(ActivityEntity activityEntity) {
@@ -115,10 +115,10 @@ public class ActivityAssembler {
             .build();
     }
 
-    private ActivityDto.ActivityWrapper buildResponse(List<ActivityDto> activities) {
+    private ActivityDto.ActivityWrapper buildResponse(List<ActivityDto> activities, Number totalActivities) {
         return ActivityDto.ActivityWrapper.builder()
                 .activities(activities)
-                .activities_count(activities.size()) 
+                .activities_count(totalActivities) 
                 .build();
     }
 }

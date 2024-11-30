@@ -14,20 +14,20 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CourtAssembler {
-    public CourtDto.CourtWrapper toCourtsList(List<CourtEntity> pageCourts) {
-        var content = pageCourts.stream()
+    public CourtDto.CourtWrapper toCourtsList(List<CourtEntity> courtEntities) {
+        var content = courtEntities.stream()
             .map(this::toCourtResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, courtEntities.size());
     }
 
-    public CourtDto.CourtWrapper toCourtsListWithSport(List<CourtEntity> pageCourts) {
-        var content = pageCourts.stream()
+    public CourtDto.CourtWrapper toCourtsListWithSport(List<CourtEntity> courtEntities) {
+        var content = courtEntities.stream()
             .map(this::toCourtWithSportResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, courtEntities.size());
     }
 
     public CourtDto.CourtWrapper toCourtsListFiltered(Page<CourtEntity> pageCourts) {
@@ -35,7 +35,7 @@ public class CourtAssembler {
             .map(this::toCourtResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, pageCourts.getTotalElements());
     }
 
     public CourtDto.CourtWrapper toCourtsListWithSportFiltered(Page<CourtEntity> pageCourts) {
@@ -43,7 +43,7 @@ public class CourtAssembler {
             .map(this::toCourtWithSportResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, pageCourts.getTotalElements());
     }
 
     public CourtDto toCourtResponse(CourtEntity courtEntity) {
@@ -77,10 +77,10 @@ public class CourtAssembler {
             .build();
     }
 
-    private CourtDto.CourtWrapper buildResponse(List<CourtDto> courts) {
+    private CourtDto.CourtWrapper buildResponse(List<CourtDto> courts, Number totalCourts) {
         return CourtDto.CourtWrapper.builder()
                 .courts(courts)
-                .courts_count(courts.size()) 
+                .courts_count(totalCourts) 
                 .build();
     }
 }

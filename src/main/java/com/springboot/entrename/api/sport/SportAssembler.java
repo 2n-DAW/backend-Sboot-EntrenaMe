@@ -21,7 +21,7 @@ public class SportAssembler {
             .map(this::toSportResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, sportEntities.size());
     }
 
     public SportDto.SportWrapper toSportsListWithCourtsAndActivities(List<SportEntity> sportEntities) {
@@ -29,23 +29,23 @@ public class SportAssembler {
             .map(this::toSportWithCourtsAndActivitiesResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, sportEntities.size());
     }
 
-    public SportDto.SportWrapper toSportsListFiltered(Page<SportEntity> sportEntities) {
-        var content = sportEntities.stream()
+    public SportDto.SportWrapper toSportsListFiltered(Page<SportEntity> pageSports) {
+        var content = pageSports.stream()
             .map(this::toSportResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, pageSports.getTotalElements());
     }
 
-    public SportDto.SportWrapper toSportsListWithCourtsAndActivitiesFiltered(Page<SportEntity> sportEntities) {
-        var content = sportEntities.stream()
+    public SportDto.SportWrapper toSportsListWithCourtsAndActivitiesFiltered(Page<SportEntity> pageSports) {
+        var content = pageSports.stream()
             .map(this::toSportWithCourtsAndActivitiesResponse)
             .collect(Collectors.toList());
 
-        return buildResponse(content);
+        return buildResponse(content, pageSports.getTotalElements());
     }
 
     public SportDto toSportResponse(SportEntity entity) {
@@ -98,10 +98,10 @@ public class SportAssembler {
             .build();
     }
 
-    private SportDto.SportWrapper buildResponse(List<SportDto> sports) {
+    private SportDto.SportWrapper buildResponse(List<SportDto> sports, Number totalSports) {
         return SportDto.SportWrapper.builder()
                 .sports(sports)
-                .sports_count(sports.size()) 
+                .sports_count(totalSports) 
                 .build();
     }
 }
