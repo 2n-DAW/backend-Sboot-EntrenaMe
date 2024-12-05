@@ -4,7 +4,7 @@ import com.springboot.entrename.api.user.UserDto;
 import com.springboot.entrename.api.sport.SportDto;
 
 import lombok.*;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

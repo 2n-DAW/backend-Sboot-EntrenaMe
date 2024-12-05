@@ -3,7 +3,7 @@ package com.springboot.entrename.api.sport;
 import com.springboot.entrename.api.activity.ActivityDto;
 
 import lombok.*;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.springboot.entrename.api.court.CourtDto;

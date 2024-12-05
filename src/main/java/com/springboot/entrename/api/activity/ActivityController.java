@@ -73,7 +73,7 @@ public class ActivityController {
         @Join(path = "idSport", alias = "s")
         @And({
             @Spec(path = "i.username", params = "instructor", spec = Like.class),
-            @Spec(path = "s.nameSport", params = "sport", spec = Like.class),
+            @Spec(path = "s.slugSport", params = "sport", spec = Like.class),
             @Spec(path = "nameActivity", params = "n_activity", spec = Like.class),
             @Spec(path = "slotHour", params = "slot_hour", spec = Like.class),
             @Spec(path = "weekDay", params = "week_day", spec = Like.class),
