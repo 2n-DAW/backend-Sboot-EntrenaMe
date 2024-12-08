@@ -131,6 +131,25 @@ public class UserDto {
     }
 
     @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class UserWithToken {
+        private Long id_user;
+        private String img_user;
+        private String email;
+        private String username;
+        private String password;
+        private TypeUser type_user;
+        private String token;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private AdminDto admin;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private ClientDto client;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private InstructorDto instructor;
+    }
+
+    @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor

@@ -2,6 +2,7 @@ package com.springboot.entrename.api.security;
 
 import com.springboot.entrename.api.user.UserAssembler;
 import com.springboot.entrename.api.user.UserDto;
+// import com.springboot.entrename.api.user.UserDto.UserWithToken;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserDto login(@RequestBody @Valid UserDto.Login login) {
-        var user = authService.login(login);
-        return userAssembler.toUserResponse(user);
+    public UserDto.UserWithToken login(@RequestBody @Valid UserDto.Login login) {
+        var userWithToken  = authService.login(login);
+        return userWithToken;
+        
     }
 }

@@ -25,6 +25,21 @@ public class UserAssembler {
             .build();
     }
 
+    public UserDto.UserWithToken toLoginResponse(UserEntity userEntity, String token) {
+        return UserDto.UserWithToken.builder()
+            .id_user(userEntity.getIdUser())
+            .img_user(userEntity.getImgUser())
+            .email(userEntity.getEmail())
+            .username(userEntity.getUsername())
+            .password(userEntity.getPassword())
+            .type_user(userEntity.getTypeUser())
+            .token(token != null ? token : null)
+            .admin(userEntity.getIdAdmin() != null ? toAdminResponse(userEntity.getIdAdmin()) : null) // Mapear datos del admin
+            .client(userEntity.getIdClient() != null ? toClientResponse(userEntity.getIdClient()) : null) // Mapear datos del cliente
+            .instructor(userEntity.getIdInstructor() != null ? toInstructorResponse(userEntity.getIdInstructor()) : null) // Mapear datos del instructor
+            .build();
+    }
+
     // Método para mapear los datos del admin
     private AdminDto toAdminResponse(AdminEntity adminEntity) {
         return AdminDto.builder()

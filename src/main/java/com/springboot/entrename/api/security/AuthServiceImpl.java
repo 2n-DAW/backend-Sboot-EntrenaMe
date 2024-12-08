@@ -6,6 +6,8 @@ import com.springboot.entrename.domain.user.ClientEntity;
 import com.springboot.entrename.domain.user.InstructorEntity;
 import com.springboot.entrename.domain.user.UserEntity.TypeUser;
 import com.springboot.entrename.api.user.UserDto;
+import com.springboot.entrename.api.user.UserAssembler;
+// import com.springboot.entrename.api.user.UserDto.UserWithToken;
 import com.springboot.entrename.domain.user.UserRepository;
 import com.springboot.entrename.domain.user.AdminRepository;
 import com.springboot.entrename.domain.user.ClientRepository;
@@ -14,6 +16,9 @@ import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,9 @@ public class AuthServiceImpl implements AuthService {
     private final ClientRepository clientRepository;
     private final InstructorRepository instructorRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserAssembler userAssembler;
 
     @Transactional
     @Override  // Indica que este método implementa la definición de la interfaz
@@ -94,13 +102,26 @@ public class AuthServiceImpl implements AuthService {
         return savedUser;
     }
 
+    // @Transactional(readOnly = true)
+    // @Override
+    // public UserEntity login(final UserDto.Login login) {
+    //     return userRepository.findByEmail(login.getEmail())
+    //         .filter(user -> passwordEncoder.matches(login.getPassword(), user.getPassword()))
+    //         .orElseThrow(() -> new AppException(Error.LOGIN_INFO_INVALID));
+    // }
+
     @Transactional(readOnly = true)
     @Override
-    public UserEntity login(final UserDto.Login login) {
-        return userRepository.findByEmail(login.getEmail())
-            .filter(user -> passwordEncoder.matches(login.getPassword(), user.getPassword()))
-            .orElseThrow(() -> new AppException(Error.LOGIN_INFO_INVALID));
-        
-        //! Falta implementar JWT
+    public UserDto.UserWithToken login(final UserDto.Login login) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword())
+        );
+
+        var user = userRepository.findByEmail(login.getEmail())
+            .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
+        var token = jwtUtils.generateJWT(user.getEmail(), user.getUsername(), user.getTypeUser());
+        System.out.println("Token ========================================================\n" + token);
+
+    return userAssembler.toLoginResponse(user, token);
     }
 }

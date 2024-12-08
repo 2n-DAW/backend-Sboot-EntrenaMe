@@ -7,5 +7,5 @@ public interface AuthService {
     // final indica que no se puede modificar dentro del cuerpo del método
     UserEntity register(final UserDto.Register register);
 
-    UserEntity login(final UserDto.Login login);
+    UserDto.UserWithToken login(final UserDto.Login login);
 }

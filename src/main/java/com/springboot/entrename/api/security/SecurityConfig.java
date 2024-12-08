@@ -3,7 +3,6 @@ package com.springboot.entrename.api.security;
 // import com.springboot.entrename.api.exception.CustomAuthenticationEntryPoint;
 // import com.springboot.entrename.api.exception.CustomAccessDeniedHandler;
 
-// import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    // private final SecurityFilter securityFilter;
+    // private final JWTAuthFilter jwtAuthFilter;
     // private final CustomAccessDeniedHandler customAccessDeniedHandler;
     // private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -53,7 +52,7 @@ public class SecurityConfig {
                 // .exceptionHandling(handler -> handler
                 //     .accessDeniedHandler(customAccessDeniedHandler) // Maneja errores de autorización para el acceso (usuarios autenticados pero sin permisos)
                 //     .authenticationEntryPoint(customAuthenticationEntryPoint)); // Maneja errores de autenticación (usuarios no autenticados)
-                // .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Añade un filtro de seguridad personalizado (JWT)
+                // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Añade un filtro de seguridad personalizado (JWT)
 
         return http.build();
     }
@@ -65,8 +64,8 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager(); // Obtiene el AuthenticationManager por la configuración de Spring
+        // Obtiene el AuthenticationManager a través de la configuración predeterminadade Spring Boot
+        // Accede de forma predeterminada al AuthenticationProvider, que a su ver accede al UserDetailsService (userDetailsServiceImpl)
+        return configuration.getAuthenticationManager();
     }
-
-
 }
