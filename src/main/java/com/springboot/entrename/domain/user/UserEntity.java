@@ -50,6 +50,13 @@ public class UserEntity {
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true)
+    private AdminEntity idAdmin;
+
+    @OneToOne(
+        mappedBy = "idUser",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
     private ClientEntity idClient;
 
     @OneToOne(

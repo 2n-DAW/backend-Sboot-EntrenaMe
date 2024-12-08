@@ -12,32 +12,20 @@ import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias pa
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "instructors")
-public class InstructorEntity {
+@Table(name = "admins")
+public class AdminEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_instructor")
-    private Long idInstructor;
+    @Column(name = "id_admin")
+    private Long idAdmin;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", referencedColumnName = "id_user", nullable = false)
     private UserEntity idUser;
-
-    @Column(name = "nif", length = 255)
-    private String nif;
-
-    @Column(name = "tlf", length = 20)
-    private String tlf;
-
-    @Column(name = "address", length = 255)
-    private String address;
     
     @Builder
-    public InstructorEntity(Long idInstructor, UserEntity idUser, String nif, String tlf, String address) {
-        this.idInstructor = idInstructor;
+    public AdminEntity(Long idAdmin, UserEntity idUser) {
+        this.idAdmin = idAdmin;
         this.idUser = idUser;
-        this.nif = nif;
-        this.tlf = tlf;
-        this.address = address;
     }
 }
