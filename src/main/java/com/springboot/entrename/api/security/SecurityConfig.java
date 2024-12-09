@@ -32,7 +32,8 @@ public class SecurityConfig {
     private static final String[] PUBLIC_READ_ENDPOINTS = {
             "/courts", "/courts/*", "/courts/**",
             "/sports", "/sports/*", "/sports/**",
-            "/activities", "/activities/*", "/activities/**"
+            "/activities", "/activities/*", "/activities/**",
+            "/profiles", "/profiles/*", "/profiles/**"
     };
 
     private static final String[] PUBLIC_WRITE_ENDPOINTS = {
