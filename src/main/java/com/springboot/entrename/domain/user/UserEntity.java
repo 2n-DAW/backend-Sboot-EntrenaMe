@@ -1,7 +1,9 @@
 package com.springboot.entrename.domain.user;
 
 import com.springboot.entrename.domain.activity.ActivityEntity;
-
+import com.springboot.entrename.domain.user.admin.AdminEntity;
+import com.springboot.entrename.domain.user.client.ClientEntity;
+import com.springboot.entrename.domain.user.instructor.InstructorEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

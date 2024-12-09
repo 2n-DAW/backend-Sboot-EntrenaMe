@@ -2,7 +2,6 @@ package com.springboot.entrename.api.security;
 
 import com.springboot.entrename.api.user.UserAssembler;
 import com.springboot.entrename.api.user.UserDto;
-// import com.springboot.entrename.api.user.UserDto.UserWithToken;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

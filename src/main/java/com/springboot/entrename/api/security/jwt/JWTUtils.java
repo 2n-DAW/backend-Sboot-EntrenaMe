@@ -1,4 +1,4 @@
-package com.springboot.entrename.api.security;
+package com.springboot.entrename.api.security.jwt;
 
 import com.springboot.entrename.domain.user.UserEntity.TypeUser;
 
@@ -39,13 +39,14 @@ public class JWTUtils {
     }
 
     // Crea JWT
-    public String generateJWT(String sub, String username, TypeUser typeUser) {
-        if (sub == null || sub.equals("")) {
+    public String generateJWT(String email, String username, TypeUser typeUser) {
+        if (email == null || email.equals("")) {
             return null;
         }
+        //! Falta ausencia de null para username y typeUser
         Instant exp = Instant.now(); // Momento actual
         return Jwts.builder()
-            .setSubject(sub)
+            .setSubject(email)
             .claim("username", username)
             .claim("typeUser", typeUser)
             .setIssuedAt(new Date(exp.toEpochMilli()))
@@ -83,7 +84,7 @@ public class JWTUtils {
     }
 
     // Extrae el sub (identificador) de un JWT válido
-    public String getUsernameFromJWT(String jwt) {
+    public String getEmailFromJWT(String jwt) {
         try {
             Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecret)

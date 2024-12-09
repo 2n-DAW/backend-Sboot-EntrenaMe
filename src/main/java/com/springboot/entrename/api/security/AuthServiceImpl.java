@@ -1,29 +1,27 @@
 package com.springboot.entrename.api.security;
 
 import com.springboot.entrename.domain.user.UserEntity;
-import com.springboot.entrename.domain.user.AdminEntity;
-import com.springboot.entrename.domain.user.ClientEntity;
-import com.springboot.entrename.domain.user.InstructorEntity;
 import com.springboot.entrename.domain.user.UserEntity.TypeUser;
+import com.springboot.entrename.domain.user.admin.AdminEntity;
+import com.springboot.entrename.domain.user.admin.AdminRepository;
+import com.springboot.entrename.domain.user.client.ClientEntity;
+import com.springboot.entrename.domain.user.client.ClientRepository;
+import com.springboot.entrename.domain.user.instructor.InstructorEntity;
+import com.springboot.entrename.domain.user.instructor.InstructorRepository;
 import com.springboot.entrename.api.user.UserDto;
+import com.springboot.entrename.api.security.jwt.JWTUtils;
 import com.springboot.entrename.api.user.UserAssembler;
-// import com.springboot.entrename.api.user.UserDto.UserWithToken;
 import com.springboot.entrename.domain.user.UserRepository;
-import com.springboot.entrename.domain.user.AdminRepository;
-import com.springboot.entrename.domain.user.ClientRepository;
-import com.springboot.entrename.domain.user.InstructorRepository;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
-
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
-// import java.util.List;
+;
 
 @Service
 @RequiredArgsConstructor
@@ -120,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
         var user = userRepository.findByEmail(login.getEmail())
             .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
         var token = jwtUtils.generateJWT(user.getEmail(), user.getUsername(), user.getTypeUser());
-        System.out.println("Token ========================================================\n" + token);
+        // System.out.println("Token ========================================================\n" + token);
 
     return userAssembler.toLoginResponse(user, token);
     }

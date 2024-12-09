@@ -1,5 +1,8 @@
 package com.springboot.entrename.api.user;
 
+import com.springboot.entrename.api.user.admin.AdminDto;
+import com.springboot.entrename.api.user.client.ClientDto;
+import com.springboot.entrename.api.user.instructor.InstructorDto;
 import com.springboot.entrename.domain.user.UserEntity.TypeUser;
 
 import lombok.*;

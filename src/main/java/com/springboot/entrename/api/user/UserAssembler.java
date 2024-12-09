@@ -1,9 +1,12 @@
 package com.springboot.entrename.api.user;
 
 import com.springboot.entrename.domain.user.UserEntity;
-import com.springboot.entrename.domain.user.AdminEntity;
-import com.springboot.entrename.domain.user.ClientEntity;
-import com.springboot.entrename.domain.user.InstructorEntity;
+import com.springboot.entrename.domain.user.admin.AdminEntity;
+import com.springboot.entrename.domain.user.client.ClientEntity;
+import com.springboot.entrename.domain.user.instructor.InstructorEntity;
+import com.springboot.entrename.api.user.admin.AdminDto;
+import com.springboot.entrename.api.user.client.ClientDto;
+import com.springboot.entrename.api.user.instructor.InstructorDto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
