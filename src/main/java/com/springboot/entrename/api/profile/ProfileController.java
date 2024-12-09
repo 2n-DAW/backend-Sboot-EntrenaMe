@@ -33,11 +33,4 @@ public class ProfileController {
         var profile = profileService.getProfile(username);
         return profileAssembler.toPublicProfileResponse(profile);
     }
-
-    // @PutMapping
-    // @CheckSecurity.Protected.canManage
-    // public ProfileDto updateProfile(@RequestBody @Valid ProfileDto.Update update) {;
-    //     var updateUser = userService.updateCurrentUser(update);
-    //     return profileAssembler.toUserResponse(updateUser);
-    // }
 }
