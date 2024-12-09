@@ -1,7 +1,8 @@
 package com.springboot.entrename.api.security;
 
-// import com.springboot.entrename.api.exception.CustomAuthenticationEntryPoint;
-// import com.springboot.entrename.api.exception.CustomAccessDeniedHandler;
+import com.springboot.entrename.api.exception.CustomAuthenticationEntryPoint;
+import com.springboot.entrename.api.security.jwt.JWTAuthFilter;
+import com.springboot.entrename.api.exception.CustomAccessDeniedHandler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,16 +18,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-// import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    // private final JWTAuthFilter jwtAuthFilter;
-    // private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    // private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final JWTAuthFilter jwtAuthFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     private static final String[] PUBLIC_READ_ENDPOINTS = {
             "/courts", "/courts/*", "/courts/**",
@@ -48,11 +49,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, PUBLIC_READ_ENDPOINTS).permitAll() // Permite acceso sin autenticación para GET a rutas públicas de lectura
                         .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
                 )
-                .anonymous(AbstractHttpConfigurer::disable); // Deshabilita el acceso anónimo a las rutas protegidas
-                // .exceptionHandling(handler -> handler
-                //     .accessDeniedHandler(customAccessDeniedHandler) // Maneja errores de autorización para el acceso (usuarios autenticados pero sin permisos)
-                //     .authenticationEntryPoint(customAuthenticationEntryPoint)); // Maneja errores de autenticación (usuarios no autenticados)
-                // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Añade un filtro de seguridad personalizado (JWT)
+                .anonymous(AbstractHttpConfigurer::disable) // Deshabilita el acceso anónimo a las rutas protegidas
+                .exceptionHandling(handler -> handler
+                    .accessDeniedHandler(customAccessDeniedHandler) // Maneja errores de autorización para el acceso (usuarios autenticados pero sin permisos)
+                    .authenticationEntryPoint(customAuthenticationEntryPoint)) // Maneja errores de autenticación (usuarios no autenticados)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Añade un filtro de seguridad personalizado (JWT)
 
         return http.build();
     }

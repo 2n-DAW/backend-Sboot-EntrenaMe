@@ -1,6 +1,8 @@
 package com.springboot.entrename.api.exception;
 
 import com.springboot.entrename.domain.exception.AppException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +20,13 @@ public class AppExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessages> handleGenericException(Exception exception) {
         return responseErrorMessages(
-                Map.of("error", "internal server error"), // Error code, Error message
+                Map.of("INTERNAL_SERVER_ERROR", "Error interno del servidor"), // Error code, Error message
                 HttpStatus.INTERNAL_SERVER_ERROR // Error http status
         );
     }
 
     // Maneja errores específicos
-    @ExceptionHandler(AppException.class)
+    @ExceptionHandler({AppException.class, AuthenticationException.class, AccessDeniedException.class})
     public ResponseEntity<ErrorMessages> handleAppException(AppException exception) {
         return responseErrorMessages(
             Map.of(exception.getError().name(), exception.getMessage()), // Error code, Error message
