@@ -1,4 +1,4 @@
-package com.springboot.entrename.api.user;
+package com.springboot.entrename.api.user.instructor;
 
 import lombok.*;
 import jakarta.validation.constraints.NotNull;

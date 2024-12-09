@@ -1,10 +1,12 @@
-package com.springboot.entrename.domain.user;
+package com.springboot.entrename.domain.user.admin;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+
+import com.springboot.entrename.domain.user.UserEntity;
 
 import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias para trabajar con JPA
 
