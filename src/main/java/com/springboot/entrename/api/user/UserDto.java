@@ -97,8 +97,8 @@ public class UserDto {
 
         @NotNull(message = "El nombre de usuario no puede ser nulo")
         @Pattern(
-            regexp = "[\\w\\d]{1,30}",
-            message = "El nombre de usuario debe tener entre 1 y 30 caracteres, y puede incluir mayúsculas, minúsculas, números y _"
+            regexp = "[\\w\\d]{3,15}",
+            message = "El nombre de usuario debe tener entre 3 y 15 caracteres, y puede incluir mayúsculas, minúsculas, números y _"
         )
         private String username;
 
@@ -170,8 +170,8 @@ public class UserDto {
 
         @Nullable
         @Pattern(
-            regexp = "[\\w\\d]{1,30}",
-            message = "El nombre de usuario debe tener entre 1 y 30 caracteres, y puede incluir mayúsculas, minúsculas, números y _"
+            regexp = "[\\w\\d]{3,15}",
+            message = "El nombre de usuario debe tener entre 3 y 15 caracteres, y puede incluir mayúsculas, minúsculas, números y _"
         )
         private String username;
 
