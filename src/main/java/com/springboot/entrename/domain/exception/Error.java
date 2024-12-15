@@ -10,6 +10,13 @@ public enum Error {
     // Errores de autenticación y autorización
     UNAUTHORIZED("Falta de credenciales o token inválido", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("Acceso denegado", HttpStatus.FORBIDDEN),
+    BLACKLISTED_TOKEN("Refresh Token ya existe en la Blacklist", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN("Refresh Token inválido", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN_SIGNATURE("Firma del Refresh Token inválida", HttpStatus.UNAUTHORIZED),
+    EXPIRED_TOKEN("Refresh Token expirado", HttpStatus.UNAUTHORIZED),
+    MALFORMED_TOKEN("Refresh Token mal formado", HttpStatus.UNAUTHORIZED),
+    UNSUPPORTED_TOKEN("Refresh Token no compatible", HttpStatus.UNAUTHORIZED),
+    ILLEGAL_ARGUMENT_TOKEN("Refresh Token está vacio o es nulo", HttpStatus.UNAUTHORIZED),
 
     // Errores de validación
     INVALID_INPUT("Entrada inválida", HttpStatus.BAD_REQUEST),
@@ -28,6 +35,8 @@ public enum Error {
     COURT_NOT_FOUND("Pista no encontrada", HttpStatus.NOT_FOUND),
     SPORT_NOT_FOUND("Deporte no encontrado", HttpStatus.NOT_FOUND),
     ACTIVITY_NOT_FOUND("Actividad no encontrada", HttpStatus.NOT_FOUND),
+    REFRESH_TOKEN_NOT_FOUND("Refresh Token no encontrado", HttpStatus.NOT_FOUND),
+    BLACKLIST_TOKEN_NOT_FOUND("Blacklist Token no encontrado", HttpStatus.NOT_FOUND),
     // FOLLOW_NOT_FOUND("such follow not found", HttpStatus.NOT_FOUND),
     // FAVORITE_NOT_FOUND("favorite not found", HttpStatus.NOT_FOUND),
 

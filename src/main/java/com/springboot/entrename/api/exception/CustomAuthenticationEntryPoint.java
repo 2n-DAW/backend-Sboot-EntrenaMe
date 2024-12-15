@@ -16,14 +16,26 @@ import java.io.IOException;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        AppException appException = new AppException(Error.UNAUTHORIZED);
+        AppException appException = getAppException(request, authException);
+        writeErrorResponse(response, appException);
+    }
 
+    private AppException getAppException(HttpServletRequest request, AuthenticationException authException) {
+        Object exceptionAttribute = request.getAttribute("APP_EXCEPTION");
+        if (exceptionAttribute instanceof AppException) {
+            return (AppException) exceptionAttribute;
+        } else if (authException.getCause() instanceof AppException) {
+            return (AppException) authException.getCause();
+        } else {
+            return new AppException(Error.UNAUTHORIZED);
+        }
+    }
+
+    private void writeErrorResponse(HttpServletResponse response, AppException appException) throws IOException {
         ErrorMessages errorMessages = new ErrorMessages();
         errorMessages.addError(appException.getError().name(), appException.getMessage());
-
         response.setStatus(appException.getError().getStatus().value());
         response.setContentType("application/json");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writerWithDefaultPrettyPrinter().writeValue(response.getWriter(), errorMessages);
+        new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(response.getWriter(), errorMessages);
     }
 }

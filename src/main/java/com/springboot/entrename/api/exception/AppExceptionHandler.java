@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class AppExceptionHandler {
     // Maneja errores genéricos
     @ExceptionHandler(Exception.class)
+    @ResponseBody
     public ResponseEntity<ErrorMessages> handleGenericException(Exception exception) {
         return responseErrorMessages(
                 Map.of("INTERNAL_SERVER_ERROR", "Error interno del servidor"), // Error code, Error message
@@ -27,6 +29,7 @@ public class AppExceptionHandler {
 
     // Maneja errores específicos
     @ExceptionHandler({AppException.class, AuthenticationException.class, AccessDeniedException.class})
+    @ResponseBody
     public ResponseEntity<ErrorMessages> handleAppException(AppException exception) {
         return responseErrorMessages(
             Map.of(exception.getError().name(), exception.getMessage()), // Error code, Error message
@@ -36,6 +39,7 @@ public class AppExceptionHandler {
 
     // Maneja errores de validación en los DTOs
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
     public ResponseEntity<ErrorMessages> handleValidationErrors(MethodArgumentNotValidException exception) {
         Map<String, String> fieldError = exception.getBindingResult().getFieldErrors().stream()
             .collect(Collectors.toMap(
