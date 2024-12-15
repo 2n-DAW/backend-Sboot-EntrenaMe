@@ -1,6 +1,8 @@
 package com.springboot.entrename.api.security.jwt;
 
 import com.springboot.entrename.domain.user.UserEntity.TypeUser;
+import com.springboot.entrename.domain.exception.AppException;
+import com.springboot.entrename.domain.exception.Error;
 
 import io.jsonwebtoken.Claims; // Representa el Payload de un JWT
 import io.jsonwebtoken.Jwts; // Para creación y validación de JWT
@@ -22,44 +24,54 @@ import java.util.Date; // Para trabajar con fechas tradicionales en Java
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 
-// Para debugear en consola
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Component
 public class JWTUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JWTUtils.class); // Para debugear en consola
-    private final Key jwtSecret;
-    private final Long jwtExpirationMs;
+    private final Key accessTokenKey;
+    private final Long accessTokenExpiration;
+    private final Key refreshTokenKey;
+    private final Long refreshTokenExpiration;
 
     // Constructor
-    public JWTUtils(@Value("${api.security.token.secret}") String secretKey, @Value("${api.security.token.expiration}") Long jwtExpirationMs) {
-        this.jwtExpirationMs = jwtExpirationMs;
-        this.jwtSecret = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    public JWTUtils(
+        @Value("${api.security.accesstoken.secret}") String accessKey,
+        @Value("${api.security.accesstoken.expiration}") Long accessExpiration,
+        @Value("${api.security.refreshtoken.secret}") String refreshKey,
+        @Value("${api.security.refreshtoken.expiration}") Long refreshExpiration
+    ) {
+        this.accessTokenKey = Keys.hmacShaKeyFor(accessKey.getBytes(StandardCharsets.UTF_8));
+        this.accessTokenExpiration = accessExpiration;
+        this.refreshTokenKey = Keys.hmacShaKeyFor(refreshKey.getBytes(StandardCharsets.UTF_8));
+        this.refreshTokenExpiration = refreshExpiration;
     }
 
     // Crea JWT
-    public String generateJWT(String email, String username, TypeUser typeUser) {
-        if (email == null || email.equals("")) {
-            return null;
+    public String generateJWT(Long idUser, String email, String username, TypeUser typeUser, String tokenType) {
+        if (idUser == null || email == null || email.isEmpty() || username == null || username.isEmpty() || typeUser == null) {
+            throw new AppException(Error.ILLEGAL_ARGUMENT_TOKEN);
         }
-        //! Falta ausencia de null para username y typeUser
+
+        Key key = "access".equals(tokenType) ? accessTokenKey : refreshTokenKey;
+        Long expiration = "access".equals(tokenType) ? accessTokenExpiration : refreshTokenExpiration;
+
         Instant exp = Instant.now(); // Momento actual
         return Jwts.builder()
-            .setSubject(email)
+            .setSubject(idUser.toString())
+            .claim("email", email)
             .claim("username", username)
             .claim("typeUser", typeUser)
             .setIssuedAt(new Date(exp.toEpochMilli()))
-            .setExpiration(new Date(exp.toEpochMilli() + jwtExpirationMs))
-            .signWith(jwtSecret,  SignatureAlgorithm.HS256)
+            .setExpiration(new Date(exp.toEpochMilli() + expiration))
+            .signWith(key, SignatureAlgorithm.HS256)
             .compact(); // Genera JWT serializado
     }
 
     // Valida JWT
-    public boolean validateJWT(String jwt) {
+    public boolean validateJWT(String jwt, String tokenType) {
         try {
+            Key key = "access".equals(tokenType) ? accessTokenKey : refreshTokenKey;
+
             Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt) // Analiza y valida el token JWT. Si el token es inválido lanza una JwtException
                 .getBody();
@@ -68,32 +80,45 @@ public class JWTUtils {
             return exp.after(Date.from(now)); // Devuelve boolean dependiendo si la f.expiración es posterior al momento actual
 
         } catch (SignatureException e) {
-            logger.error("La firma del token no es válida: " + e.getMessage());
+            throw new AppException(Error.INVALID_TOKEN_SIGNATURE);
         } catch (MalformedJwtException e) {
-            logger.error("El token está mal formado: " + e.getMessage());
+            throw new AppException(Error.MALFORMED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            logger.error("El token no es compatible: " + e.getMessage());
+            throw new AppException(Error.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            logger.error("El token está vacío o es nulo: " + e.getMessage());
+            throw new AppException(Error.ILLEGAL_ARGUMENT_TOKEN);
         } catch (ExpiredJwtException e) {
-            logger.error("El token ha expirado: " + e.getMessage());
+            throw new AppException(Error.EXPIRED_TOKEN);
         } catch (JwtException e) {
-            logger.error("Error general de JWT: " + e.getMessage());
+            throw new AppException(Error.INVALID_TOKEN);
         }
-        return false;
     }
 
     // Extrae el sub (identificador) de un JWT válido
-    public String getEmailFromJWT(String jwt) {
+    public String validateJwtAndgetEmail(String jwt, String tokenType) {
         try {
+            Key key = "access".equals(tokenType) ? accessTokenKey : refreshTokenKey;
+            
             Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
-            return claims.getSubject();
+
+            return claims.get("email", String.class);
+
+        } catch (SignatureException e) {
+            throw new AppException(Error.INVALID_TOKEN_SIGNATURE);
+        } catch (MalformedJwtException e) {
+            throw new AppException(Error.MALFORMED_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new AppException(Error.UNSUPPORTED_TOKEN);
+        } catch (IllegalArgumentException e) {
+            throw new AppException(Error.ILLEGAL_ARGUMENT_TOKEN);
+        } catch (ExpiredJwtException e) {
+            throw e; // Propaga esta excepción para manejarla en el filtro
         } catch (JwtException e) {
-            return null;
+            throw new AppException(Error.INVALID_TOKEN);
         }
     }
 }

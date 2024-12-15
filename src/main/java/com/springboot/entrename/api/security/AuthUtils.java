@@ -14,6 +14,15 @@ public class AuthUtils {
         return getAuthentication().getName();
     }
 
+    // public String getCurrentUserToken() {
+    //     var authentication = getAuthentication();
+    //     if (authentication != null && authentication.getCredentials() instanceof String) {
+    //         return (String) authentication.getCredentials();
+    //     }
+    
+    //     return null;
+    // }
+
     public boolean isAuthenticated() {
         return getAuthentication() != null;
     }
