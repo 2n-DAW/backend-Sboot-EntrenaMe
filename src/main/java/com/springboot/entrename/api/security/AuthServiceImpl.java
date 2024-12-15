@@ -2,16 +2,20 @@ package com.springboot.entrename.api.security;
 
 import com.springboot.entrename.domain.user.UserEntity;
 import com.springboot.entrename.domain.user.UserEntity.TypeUser;
+import com.springboot.entrename.api.user.UserDto;
+import com.springboot.entrename.api.user.UserAssembler;
+import com.springboot.entrename.domain.user.UserRepository;
 import com.springboot.entrename.domain.user.admin.AdminEntity;
 import com.springboot.entrename.domain.user.admin.AdminRepository;
 import com.springboot.entrename.domain.user.client.ClientEntity;
 import com.springboot.entrename.domain.user.client.ClientRepository;
 import com.springboot.entrename.domain.user.instructor.InstructorEntity;
 import com.springboot.entrename.domain.user.instructor.InstructorRepository;
-import com.springboot.entrename.api.user.UserDto;
+import com.springboot.entrename.domain.blacklistToken.BlacklistTokenEntity;
+import com.springboot.entrename.domain.blacklistToken.BlacklistTokenRepository;
+import com.springboot.entrename.domain.refreshToken.RefreshTokenEntity;
+import com.springboot.entrename.domain.refreshToken.RefreshTokenRepository;
 import com.springboot.entrename.api.security.jwt.JWTUtils;
-import com.springboot.entrename.api.user.UserAssembler;
-import com.springboot.entrename.domain.user.UserRepository;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 
@@ -21,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +33,13 @@ public class AuthServiceImpl implements AuthService {
     private final AdminRepository adminRepository;
     private final ClientRepository clientRepository;
     private final InstructorRepository instructorRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JWTUtils jwtUtils;
-    private final AuthenticationManager authenticationManager;
     private final UserAssembler userAssembler;
+    private final BlacklistTokenRepository blacklistTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JWTUtils jwtUtils;
+    private final AuthUtils authUtils;
 
     @Transactional
     @Override  // Indica que este método implementa la definición de la interfaz
@@ -108,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
     //         .orElseThrow(() -> new AppException(Error.LOGIN_INFO_INVALID));
     // }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public UserDto.UserWithToken login(final UserDto.Login login) {
         authenticationManager.authenticate(
@@ -117,9 +123,48 @@ public class AuthServiceImpl implements AuthService {
 
         var user = userRepository.findByEmail(login.getEmail())
             .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
-        var token = jwtUtils.generateJWT(user.getEmail(), user.getUsername(), user.getTypeUser());
-        // System.out.println("Token ========================================================\n" + token);
 
-    return userAssembler.toLoginResponse(user, token);
+        var accessToken = jwtUtils.generateJWT(user.getIdUser(), user.getEmail(), user.getUsername(), user.getTypeUser(), "access");
+        var refreshToken = jwtUtils.generateJWT(user.getIdUser(), user.getEmail(), user.getUsername(), user.getTypeUser(), "refresh");
+        // System.out.println("AccessToken ========================================================\n" + accessToken);
+        // System.out.println("RefreshToken ========================================================\n" + refreshToken);
+
+        // Inserta o actualiza el refreshToken en la base de datos
+        if (refreshToken != null && refreshToken != "") {
+            var existingToken = refreshTokenRepository.findByIdUser(user.getIdUser());
+            RefreshTokenEntity refreshTokenEntity = existingToken.orElse(
+                RefreshTokenEntity.builder()
+                    .idUser(user.getIdUser())
+                    .build()
+            );
+            refreshTokenEntity.setRefreshToken(refreshToken);
+            refreshTokenRepository.saveAndFlush(refreshTokenEntity);
+        }
+
+    return userAssembler.toLoginResponse(user, accessToken);
+    }
+
+    @Transactional()
+    @Override
+    public BlacklistTokenEntity saveBlacklistToken() {
+        if (authUtils.isAuthenticated()) {
+            var currentUser = userRepository.findByEmail(authUtils.getCurrentUserEmail()).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
+            Long idUser = currentUser.getIdUser();
+
+            var refreshTokenEntity = refreshTokenRepository.findByIdUser(idUser).orElseThrow(() -> new AppException(Error.REFRESH_TOKEN_NOT_FOUND));
+            String refresToken = refreshTokenEntity.getRefreshToken();
+
+            var blacklistToken  = blacklistTokenRepository.findByRefreshToken(refresToken);
+            // System.out.println("Token ========================================================\n" + refresToken);
+            // System.out.println("Query ========================================================\n" + blacklistToken);
+            if (blacklistToken.isEmpty()) {
+                BlacklistTokenEntity blacklistTokenEntity = BlacklistTokenEntity.builder()
+                    .refreshToken(refresToken)
+                    .build();
+                return blacklistTokenRepository.save(blacklistTokenEntity);
+            }
+        }
+
+        return null;
     }
 }

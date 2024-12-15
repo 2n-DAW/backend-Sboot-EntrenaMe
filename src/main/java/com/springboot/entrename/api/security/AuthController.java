@@ -1,12 +1,17 @@
 package com.springboot.entrename.api.security;
 
+import com.springboot.entrename.api.security.authorization.CheckSecurity;
 import com.springboot.entrename.api.user.UserAssembler;
 import com.springboot.entrename.api.user.UserDto;
+import com.springboot.entrename.domain.exception.AppException;
+import com.springboot.entrename.domain.exception.Error;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Map;
 import jakarta.validation.Valid;
 
 // Para debugear en consola
@@ -35,5 +40,20 @@ public class AuthController {
         var userWithToken  = authService.login(login);
         return userWithToken;
         
+    }
+
+    @PostMapping("/logout")
+    @CheckSecurity.Protected.canManage
+    public ResponseEntity<Map<String, String>> logout() {
+        var blacklistToken = authService.saveBlacklistToken();
+
+        if (blacklistToken != null) {
+            Map<String, String> response = Map.of(
+                "message", "RefreshToken guardado en la Blacklist"
+            );
+            return ResponseEntity.ok(response);
+        }
+
+        throw new AppException(Error.BLACKLISTED_TOKEN);
     }
 }
