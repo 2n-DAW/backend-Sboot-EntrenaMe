@@ -5,6 +5,7 @@ import com.springboot.entrename.api.user.UserAssembler;
 import com.springboot.entrename.api.user.UserDto;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
+import com.springboot.entrename.domain.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +38,31 @@ public class AuthController {
 
     @PostMapping("/login")
     public UserDto.UserWithToken login(@RequestBody @Valid UserDto.Login login) {
-        var userWithToken  = authService.login(login);
+        String typeUser = getTypeUser(login.getEmail());
+        // System.out.println("TypeUser ========================================================\n" + typeUser);
+
+        UserDto.UserWithToken userWithToken  = "client".equals(typeUser) ? clientLogin(login) : laravelLogin(login);
+        return userWithToken;
+    }
+
+    private String getTypeUser(String email) {
+        UserEntity user = authService.getTypeUser(email);
+        return user.getTypeUser().name();
+    }
+
+    private UserDto.UserWithToken clientLogin(@RequestBody @Valid UserDto.Login login) {
+        var userWithToken  = authService.clientLogin(login);
         return userWithToken;
         
+    }
+
+    private UserDto.UserWithToken laravelLogin(@RequestBody @Valid UserDto.Login login) {
+        try {
+            var userWithToken  = authService.laravelLogin(login);
+            return userWithToken;
+        } catch (Exception e) {
+            throw new AppException(Error.SERVICE_UNAVAILABLE);
+        }
     }
 
     @PostMapping("/logout")

@@ -134,6 +134,7 @@ public class UserDto {
     }
 
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     public static class UserWithToken {

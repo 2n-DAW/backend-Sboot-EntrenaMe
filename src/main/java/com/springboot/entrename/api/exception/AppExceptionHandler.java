@@ -27,6 +27,16 @@ public class AppExceptionHandler {
         );
     }
 
+    // Maneja errores transitorios
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessages> handleRuntimeException(RuntimeException exception) {
+        return responseErrorMessages(
+            Map.of("INTERNAL_SERVER_ERROR", exception.getMessage()), // Error code, Error message
+            HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
     // Maneja errores específicos
     @ExceptionHandler({AppException.class, AuthenticationException.class, AccessDeniedException.class})
     @ResponseBody

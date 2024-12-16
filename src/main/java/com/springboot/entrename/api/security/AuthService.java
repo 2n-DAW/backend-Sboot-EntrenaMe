@@ -8,7 +8,11 @@ public interface AuthService {
     // final indica que no se puede modificar dentro del cuerpo del método
     UserEntity register(final UserDto.Register register);
 
-    UserDto.UserWithToken login(final UserDto.Login login);
+    UserDto.UserWithToken clientLogin(final UserDto.Login login);
+
+    UserDto.UserWithToken laravelLogin(final UserDto.Login login);
+
+    UserEntity getTypeUser(String email);
 
     BlacklistTokenEntity saveBlacklistToken();
 }

@@ -15,16 +15,21 @@ import com.springboot.entrename.domain.blacklistToken.BlacklistTokenEntity;
 import com.springboot.entrename.domain.blacklistToken.BlacklistTokenRepository;
 import com.springboot.entrename.domain.refreshToken.RefreshTokenEntity;
 import com.springboot.entrename.domain.refreshToken.RefreshTokenRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.entrename.api.security.jwt.JWTUtils;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +45,11 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtils;
     private final AuthUtils authUtils;
+    private final RestClient restClient;
+
+    @Value("${laravel.api.endpoint}")
+    private String laravelEndpoint;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     @Override  // Indica que este método implementa la definición de la interfaz
@@ -116,7 +126,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional()
     @Override
-    public UserDto.UserWithToken login(final UserDto.Login login) {
+    public UserDto.UserWithToken clientLogin(final UserDto.Login login) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword())
         );
@@ -142,6 +152,36 @@ public class AuthServiceImpl implements AuthService {
         }
 
     return userAssembler.toLoginResponse(user, accessToken);
+    }
+
+    @Override
+    public UserDto.UserWithToken laravelLogin(final UserDto.Login login) {
+        try {
+            // Enviar las credenciales al endpoint de Laravel
+            ResponseEntity<Object> response = restClient.post()
+                .uri(laravelEndpoint + "/user/login")
+                .body(login) // Enviar el cuerpo de la petición con el DTO
+                .retrieve()
+                .toEntity(Object.class);
+    
+            // Si la solicitud no es exitosa o el cuerpo de la respuesta es nulo, lanza una excepción
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+                throw new AppException(Error.LOGIN_INFO_INVALID);
+            }
+
+            // Convertir la respuesta a UserWithToken
+            return objectMapper.convertValue(response.getBody(), UserDto.UserWithToken.class);
+
+        } catch (RestClientException exception) {
+            // throw new AppException(Error.SERVICE_UNAVAILABLE);
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @Transactional()
+    @Override
+    public UserEntity getTypeUser(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
     }
 
     @Transactional()

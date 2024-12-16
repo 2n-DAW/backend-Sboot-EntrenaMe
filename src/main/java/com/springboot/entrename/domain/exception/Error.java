@@ -41,7 +41,8 @@ public enum Error {
     // FAVORITE_NOT_FOUND("favorite not found", HttpStatus.NOT_FOUND),
 
     // Error genérico del servidor
-    INTERNAL_SERVER_ERROR("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR),
+    SERVICE_UNAVAILABLE("Error de conexión", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String message;
     private final HttpStatus status;
