@@ -11,12 +11,12 @@ public enum Error {
     UNAUTHORIZED("Falta de credenciales o token inválido", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("Acceso denegado", HttpStatus.FORBIDDEN),
     BLACKLISTED_TOKEN("Refresh Token ya existe en la Blacklist", HttpStatus.UNAUTHORIZED),
-    INVALID_TOKEN("Refresh Token inválido", HttpStatus.UNAUTHORIZED),
-    INVALID_TOKEN_SIGNATURE("Firma del Refresh Token inválida", HttpStatus.UNAUTHORIZED),
-    EXPIRED_TOKEN("Refresh Token expirado", HttpStatus.UNAUTHORIZED),
-    MALFORMED_TOKEN("Refresh Token mal formado", HttpStatus.UNAUTHORIZED),
-    UNSUPPORTED_TOKEN("Refresh Token no compatible", HttpStatus.UNAUTHORIZED),
-    ILLEGAL_ARGUMENT_TOKEN("Refresh Token está vacio o es nulo", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN("Token inválido", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN_SIGNATURE("Firma del Token inválida", HttpStatus.UNAUTHORIZED),
+    EXPIRED_TOKEN("Token expirado", HttpStatus.UNAUTHORIZED),
+    MALFORMED_TOKEN("Token mal formado", HttpStatus.UNAUTHORIZED),
+    UNSUPPORTED_TOKEN("Token no compatible", HttpStatus.UNAUTHORIZED),
+    ILLEGAL_ARGUMENT_TOKEN("Token está vacio o es nulo", HttpStatus.UNAUTHORIZED),
 
     // Errores de validación
     INVALID_INPUT("Entrada inválida", HttpStatus.BAD_REQUEST),

@@ -90,11 +90,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private void handleExpiredToken(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, ExpiredJwtException e) throws IOException, ServletException {
         // Busca el refreshToken asociado
         final String idUser = e.getClaims().getSubject();
+        final String typeUser = e.getClaims().get("typeUser", String.class);
         final String refreshToken = getRefreshToken(idUser);
         logger.info("Refresh Token: {}", refreshToken);
 
-        // Verifica que el refreshToken no esté en la blacklist
-        if (blacklistTokenService.isBlacklisted(refreshToken)) {
+        // Verifica para tipo de usuario client que el refreshToken no esté en la blacklist
+        if ("client".equals(typeUser) && blacklistTokenService.isBlacklisted(refreshToken)) {
             logger.warn("Intento de uso de Blacklist Token: {}", refreshToken);
             handleAppException(request, response,filterChain, new AppException(Error.BLACKLISTED_TOKEN));
             return;
@@ -104,7 +105,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         try {
             jwtUtils.validateJWT(refreshToken, "refresh");
         } catch (AppException ex) {
-            blacklistTokenService.saveBlacklistToken(refreshToken);
+            if ("client".equals(typeUser)) blacklistTokenService.saveBlacklistToken(refreshToken);
             logger.warn("Refresh Token inválido: {}", refreshToken);
             handleAppException(request, response, filterChain, ex);
             return;
