@@ -10,10 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.entrename.api.security.AuthUtils;
 import com.springboot.entrename.api.security.UserDetailsServiceImpl;
 
@@ -23,9 +21,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
 import java.io.IOException;
-import java.util.Map;
 
 import com.springboot.entrename.domain.exception.Error;
 import org.slf4j.Logger;
@@ -56,8 +52,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         final String accessToken = authHeader.substring(TOKEN_PREFIX.length());
 
         try {
-            validateAccessToken(request, accessToken);
-            filterChain.doFilter(request, response);
+            validateAccessToken(request, response, filterChain, accessToken);
         } catch (ExpiredJwtException e) {
             handleExpiredToken(request, response, filterChain, e);
         } catch (AppException e) {
@@ -71,73 +66,85 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private void validateAccessToken(HttpServletRequest request, String accessToken) {
+    private void validateAccessToken(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken) throws IOException, ServletException {
         // Validación del token y obtención del email
         String email = jwtUtils.validateJwtAndgetEmail(accessToken, "access");
 
+        // Si el access token es valido y el contexto de seguridad no esta configurado, establece la autenticación
         if (email != null && !authUtils.isAuthenticated()) {
-            var userDetails = userDetailsServiceImpl.loadUserByUsername(email);
-
-            // Establece la autenticación en el contexto de seguridad
-            if (userDetails != null) {
-                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            configureAuthentication(request, email);
         }
+
+        filterChain.doFilter(request, response);
     }
 
     private void handleExpiredToken(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, ExpiredJwtException e) throws IOException, ServletException {
-        // Busca el refreshToken asociado
         final String idUser = e.getClaims().getSubject();
+        final String email = e.getClaims().get("email", String.class);
         final String typeUser = e.getClaims().get("typeUser", String.class);
-        final String refreshToken = getRefreshToken(idUser);
-        logger.info("Refresh Token: {}", refreshToken);
 
-        // Verifica para tipo de usuario client que el refreshToken no esté en la blacklist
-        if ("client".equals(typeUser) && blacklistTokenService.isBlacklisted(refreshToken)) {
-            logger.warn("Intento de uso de Blacklist Token: {}", refreshToken);
-            handleAppException(request, response,filterChain, new AppException(Error.BLACKLISTED_TOKEN));
-            return;
+        if ("client".equals(typeUser)) {
+            // Busca el refreshToken asociado
+            final String refreshToken = getRefreshToken(idUser);
+            // logger.info("Refresh Token: {}", refreshToken);
+
+            // Verifica que el refreshToken no esté en la blacklist
+            if (blacklistTokenService.isBlacklisted(refreshToken)) {
+                logger.warn("Intento de uso de Blacklist Token: {}", refreshToken);
+                handleAppException(request, response,filterChain, new AppException(Error.BLACKLISTED_TOKEN));
+                return;
+            }
+
+            // Valida el Refresh Token
+            try {
+                jwtUtils.validateJWT(refreshToken, "refresh");
+            } catch (AppException ex) {
+                if ("client".equals(typeUser)) blacklistTokenService.saveBlacklistToken(refreshToken);
+                logger.warn("Refresh Token inválido: {}", refreshToken);
+                handleAppException(request, response, filterChain, ex);
+                return;
+            }
+
+            // Genera un nuevo access token
+            var newAccessToken = jwtUtils.generateJWT(
+                Long.parseLong(idUser),
+                e.getClaims().get("email", String.class),
+                e.getClaims().get("username", String.class),
+                TypeUser.valueOf(typeUser),
+                "access"
+            );
+            logger.info("New Access Token generado: {}", newAccessToken);
+
+            // Configura la autenticación
+            configureAuthentication(request, email);
+
+            // Agrega el nuevo Access Token como encabezado
+            response.setHeader("New-Access-Token", newAccessToken);
+
+            // Continúa con el flujo normal
+            filterChain.doFilter(request, response);
         }
+    }
 
-        // Valida el Refresh Token
-        try {
-            jwtUtils.validateJWT(refreshToken, "refresh");
-        } catch (AppException ex) {
-            if ("client".equals(typeUser)) blacklistTokenService.saveBlacklistToken(refreshToken);
-            logger.warn("Refresh Token inválido: {}", refreshToken);
-            handleAppException(request, response, filterChain, ex);
-            return;
+    private void configureAuthentication(HttpServletRequest request, String email) {
+        // Carga los detalles del usuario
+        var userDetails = userDetailsServiceImpl.loadUserByUsername(email);
+        
+        // Establece la autenticación en el contexto de seguridad
+        if (userDetails != null) {
+            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
-        generateAndSendNewAccessToken(response, idUser, e);
+    }
+    
+    private void handleAppException(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, AppException e) throws IOException, ServletException {
+        request.setAttribute("APP_EXCEPTION", e);
+        filterChain.doFilter(request, response);
     }
 
     private String getRefreshToken(String idUser) {
         var refreshTokenEntity = refreshTokenService.getRefreshToken(Long.parseLong(idUser));
         return refreshTokenEntity.getRefreshToken();
-    }
-
-    private void generateAndSendNewAccessToken(HttpServletResponse response, String idUser, ExpiredJwtException e) throws IOException {
-        var newAccessToken = jwtUtils.generateJWT(
-            Long.parseLong(idUser),
-            e.getClaims().get("email", String.class),
-            e.getClaims().get("username", String.class),
-            TypeUser.valueOf(e.getClaims().get("typeUser", String.class)),
-            "access"
-        );
-        logger.info("New Access Token: {}", newAccessToken);
-
-        // Escribe la respuesta y termina el procesamiento
-        response.setHeader("New-Access-Token", newAccessToken);
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType("application/json");
-        new ObjectMapper().writeValue(response.getWriter(), Map.of("message", "Nuevo Access Token generado"));
-    }
-
-    private void handleAppException(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, AppException e) throws IOException, ServletException {
-        request.setAttribute("APP_EXCEPTION", e);
-        filterChain.doFilter(request, response);
     }
 }
