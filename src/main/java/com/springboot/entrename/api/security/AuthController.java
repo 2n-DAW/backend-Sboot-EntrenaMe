@@ -47,7 +47,7 @@ public class AuthController {
 
     private String getTypeUser(String email) {
         UserEntity user = authService.getTypeUser(email);
-        return user.getTypeUser().name();
+        return user.getType_user().name();
     }
 
     private UserDto.UserWithToken clientLogin(@RequestBody @Valid UserDto.Login login) {

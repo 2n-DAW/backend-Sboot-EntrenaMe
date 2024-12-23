@@ -86,7 +86,7 @@ public class SportAssembler {
     private ActivityDto toActivityResponse(ActivityEntity activityEntity) {
         return ActivityDto.builder()
             .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
+            .id_user_instructor(activityEntity.getIdUserInstructor().getId_user())
             .id_sport(activityEntity.getIdSport().getIdSport())
             .n_activity(activityEntity.getNameActivity())
             .description(activityEntity.getDescription())

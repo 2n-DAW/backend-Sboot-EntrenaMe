@@ -19,15 +19,15 @@ public class AdminEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_admin")
-    private Long idAdmin;
+    private Long id_admin;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", referencedColumnName = "id_user", nullable = false)
-    private UserEntity idUser;
+    private UserEntity id_user;
     
     @Builder
-    public AdminEntity(Long idAdmin, UserEntity idUser) {
-        this.idAdmin = idAdmin;
-        this.idUser = idUser;
+    public AdminEntity(Long id_admin, UserEntity id_user) {
+        this.id_admin = id_admin;
+        this.id_user = id_user;
     }
 }

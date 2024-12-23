@@ -19,11 +19,11 @@ public class InstructorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_instructor")
-    private Long idInstructor;
+    private Long id_instructor;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", referencedColumnName = "id_user", nullable = false)
-    private UserEntity idUser;
+    private UserEntity id_user;
 
     @Column(name = "nif", length = 255)
     private String nif;
@@ -35,9 +35,9 @@ public class InstructorEntity {
     private String address;
     
     @Builder
-    public InstructorEntity(Long idInstructor, UserEntity idUser, String nif, String tlf, String address) {
-        this.idInstructor = idInstructor;
-        this.idUser = idUser;
+    public InstructorEntity(Long id_instructor, UserEntity id_user, String nif, String tlf, String address) {
+        this.id_instructor = id_instructor;
+        this.id_user = id_user;
         this.nif = nif;
         this.tlf = tlf;
         this.address = address;

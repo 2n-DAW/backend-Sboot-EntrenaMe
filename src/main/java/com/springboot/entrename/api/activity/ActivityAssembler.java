@@ -51,7 +51,7 @@ public class ActivityAssembler {
     public ActivityDto toActivityResponse(ActivityEntity activityEntity) {
         return ActivityDto.builder()
             .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
+            .id_user_instructor(activityEntity.getIdUserInstructor().getId_user())
             .id_sport(activityEntity.getIdSport().getIdSport())
             .n_activity(activityEntity.getNameActivity())
             .description(activityEntity.getDescription())
@@ -66,7 +66,7 @@ public class ActivityAssembler {
     public ActivityDto toActivityWithInstructorAndSportResponse(ActivityEntity activityEntity) {
         return ActivityDto.builder()
             .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
+            .id_user_instructor(activityEntity.getIdUserInstructor().getId_user())
             .id_sport(activityEntity.getIdSport().getIdSport())
             .n_activity(activityEntity.getNameActivity())
             .description(activityEntity.getDescription())
@@ -82,12 +82,12 @@ public class ActivityAssembler {
 
     private UserDto toUserResponse(UserEntity userEntity) {
         return UserDto.builder()
-            .id_user(userEntity.getIdUser())
-            .img_user(userEntity.getImgUser())
+            .id_user(userEntity.getId_user())
+            .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
             .password(userEntity.getPassword())
-            .type_user(userEntity.getTypeUser())
+            .type_user(userEntity.getType_user())
             .build();
     }
 

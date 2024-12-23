@@ -19,11 +19,11 @@ public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_client")
-    private Long idClient;
+    private Long id_client;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", referencedColumnName = "id_user", nullable = false)
-    private UserEntity idUser;
+    private UserEntity id_user;
 
     @Column(name = "nif", length = 255)
     private String nif;
@@ -32,9 +32,9 @@ public class ClientEntity {
     private String tlf;
     
     @Builder
-    public ClientEntity(Long idClient, UserEntity idUser, String nif, String tlf) {
-        this.idClient = idClient;
-        this.idUser = idUser;
+    public ClientEntity(Long id_client, UserEntity id_user, String nif, String tlf) {
+        this.id_client = id_client;
+        this.id_user = id_user;
         this.nif = nif;
         this.tlf = tlf;
     }
