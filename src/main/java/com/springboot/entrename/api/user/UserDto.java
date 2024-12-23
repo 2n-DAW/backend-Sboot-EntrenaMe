@@ -26,9 +26,18 @@ public class UserDto {
     @NotNull
     private String username;
     @NotNull
+    private String name;
+    @NotNull
+    private String surname;
+    private Integer age;
+    private String bio;
+    @NotNull
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
     @NotNull
     private TypeUser type_user;
+    private Integer is_active;
+    private Integer is_deleted;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private AdminDto admin;
@@ -38,54 +47,6 @@ public class UserDto {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private InstructorDto instructor;
-
-    // @Getter
-    // @Setter
-    // @AllArgsConstructor
-    // @Builder
-    // public static class Client {
-    //     private Long id_user;
-    //     private String img_user;
-    //     @NotNull
-    //     private String email;
-    //     @NotNull
-    //     private String username;
-    //     @NotNull
-    //     private String password;
-    //     @NotNull
-    //     private TypeUser type_user;
-    //     @NotNull
-    //     private Long id_client;
-    //     @Nullable
-    //     private String nif;
-    //     @Nullable
-    //     private String tlf;
-    // }
-
-    // @Getter
-    // @Setter
-    // @AllArgsConstructor
-    // @Builder
-    // public static class Instructor {
-    //     private Long id_user;
-    //     private String img_user;
-    //     @NotNull
-    //     private String email;
-    //     @NotNull
-    //     private String username;
-    //     @NotNull
-    //     private String password;
-    //     @NotNull
-    //     private TypeUser type_user;
-    //     @NotNull
-    //     private Long id_instructor;
-    //     @Nullable
-    //     private String nif;
-    //     @Nullable
-    //     private String tlf;
-    //     @Nullable
-    //     private String address;
-    // }
 
     @Getter
     @AllArgsConstructor
@@ -102,6 +63,16 @@ public class UserDto {
         )
         private String username;
 
+        @NotNull(message = "El nombre proppio del usuario no puede ser nulo")
+        private String name;
+
+        @NotNull(message = "Los apellidos del usuario no pueden ser nulos")
+        private String surname;
+
+        private Integer age;
+
+        private String bio;
+
         @NotBlank(message = "La contraseña no puede ser nula o vacía")
         @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,32}$",
@@ -110,7 +81,7 @@ public class UserDto {
         private String password;
 
         @NotNull(message = "El tipo de usuario no puede ser nulo")
-        private TypeUser typeUser;
+        private TypeUser type_user;
 
         private AdminDto admin;
         private ClientDto client;
@@ -142,8 +113,14 @@ public class UserDto {
         private String img_user;
         private String email;
         private String username;
+        private String name;
+        private String surname;
+        private Integer age;
+        private String bio;
         private String password;
         private TypeUser type_user;
+        private Integer is_active;
+        private Integer is_deleted;
         private String token;
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private AdminDto admin;
@@ -175,6 +152,16 @@ public class UserDto {
             message = "El nombre de usuario debe tener entre 3 y 15 caracteres, y puede incluir mayúsculas, minúsculas, números y _"
         )
         private String username;
+
+        @NotNull(message = "El nombre proppio del usuario no puede ser nulo")
+        private String name;
+
+        @NotNull(message = "Los apellidos del usuario no pueden ser nulos")
+        private String surname;
+
+        private Integer age;
+
+        private String bio;
 
         @Nullable
         @Pattern(

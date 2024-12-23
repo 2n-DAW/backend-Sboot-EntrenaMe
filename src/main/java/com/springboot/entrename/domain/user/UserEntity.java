@@ -29,10 +29,10 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
-    private Long idUser;
+    private Long id_user;
 
     @Column(name = "img_user", length = 255)
-    private String imgUser;
+    private String img_user;
 
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
@@ -40,33 +40,51 @@ public class UserEntity {
     @Column(name = "username", nullable = false, unique = true, length = 255)
     private String username;
 
+    @Column(name = "name", nullable = false, length = 255)
+    private String name;
+
+    @Column(name = "surname", nullable = false, length = 255)
+    private String surname;
+
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "bio", length = 500)
+    private String bio;
+
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type_user", nullable = false)
-    private TypeUser typeUser;
+    private TypeUser type_user;
+
+    @Column(name = "is_active", columnDefinition = "TINYINT") 
+    private Integer is_active;
+
+    @Column(name = "is_deleted", columnDefinition = "TINYINT") 
+    private Integer is_deleted;
 
     @OneToOne(
-        mappedBy = "idUser",
+        mappedBy = "id_user",
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true)
-    private AdminEntity idAdmin;
+    private AdminEntity id_admin;
 
     @OneToOne(
-        mappedBy = "idUser",
+        mappedBy = "id_user",
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true)
-    private ClientEntity idClient;
+    private ClientEntity id_client;
 
     @OneToOne(
-        mappedBy = "idUser",
+        mappedBy = "id_user",
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true)
-    private InstructorEntity idInstructor;
+    private InstructorEntity id_instructor;
 
     public enum TypeUser {
         admin, client, instructor
@@ -79,12 +97,31 @@ public class UserEntity {
     private List<ActivityEntity> activities = new ArrayList<>();
 
     @Builder
-    public UserEntity(Long idUser, String imgUser, String email, String username, String password, TypeUser typeUser) {
-        this.idUser = idUser;
-        this.imgUser = imgUser;
+    public UserEntity(
+        Long id_user,
+        String img_user,
+        String email,
+        String username,
+        String name,
+        String surname,
+        Integer age,
+        String bio,
+        String password,
+        TypeUser type_user,
+        Integer is_active,
+        Integer is_deleted
+    ){
+        this.id_user = id_user;
+        this.img_user = img_user;
         this.email = email;
         this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.bio = bio;
         this.password = password;
-        this.typeUser = typeUser;
+        this.type_user = type_user;
+        this.is_active = is_active;
+        this.is_deleted = is_deleted;
     }
 }

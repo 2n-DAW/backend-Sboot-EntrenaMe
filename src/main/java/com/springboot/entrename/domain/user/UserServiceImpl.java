@@ -40,22 +40,38 @@ public class UserServiceImpl implements UserService {
         var currentUser = getByEmail(authUtils.getCurrentUserEmail());
 
         if (update.getImg_user() != null) {
-            currentUser.setImgUser(update.getImg_user());
+            currentUser.setImg_user(update.getImg_user());
         }
 
         //! Todas las busquedas hay que hacerlas con Id, y sub token con Id para evitar conflicto al cambiar email
         if (update.getEmail() != null) {
             userRepository.findByEmail(update.getEmail())
-                .filter(found -> !found.getIdUser().equals(currentUser.getIdUser()))
+                .filter(found -> !found.getId_user().equals(currentUser.getId_user()))
                 .ifPresent(found -> {throw new AppException(Error.DUPLICATED_EMAIL);});
             currentUser.setEmail(update.getEmail());
         }
 
         if (update.getUsername() != null) {
             userRepository.findByUsername(update.getUsername())
-                .filter(found -> !found.getIdUser().equals(currentUser.getIdUser()))
+                .filter(found -> !found.getId_user().equals(currentUser.getId_user()))
                 .ifPresent(found -> {throw new AppException(Error.DUPLICATED_USERNAME);});
             currentUser.setUsername(update.getUsername());
+        }
+
+        if (update.getName() != null) {
+            currentUser.setName(update.getName());
+        }
+
+        if (update.getSurname() != null) {
+            currentUser.setSurname(update.getSurname());
+        }
+
+        if (update.getAge() != null) {
+            currentUser.setAge(update.getAge());
+        }
+
+        if (update.getBio() != null) {
+            currentUser.setBio(update.getBio());
         }
 
         if (update.getPassword() != null) {

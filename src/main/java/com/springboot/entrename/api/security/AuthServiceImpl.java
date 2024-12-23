@@ -70,47 +70,53 @@ public class AuthServiceImpl implements AuthService {
         UserEntity.UserEntityBuilder builder = UserEntity.builder()
             .username(register.getUsername())
             .email(register.getEmail())
+            .name(register.getName())
+            .surname(register.getSurname())
+            .age(register.getAge())
+            .bio(register.getBio())
             .password(passwordEncoder.encode(register.getPassword()))
-            .typeUser(register.getTypeUser());
+            .type_user(register.getType_user())
+            .is_active(0)
+            .is_deleted(0);
     
         // Dependiendo del tipo de usuario, establece el nombre de archivo de la imagen
-        if (register.getTypeUser() == TypeUser.admin) builder.imgUser("admin.jpg");
-        if (register.getTypeUser() == TypeUser.client) builder.imgUser("client.jpg");
-        if (register.getTypeUser() == TypeUser.instructor) builder.imgUser("instructor.jpg");
+        if (register.getType_user() == TypeUser.admin) builder.img_user("admin.jpg");
+        if (register.getType_user() == TypeUser.client) builder.img_user("client.jpg");
+        if (register.getType_user() == TypeUser.instructor) builder.img_user("instructor.jpg");
     
         // Guarda el usuario en la base de datos
         UserEntity savedUser = userRepository.save(builder.build());
         
         // Asigna el usuario al admin, dependiendo del tipo de usuario
-        if (register.getTypeUser() == TypeUser.admin) {
+        if (register.getType_user() == TypeUser.admin) {
             AdminEntity adminEntity = AdminEntity.builder()
-                .idUser(savedUser)
+                .id_user(savedUser)
                 .build();
             adminRepository.save(adminEntity);
-            savedUser.setIdAdmin(adminEntity); // Asignar el admin al user
+            savedUser.setId_admin(adminEntity); // Asignar el admin al user
         }
 
         // Asigna el usuario al cliente y añade sus datos, dependiendo del tipo de usuario
-        if (register.getTypeUser() == TypeUser.client && register.getClient() != null) {
+        if (register.getType_user() == TypeUser.client && register.getClient() != null) {
             ClientEntity clientEntity = ClientEntity.builder()
-                .idUser(savedUser)
+                .id_user(savedUser)
                 .nif(register.getClient().getNif())
                 .tlf(register.getClient().getTlf())
                 .build();
             clientRepository.save(clientEntity);
-            savedUser.setIdClient(clientEntity); // Asignar el client al user
+            savedUser.setId_client(clientEntity); // Asignar el client al user
         }
 
         // Asigna el usuario al instructor y añade sus datos, dependiendo del tipo de usuario
-        if (register.getTypeUser() == TypeUser.instructor && register.getInstructor() != null) {
+        if (register.getType_user() == TypeUser.instructor && register.getInstructor() != null) {
             InstructorEntity instructorEntity = InstructorEntity.builder()
-                .idUser(savedUser)
+                .id_user(savedUser)
                 .nif(register.getInstructor().getNif())
                 .tlf(register.getInstructor().getTlf())
                 .address(register.getInstructor().getAddress())
                 .build();
             instructorRepository.save(instructorEntity);
-            savedUser.setIdInstructor(instructorEntity); // Asignar el instructor al user
+            savedUser.setId_instructor(instructorEntity); // Asignar el instructor al user
         }
 
         return savedUser;
@@ -134,17 +140,23 @@ public class AuthServiceImpl implements AuthService {
         var user = userRepository.findByEmail(login.getEmail())
             .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
 
-        var accessToken = jwtUtils.generateJWT(user.getIdUser(), user.getEmail(), user.getUsername(), user.getTypeUser(), "access");
-        var refreshToken = jwtUtils.generateJWT(user.getIdUser(), user.getEmail(), user.getUsername(), user.getTypeUser(), "refresh");
-        // System.out.println("AccessToken ========================================================\n" + accessToken);
-        // System.out.println("RefreshToken ========================================================\n" + refreshToken);
+        // Si el usuario no está activo, lo activa
+        if (user.getIs_active() == 0) {
+            user.setIs_active(1);
+            userRepository.save(user);
+        }
+
+        var accessToken = jwtUtils.generateJWT(user.getId_user(), user.getEmail(), user.getUsername(), user.getType_user(), "access");
+        var refreshToken = jwtUtils.generateJWT(user.getId_user(), user.getEmail(), user.getUsername(), user.getType_user(), "refresh");
+        System.out.println("AccessToken ========================================================\n" + accessToken);
+        System.out.println("RefreshToken ========================================================\n" + refreshToken);
 
         // Inserta o actualiza el refreshToken en la base de datos
         if (refreshToken != null && refreshToken != "") {
-            var existingToken = refreshTokenRepository.findByIdUser(user.getIdUser());
+            var existingToken = refreshTokenRepository.findByIdUser(user.getId_user());
             RefreshTokenEntity refreshTokenEntity = existingToken.orElse(
                 RefreshTokenEntity.builder()
-                    .idUser(user.getIdUser())
+                    .idUser(user.getId_user())
                     .build()
             );
             refreshTokenEntity.setRefreshToken(refreshToken);
@@ -189,7 +201,7 @@ public class AuthServiceImpl implements AuthService {
     public BlacklistTokenEntity saveBlacklistToken() {
         if (authUtils.isAuthenticated()) {
             var currentUser = userRepository.findByEmail(authUtils.getCurrentUserEmail()).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
-            Long idUser = currentUser.getIdUser();
+            Long idUser = currentUser.getId_user();
 
             var refreshTokenEntity = refreshTokenRepository.findByIdUser(idUser).orElseThrow(() -> new AppException(Error.REFRESH_TOKEN_NOT_FOUND));
             String refresToken = refreshTokenEntity.getRefreshToken();

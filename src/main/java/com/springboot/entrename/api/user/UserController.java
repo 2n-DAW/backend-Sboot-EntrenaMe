@@ -21,7 +21,7 @@ public class UserController {
     @CheckSecurity.Protected.canManage
     public UserDto getCurrentUser() {
         var currentUser = userService.getCurrentUser();
-        return userAssembler.toUserResponse(currentUser);
+        return userAssembler.toCurrentUserResponse(currentUser);
     }
 
     @PutMapping

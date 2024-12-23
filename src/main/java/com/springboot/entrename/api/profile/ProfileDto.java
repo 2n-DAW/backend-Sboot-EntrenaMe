@@ -22,6 +22,14 @@ public class ProfileDto {
     private String email;
     @NotNull
     private String username;
+    @NotNull
+    private String name;
+    @NotNull
+    private String surname;
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer age;
+    private String bio;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private AdminDto admin;
