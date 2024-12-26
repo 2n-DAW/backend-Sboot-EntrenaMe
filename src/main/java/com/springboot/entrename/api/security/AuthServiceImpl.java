@@ -128,23 +128,16 @@ public class AuthServiceImpl implements AuthService {
         return savedUser;
     }
 
-    // @Transactional(readOnly = true)
-    // @Override
-    // public UserEntity login(final UserDto.Login login) {
-    //     return userRepository.findByEmail(login.getEmail())
-    //         .filter(user -> passwordEncoder.matches(login.getPassword(), user.getPassword()))
-    //         .orElseThrow(() -> new AppException(Error.LOGIN_INFO_INVALID));
-    // }
-
     @Transactional()
     @Override
     public UserDto.UserWithToken clientLogin(final UserDto.Login login) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword())
-        );
-
+        
         var user = userRepository.findByEmail(login.getEmail())
             .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+            throw new AppException(Error.PASSWORD_INVALID);
+        }
 
         // Si el usuario no está activo, lo activa
         if (user.getIs_active() == 0) {

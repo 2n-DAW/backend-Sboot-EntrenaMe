@@ -21,12 +21,12 @@ public enum Error {
     // Errores de validación
     INVALID_INPUT("Entrada inválida", HttpStatus.BAD_REQUEST),
 
-    // Errores de conflicto
+    // Errores de negocio
     DUPLICATED_USERNAME("El nombre de usuario ya está en uso. Introduce otro", HttpStatus.UNPROCESSABLE_ENTITY),
     DUPLICATED_EMAIL("El correo electrónico ya está en uso. Introduce otro", HttpStatus.UNPROCESSABLE_ENTITY),
-
-    // Errores de negocio
+    PASSWORD_INVALID("La contraseña en el login no es válida", HttpStatus.UNPROCESSABLE_ENTITY),
     LOGIN_INFO_INVALID("Los datos del login no son correctos", HttpStatus.UNPROCESSABLE_ENTITY),
+    ACTIVITY_FULL("No quedan plazas en la actividad", HttpStatus.UNPROCESSABLE_ENTITY),
     // ALREADY_FOLLOWED_USER("already followed user", HttpStatus.UNPROCESSABLE_ENTITY),
     // ALREADY_FAVORITED_ARTICLE("already followed user", HttpStatus.UNPROCESSABLE_ENTITY),
 
