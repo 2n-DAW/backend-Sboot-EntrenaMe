@@ -31,13 +31,16 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_READ_ENDPOINTS = {
             "/courts", "/courts/*", "/courts/**",
+            "/courtsHours", "/courtsHours/*", "/courtsHours/**",
             "/sports", "/sports/*", "/sports/**",
             "/activities", "/activities/*", "/activities/**",
-            "/profiles", "/profiles/*", "/profiles/**"
+            "/profiles", "/profiles/*", "/profiles/**",
+            "/hours", "/hours/*", "/hours/**",
+            "/months", "/months/*", "/months/**"
     };
 
     private static final String[] PUBLIC_WRITE_ENDPOINTS = {
-            "/users/register", "/users/login"
+            "/users/register", "/users/login",
     };
 
     @Bean

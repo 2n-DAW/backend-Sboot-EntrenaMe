@@ -80,7 +80,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private void handleExpiredToken(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, ExpiredJwtException e) throws IOException, ServletException {
         final String idUser = e.getClaims().getSubject();
-        final String email = e.getClaims().get("email", String.class);
+        final String expiredAccessTokenEmail = e.getClaims().get("email", String.class);
         final String typeUser = e.getClaims().get("typeUser", String.class);
 
         if ("client".equals(typeUser)) {
@@ -91,13 +91,20 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             // Verifica que el refreshToken no esté en la blacklist
             if (blacklistTokenService.isBlacklisted(refreshToken)) {
                 logger.warn("Intento de uso de Blacklist Token: {}", refreshToken);
-                handleAppException(request, response,filterChain, new AppException(Error.BLACKLISTED_TOKEN));
+                handleAppException(request, response, filterChain, new AppException(Error.BLACKLISTED_TOKEN));
                 return;
             }
 
             // Valida el Refresh Token
             try {
-                jwtUtils.validateJWT(refreshToken, "refresh");
+                if (jwtUtils.validateJWT(refreshToken, "refresh")) {
+                    final String refreshTokenEmail = jwtUtils.validateJwtAndgetEmail(refreshToken, "refresh");
+                    if (!refreshTokenEmail.equals(expiredAccessTokenEmail)) {
+                        logger.warn("Refresh Token inválido: {}", refreshToken);
+                        handleAppException(request, response, filterChain, new AppException(Error.INVALID_TOKEN));
+                        return;
+                    }
+                }
             } catch (AppException ex) {
                 if ("client".equals(typeUser)) blacklistTokenService.saveBlacklistToken(refreshToken);
                 logger.warn("Refresh Token inválido: {}", refreshToken);
@@ -116,7 +123,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             logger.info("New Access Token generado: {}", newAccessToken);
 
             // Configura la autenticación
-            configureAuthentication(request, email);
+            configureAuthentication(request, expiredAccessTokenEmail);
 
             // Agrega el nuevo Access Token como encabezado
             response.setHeader("New-Access-Token", newAccessToken);
