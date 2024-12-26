@@ -1,7 +1,7 @@
 package com.springboot.entrename.domain.hour;
 
-import com.springboot.entrename.domain.court.CourtHourEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.springboot.entrename.domain.courtHour.CourtHourEntity;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class HourEntity {
     private String slotHour;
 
     @OneToMany(
-        mappedBy = "idHour",
+        mappedBy = "id_hour",
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL
     )

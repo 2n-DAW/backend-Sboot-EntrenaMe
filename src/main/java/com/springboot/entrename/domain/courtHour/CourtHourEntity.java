@@ -1,11 +1,10 @@
-package com.springboot.entrename.domain.court;
+package com.springboot.entrename.domain.courtHour;
 
+import com.springboot.entrename.domain.court.CourtEntity;
 import com.springboot.entrename.domain.hour.HourEntity;
 import com.springboot.entrename.domain.month.MonthEntity;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-// Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -27,31 +26,39 @@ public class CourtHourEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_court", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private CourtEntity idCourt;
+    private CourtEntity id_court;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hour", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private HourEntity idHour;
+    private HourEntity id_hour;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_month", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private MonthEntity idMonth;
+    private MonthEntity id_month;
 
     @Column(name = "day_number", nullable = false)
-    private int dayNumber;
+    private int day_number;
+
+    @Column(name = "year", nullable = false)
+    private int year;
 
     @Column(name = "slug_court_hour")
-    private String slugCourtHour;
+    private String slug_court_hour;
+
+    @Column(name = "available", columnDefinition = "TINYINT") 
+    private Integer available;
     
     @Builder
-    public CourtHourEntity(Long idCourtHour, CourtEntity idCourt, HourEntity idHour, MonthEntity idMonth, int dayNumber, String slugCourtHour) {
+    public CourtHourEntity(Long idCourtHour, CourtEntity id_court, HourEntity id_hour, MonthEntity id_month, int day_number, int year, String slug_court_hour, Integer available) {
         this.idCourtHour = idCourtHour;
-        this.idCourt = idCourt;
-        this.idHour = idHour;
-        this.idMonth = idMonth;
-        this.dayNumber = dayNumber;
-        this.slugCourtHour = slugCourtHour;
+        this.id_court = id_court;
+        this.id_hour = id_hour;
+        this.id_month = id_month;
+        this.day_number = day_number;
+        this.year = year;
+        this.slug_court_hour = slug_court_hour;
+        this.available = available;
     }
 }

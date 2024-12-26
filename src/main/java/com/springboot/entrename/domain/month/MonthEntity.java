@@ -1,7 +1,7 @@
 package com.springboot.entrename.domain.month;
 
-import com.springboot.entrename.domain.court.CourtHourEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.springboot.entrename.domain.courtHour.CourtHourEntity;
 
 // Lombok es una librería de Java que ayuda a reducir el código repetitivo
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class MonthEntity {
     private String slugMonth;
 
     @OneToMany(
-        mappedBy = "idMonth",
+        mappedBy = "id_month",
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL
     )

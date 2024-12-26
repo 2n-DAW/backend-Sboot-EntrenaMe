@@ -1,5 +1,6 @@
 package com.springboot.entrename.domain.court;
 
+import com.springboot.entrename.domain.courtHour.CourtHourEntity;
 import com.springboot.entrename.domain.sport.SportEntity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -56,7 +57,7 @@ public class CourtEntity {
     private Set<SportEntity> sports = new HashSet<>();
 
     @OneToMany(
-        mappedBy = "idCourt", // mappedBy desgina propietario de la relación
+        mappedBy = "id_court", // mappedBy desgina propietario de la relación
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL // cascade mantiene la integridad referencial entre tablas
     )
