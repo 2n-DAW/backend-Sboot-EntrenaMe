@@ -1,8 +1,13 @@
 package com.springboot.entrename.domain.activity;
 
 import com.springboot.entrename.domain.user.UserEntity;
+import com.springboot.entrename.domain.inscription.InscriptionEntity;
 import com.springboot.entrename.domain.sport.SportEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -58,6 +63,10 @@ public class ActivityEntity {
 
     @Column(name = "slug_activity", length = 255)
     private String slugActivity;
+
+    @OneToMany(mappedBy = "id_activity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<InscriptionEntity> inscriptions = new ArrayList<>();
 
     @Builder
     public ActivityEntity(

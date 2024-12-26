@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<ActivityEntity, Long>, JpaSpecificationExecutor<ActivityEntity> {
-    Optional<ActivityEntity> findBySlugActivity(String slugCourt);
+    Optional<ActivityEntity> findBySlugActivity(String slug);
 }
