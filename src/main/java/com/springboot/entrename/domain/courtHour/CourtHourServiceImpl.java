@@ -34,8 +34,8 @@ public class CourtHourServiceImpl implements CourtHourService {
     public List<CourtHourEntity> getAvailableCourtsHours(Long id_court) {
         int year = LocalDate.now().getYear();
         // System.err.println("year ============================================ " + year);
-        int currentMonth = LocalDate.now().getMonth().getValue();
-        int nextMonth = currentMonth == 12 ? 1 : currentMonth++;
+        int currentMonth = LocalDate.now().getMonth().getValue()-1;
+        int nextMonth = currentMonth == 11 ? 1 : currentMonth++;
         List<Long> months = List.of((long) currentMonth, (long) nextMonth);
         // System.err.println("currentMonth ============================================ " + currentMonth);
         // System.err.println("nextMonth ============================================ " + nextMonth);
