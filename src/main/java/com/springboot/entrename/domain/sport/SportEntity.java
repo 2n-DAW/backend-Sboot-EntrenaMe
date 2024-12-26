@@ -50,7 +50,7 @@ public class SportEntity {
     private Set<CourtEntity> courts = new HashSet<>();
 
     @OneToMany(
-        mappedBy = "idSport", // mappedBy desgina propietario de la relación
+        mappedBy = "idSport", // mappedBy indica entidad no propietaria de la relación
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL // cascade mantiene la integridad referencial entre tablas
     )

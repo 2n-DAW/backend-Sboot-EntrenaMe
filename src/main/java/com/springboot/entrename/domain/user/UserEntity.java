@@ -4,6 +4,8 @@ import com.springboot.entrename.domain.activity.ActivityEntity;
 import com.springboot.entrename.domain.user.admin.AdminEntity;
 import com.springboot.entrename.domain.user.client.ClientEntity;
 import com.springboot.entrename.domain.user.instructor.InstructorEntity;
+import com.springboot.entrename.domain.booking.BookingEntity;
+import com.springboot.entrename.domain.inscription.InscriptionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -90,11 +92,19 @@ public class UserEntity {
         admin, client, instructor
     }
 
-    // mappedBy desgina propietario de la relación
+    // mappedBy indica entidad no propietaria de la relación
     // cascade mantiene la integridad referencial entre tablas
     @OneToMany(mappedBy = "idUserInstructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference // Marca este lado como "referencia inversa"
     private List<ActivityEntity> activities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<BookingEntity> bookings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "id_user_client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<InscriptionEntity> inscriptions = new ArrayList<>();
 
     @Builder
     public UserEntity(

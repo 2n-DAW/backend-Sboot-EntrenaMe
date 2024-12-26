@@ -33,8 +33,12 @@ public enum Error {
     // Errores de recursos no encontrados
     USER_NOT_FOUND("Usuario no encontrado", HttpStatus.NOT_FOUND),
     COURT_NOT_FOUND("Pista no encontrada", HttpStatus.NOT_FOUND),
+    COURT_HOUR_NOT_FOUND("Horario de pista no encontrado", HttpStatus.NOT_FOUND),
+    COURT_HOUR_NOT_AVAILABLE("Horario de pista no disponible", HttpStatus.NOT_FOUND),
     SPORT_NOT_FOUND("Deporte no encontrado", HttpStatus.NOT_FOUND),
     ACTIVITY_NOT_FOUND("Actividad no encontrada", HttpStatus.NOT_FOUND),
+    BOOKING_NOT_FOUND("Reserva de pista no encontrada", HttpStatus.NOT_FOUND),
+    INSCRIPTION_NOT_FOUND("Inscripción de actividad no encontrada", HttpStatus.NOT_FOUND),
     REFRESH_TOKEN_NOT_FOUND("Refresh Token no encontrado", HttpStatus.NOT_FOUND),
     BLACKLIST_TOKEN_NOT_FOUND("Blacklist Token no encontrado", HttpStatus.NOT_FOUND),
     // FOLLOW_NOT_FOUND("such follow not found", HttpStatus.NOT_FOUND),
