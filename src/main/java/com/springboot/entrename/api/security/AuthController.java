@@ -57,12 +57,8 @@ public class AuthController {
     }
 
     private UserDto.UserWithToken laravelLogin(@RequestBody @Valid UserDto.Login login) {
-        try {
-            var userWithToken  = authService.laravelLogin(login);
-            return userWithToken;
-        } catch (Exception e) {
-            throw new AppException(Error.SERVICE_UNAVAILABLE);
-        }
+        var userWithToken  = authService.laravelLogin(login);
+        return userWithToken;
     }
 
     @PostMapping("/logout")

@@ -87,11 +87,11 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- Dependencia de Spring Security para codificación de contraseñas -->
-		<!-- <dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-		</dependency> -->
+		<!-- Spring Webflux proporciona el soporte para WebClient -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
 		<!-- Hot Reload para desarrollo -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
