@@ -7,19 +7,20 @@ import com.springboot.entrename.domain.user.UserEntity.TypeUser;
 
 import lombok.*;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 // import com.fasterxml.jackson.annotation.JsonTypeInfo;
 // import com.fasterxml.jackson.annotation.JsonTypeName;
 
 // import java.util.List;
-import jakarta.validation.constraints.*;
+import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
 public class UserDto {
-    private Long id_user;
+    private UUID id_user;
     private String img_user;
     @NotNull
     private String email;
@@ -109,7 +110,7 @@ public class UserDto {
     @AllArgsConstructor
     @Builder
     public static class UserWithToken {
-        private Long id_user;
+        private UUID id_user;
         private String img_user;
         private String email;
         private String username;

@@ -6,16 +6,16 @@ import com.springboot.entrename.api.user.instructor.InstructorDto;
 
 import lombok.*;
 import jakarta.annotation.Nullable;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
 public class ProfileDto {
-    private Long id_user;
+    private UUID id_user;
     private String img_user;
     @NotNull
     @JsonInclude(JsonInclude.Include.NON_NULL)

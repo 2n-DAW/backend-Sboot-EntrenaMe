@@ -1,6 +1,7 @@
 package com.springboot.entrename.api.security;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthUtils {
-    public Long getCurrentUserId() {
+    public UUID getCurrentUserId() {
         return getUserDetails().getId();
     }
 

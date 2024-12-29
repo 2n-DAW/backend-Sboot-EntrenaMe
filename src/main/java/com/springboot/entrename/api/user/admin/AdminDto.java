@@ -2,6 +2,7 @@ package com.springboot.entrename.api.user.admin;
 
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,5 +11,5 @@ import jakarta.validation.constraints.NotNull;
 public class AdminDto {
     private Long id_admin;
     @NotNull
-    private Long id_user;
+    private UUID id_user;
 }

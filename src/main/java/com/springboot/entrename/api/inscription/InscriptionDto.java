@@ -5,14 +5,14 @@ import com.springboot.entrename.api.activity.ActivityDto;
 
 import lombok.*;
 // import jakarta.annotation.Nullable;
-
+import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 // import com.fasterxml.jackson.annotation.JsonTypeInfo;
 // import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import jakarta.validation.constraints.*;
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,7 +21,7 @@ import java.util.List;
 public class InscriptionDto {
     private Long id_inscription;
     @NotNull
-    private Long id_user_client;
+    private UUID id_user_client;
     @NotNull
     private Long id_activity;
     @NotNull

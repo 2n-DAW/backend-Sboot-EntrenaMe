@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import java.util.List;
 public class ActivityDto {
     private Long id_activity;
     @NotNull
-    private Long id_user_instructor;
+    private UUID id_user_instructor;
     @NotNull
     private Long id_sport;
     @NotNull
@@ -27,6 +28,7 @@ public class ActivityDto {
     private String slot_hour;
     private String img_activity;
     private int spots;
+    private int spots_available;
     private String slug_activity;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserDto instructor;
@@ -59,5 +61,7 @@ public class ActivityDto {
         private String img_activity;
         @Nullable
         private int spots;
+        @Nullable
+        private int spots_available;
     }
 }

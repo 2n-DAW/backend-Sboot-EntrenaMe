@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import java.util.List;
 public class BookingDto {
     private Long id_booking;
     @NotNull
-    private Long id_user;
+    private UUID id_user;
     @NotNull
     private Long id_count_hours;
     @NotNull

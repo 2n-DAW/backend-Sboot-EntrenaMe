@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class UserAssembler {
     public UserDto toUserResponse(UserEntity userEntity) {
         return UserDto.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
@@ -36,7 +36,7 @@ public class UserAssembler {
 
     public UserDto.UserWithToken toLoginResponse(UserEntity userEntity, String token) {
         return UserDto.UserWithToken.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
@@ -57,7 +57,7 @@ public class UserAssembler {
 
     public UserDto toCurrentUserResponse(UserEntity userEntity) {
         return UserDto.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
@@ -78,7 +78,7 @@ public class UserAssembler {
     private AdminDto toAdminResponse(AdminEntity adminEntity) {
         return AdminDto.builder()
             .id_admin(adminEntity.getId_admin())
-            .id_user(adminEntity.getId_user().getId_user())
+            .id_user(adminEntity.getId_user().getIdUser())
             .build();
     }
 
@@ -86,7 +86,7 @@ public class UserAssembler {
     private ClientDto toClientResponse(ClientEntity clientEntity) {
         return ClientDto.builder()
             .id_client(clientEntity.getId_client())
-            .id_user(clientEntity.getId_user().getId_user())
+            .id_user(clientEntity.getId_user().getIdUser())
             .nif(clientEntity.getNif())
             .tlf(clientEntity.getTlf())
             .build();
@@ -96,7 +96,7 @@ public class UserAssembler {
     private InstructorDto toInstructorResponse(InstructorEntity instructorEntity) {
         return InstructorDto.builder()
             .id_instructor(instructorEntity.getId_instructor())
-            .id_user(instructorEntity.getId_user().getId_user())
+            .id_user(instructorEntity.getId_user().getIdUser())
             .nif(instructorEntity.getNif())
             .tlf(instructorEntity.getTlf())
             .address(instructorEntity.getAddress())

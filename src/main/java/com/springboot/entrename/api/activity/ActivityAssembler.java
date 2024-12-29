@@ -51,7 +51,7 @@ public class ActivityAssembler {
     public ActivityDto toActivityResponse(ActivityEntity activityEntity) {
         return ActivityDto.builder()
             .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getId_user())
+            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
             .id_sport(activityEntity.getIdSport().getIdSport())
             .n_activity(activityEntity.getNameActivity())
             .description(activityEntity.getDescription())
@@ -59,6 +59,7 @@ public class ActivityAssembler {
             .slot_hour(activityEntity.getSlotHour())
             .img_activity(activityEntity.getImgActivity())
             .spots(activityEntity.getSpots())
+            .spots_available(activityEntity.getSpots_available())
             .slug_activity(activityEntity.getSlugActivity())
             .build();
     }
@@ -66,7 +67,7 @@ public class ActivityAssembler {
     public ActivityDto toActivityWithInstructorAndSportResponse(ActivityEntity activityEntity) {
         return ActivityDto.builder()
             .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getId_user())
+            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
             .id_sport(activityEntity.getIdSport().getIdSport())
             .n_activity(activityEntity.getNameActivity())
             .description(activityEntity.getDescription())
@@ -74,6 +75,7 @@ public class ActivityAssembler {
             .slot_hour(activityEntity.getSlotHour())
             .img_activity(activityEntity.getImgActivity())
             .spots(activityEntity.getSpots())
+            .spots_available(activityEntity.getSpots_available())
             .slug_activity(activityEntity.getSlugActivity())
             .instructor(toUserResponse(activityEntity.getIdUserInstructor()))
             .sport(toSportResponse(activityEntity.getIdSport()))
@@ -82,7 +84,7 @@ public class ActivityAssembler {
 
     private UserDto toUserResponse(UserEntity userEntity) {
         return UserDto.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())

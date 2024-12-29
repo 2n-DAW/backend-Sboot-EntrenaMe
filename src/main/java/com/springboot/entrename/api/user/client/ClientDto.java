@@ -3,6 +3,7 @@ package com.springboot.entrename.api.user.client;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,7 +12,7 @@ import jakarta.annotation.Nullable;
 public class ClientDto {
     private Long id_client;
     @NotNull
-    private Long id_user;
+    private UUID id_user;
     private String nif;
     private String tlf;
 

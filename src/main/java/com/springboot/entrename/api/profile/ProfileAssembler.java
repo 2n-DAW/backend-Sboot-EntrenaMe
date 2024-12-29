@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class ProfileAssembler {
     public ProfileDto toProfileResponse(UserEntity userEntity) {
         return ProfileDto.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
@@ -32,7 +32,7 @@ public class ProfileAssembler {
 
     public ProfileDto toPublicProfileResponse(UserEntity userEntity) {
         return ProfileDto.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .username(userEntity.getUsername())
             .name(userEntity.getName())
@@ -45,7 +45,7 @@ public class ProfileAssembler {
     private AdminDto toAdminProfileResponse(AdminEntity adminEntity) {
         return AdminDto.builder()
             .id_admin(adminEntity.getId_admin())
-            .id_user(adminEntity.getId_user().getId_user())
+            .id_user(adminEntity.getId_user().getIdUser())
             .build();
     }
 
@@ -53,7 +53,7 @@ public class ProfileAssembler {
     private ClientDto toClientProfileResponse(ClientEntity clientEntity) {
         return ClientDto.builder()
             .id_client(clientEntity.getId_client())
-            .id_user(clientEntity.getId_user().getId_user())
+            .id_user(clientEntity.getId_user().getIdUser())
             .nif(clientEntity.getNif())
             .tlf(clientEntity.getTlf())
             .build();
@@ -63,7 +63,7 @@ public class ProfileAssembler {
     private InstructorDto toInstructorProfileResponse(InstructorEntity instructorEntity) {
         return InstructorDto.builder()
             .id_instructor(instructorEntity.getId_instructor())
-            .id_user(instructorEntity.getId_user().getId_user())
+            .id_user(instructorEntity.getId_user().getIdUser())
             .nif(instructorEntity.getNif())
             .tlf(instructorEntity.getTlf())
             .address(instructorEntity.getAddress())

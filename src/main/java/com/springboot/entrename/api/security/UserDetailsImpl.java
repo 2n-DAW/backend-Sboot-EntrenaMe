@@ -4,9 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public class UserDetailsImpl implements UserDetails {
-    private Long id;
+    private UUID id;
     private String username;
     private String email;
     private String password;
@@ -14,7 +15,7 @@ public class UserDetailsImpl implements UserDetails {
 
     // Constructor
     public UserDetailsImpl(
-        Long id,
+        UUID id,
         String username,
         String email,
         String password, 
@@ -28,7 +29,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     // Métodos adicionales para acceder a los datos personalizados
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

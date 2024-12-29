@@ -3,6 +3,7 @@ package com.springboot.entrename.api.user.instructor;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.annotation.Nullable;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,7 +12,7 @@ import jakarta.annotation.Nullable;
 public class InstructorDto {
     private Long id_instructor;
     @NotNull
-    private Long id_user;
+    private UUID id_user;
     private String nif;
     private String tlf;
     private String address;

@@ -18,6 +18,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import java.security.Key; // Representa la clave de firma de un JWT
 import java.time.Instant; // Maneja marcas de tiempo actuales en UTC
 import java.util.Date; // Para trabajar con fechas tradicionales en Java
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class JWTUtils {
     }
 
     // Crea JWT
-    public String generateJWT(Long idUser, String email, String username, TypeUser typeUser, String tokenType) {
+    public String generateJWT(UUID idUser, String email, String username, TypeUser typeUser, String tokenType) {
         if (idUser == null || email == null || email.isEmpty() || username == null || username.isEmpty() || typeUser == null) {
             throw new AppException(Error.ILLEGAL_ARGUMENT_TOKEN);
         }

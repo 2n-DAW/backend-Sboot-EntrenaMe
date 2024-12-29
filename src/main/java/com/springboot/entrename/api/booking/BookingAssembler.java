@@ -51,7 +51,7 @@ public class BookingAssembler {
     public BookingDto toBookingResponse(BookingEntity bookingEntity) {
         return BookingDto.builder()
             .id_booking(bookingEntity.getId_booking())
-            .id_user(bookingEntity.getIdUser().getId_user())
+            .id_user(bookingEntity.getIdUser().getIdUser())
             .id_count_hours(bookingEntity.getId_count_hours().getIdCourtHour())
             .date(bookingEntity.getDate())
             .is_deleted(bookingEntity.getIsDeleted())
@@ -62,7 +62,7 @@ public class BookingAssembler {
     public BookingDto toBookingWithUserAndCourtHourResponse(BookingEntity bookingEntity) {
         return BookingDto.builder()
             .id_booking(bookingEntity.getId_booking())
-            .id_user(bookingEntity.getIdUser().getId_user())
+            .id_user(bookingEntity.getIdUser().getIdUser())
             .id_count_hours(bookingEntity.getId_count_hours().getIdCourtHour())
             .date(bookingEntity.getDate())
             .is_deleted(bookingEntity.getIsDeleted())
@@ -74,7 +74,7 @@ public class BookingAssembler {
 
     private UserDto toUserResponse(UserEntity userEntity) {
         return UserDto.builder()
-            .id_user(userEntity.getId_user())
+            .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())

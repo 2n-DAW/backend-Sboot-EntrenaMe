@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Builder;
 
 import jakarta.persistence.*;
+import java.util.UUID;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -26,14 +30,15 @@ public class RefreshTokenEntity {
     @Column(name = "id_refresh")
     private Long idRefresh;
 
+    @JdbcTypeCode(SqlTypes.VARCHAR) // Usa VARCHAR para almacenar el UUID como texto
     @Column(name = "id_user", nullable = false)
-    private Long idUser;
+    private UUID idUser;
 
     @Column(name = "refresh_token", nullable = false, length = 500)
     private String refreshToken;
 
     @Builder
-    public RefreshTokenEntity(Long idRefresh, Long idUser, String refreshToken) {
+    public RefreshTokenEntity(Long idRefresh, UUID idUser, String refreshToken) {
         this.idRefresh = idRefresh;
         this.idUser = idUser;
         this.refreshToken = refreshToken;

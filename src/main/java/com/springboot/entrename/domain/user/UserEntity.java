@@ -19,6 +19,10 @@ import lombok.Builder;
 import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias para trabajar con JPA
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -28,10 +32,16 @@ import java.util.List;
 // Identificador único. Hace que otras entidades puedan referenciar a esta y viceversa sin entrar en bucle en la serialización
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idUser")
 public class UserEntity {
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @Column(name = "id_user")
+    // private Long idUser;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JdbcTypeCode(SqlTypes.VARCHAR) // Usa VARCHAR para almacenar el UUID como texto
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_user")
-    private Long id_user;
+    private UUID idUser;
 
     @Column(name = "img_user", length = 255)
     private String img_user;
@@ -92,6 +102,12 @@ public class UserEntity {
         admin, client, instructor
     }
 
+    public void generateUUID() {
+        if (this.idUser == null) {
+            this.idUser = UUID.randomUUID();
+        }
+    }
+
     // mappedBy indica entidad no propietaria de la relación
     // cascade mantiene la integridad referencial entre tablas
     @OneToMany(mappedBy = "idUserInstructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -102,13 +118,13 @@ public class UserEntity {
     @JsonBackReference
     private List<BookingEntity> bookings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id_user_client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "idUserClient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<InscriptionEntity> inscriptions = new ArrayList<>();
 
     @Builder
     public UserEntity(
-        Long id_user,
+        UUID idUser,
         String img_user,
         String email,
         String username,
@@ -121,7 +137,7 @@ public class UserEntity {
         Integer is_active,
         Integer is_deleted
     ){
-        this.id_user = id_user;
+        this.idUser = idUser;
         this.img_user = img_user;
         this.email = email;
         this.username = username;

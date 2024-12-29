@@ -26,6 +26,7 @@ import java.io.IOException;
 import com.springboot.entrename.domain.exception.Error;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -114,7 +115,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
             // Genera un nuevo access token
             var newAccessToken = jwtUtils.generateJWT(
-                Long.parseLong(idUser),
+                UUID.fromString(idUser),
                 e.getClaims().get("email", String.class),
                 e.getClaims().get("username", String.class),
                 TypeUser.valueOf(typeUser),
@@ -151,7 +152,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     }
 
     private String getRefreshToken(String idUser) {
-        var refreshTokenEntity = refreshTokenService.getRefreshToken(Long.parseLong(idUser));
+        var refreshTokenEntity = refreshTokenService.getRefreshToken(UUID.fromString(idUser));
         return refreshTokenEntity.getRefreshToken();
     }
 }
