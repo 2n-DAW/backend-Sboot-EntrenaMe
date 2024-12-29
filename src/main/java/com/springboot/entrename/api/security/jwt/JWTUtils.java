@@ -6,7 +6,6 @@ import com.springboot.entrename.domain.exception.Error;
 
 import io.jsonwebtoken.Claims; // Representa el Payload de un JWT
 import io.jsonwebtoken.Jwts; // Para creación y validación de JWT
-import io.jsonwebtoken.security.Keys; // Genera claves de firma para JWT
 
  // Para generar excepciones de JWTs no válidos
 import io.jsonwebtoken.JwtException;
@@ -16,13 +15,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.ExpiredJwtException;
 
-import java.nio.charset.StandardCharsets; // Define el conjunto de caracteres UTF-8
 import java.security.Key; // Representa la clave de firma de un JWT
 import java.time.Instant; // Maneja marcas de tiempo actuales en UTC
 import java.util.Date; // Para trabajar con fechas tradicionales en Java
 
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class JWTUtils {
@@ -32,16 +30,17 @@ public class JWTUtils {
     private final Long refreshTokenExpiration;
 
     // Constructor
+    @Autowired
     public JWTUtils(
-        @Value("${api.security.accesstoken.secret}") String accessKey,
-        @Value("${api.security.accesstoken.expiration}") Long accessExpiration,
-        @Value("${api.security.refreshtoken.secret}") String refreshKey,
-        @Value("${api.security.refreshtoken.expiration}") Long refreshExpiration
+        Key accessTokenKey,
+        Long accessTokenExpiration,
+        Key refreshTokenKey,
+        Long refreshTokenExpiration
     ) {
-        this.accessTokenKey = Keys.hmacShaKeyFor(accessKey.getBytes(StandardCharsets.UTF_8));
-        this.accessTokenExpiration = accessExpiration;
-        this.refreshTokenKey = Keys.hmacShaKeyFor(refreshKey.getBytes(StandardCharsets.UTF_8));
-        this.refreshTokenExpiration = refreshExpiration;
+        this.accessTokenKey = accessTokenKey;
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenKey = refreshTokenKey;
+        this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
     // Crea JWT
