@@ -1,8 +1,7 @@
 package com.springboot.entrename.api.court;
 
 import com.springboot.entrename.domain.court.CourtEntity;
-import com.springboot.entrename.domain.sport.SportEntity;
-import com.springboot.entrename.api.sport.SportDto;
+import com.springboot.entrename.api.sport.SportAssembler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CourtAssembler {
+    private final SportAssembler sportAssembler;
+
     public CourtDto.CourtWrapper toCourtsList(List<CourtEntity> courtEntities) {
         var content = courtEntities.stream()
             .map(this::toCourtResponse)
@@ -47,34 +48,29 @@ public class CourtAssembler {
     }
 
     public CourtDto toCourtResponse(CourtEntity courtEntity) {
-        return CourtDto.builder()
-            .id_court(courtEntity.getIdCourt())
-            .n_court(courtEntity.getNameCourt())
-            .img_court(courtEntity.getImgCourt())
-            .slug_court(courtEntity.getSlugCourt())
-            .build();
+        return buildCourt(courtEntity, false);
     }
 
     public CourtDto toCourtWithSportResponse(CourtEntity courtEntity) {
-        return CourtDto.builder()
+        return buildCourt(courtEntity, true);
+    }
+
+    private CourtDto buildCourt(CourtEntity courtEntity, boolean detailed) {
+        CourtDto.CourtDtoBuilder builder = CourtDto.builder()
             .id_court(courtEntity.getIdCourt())
             .n_court(courtEntity.getNameCourt())
             .img_court(courtEntity.getImgCourt())
-            .slug_court(courtEntity.getSlugCourt())
-            .sports(courtEntity.getSports().stream()
-                .sorted((sport1, sport2) -> sport1.getIdSport().compareTo(sport2.getIdSport())) // Orden ascendente por id
-                .map(this::toSportResponse)
-                .toList())
-            .build();
-    }
+            .slug_court(courtEntity.getSlugCourt());
 
-    private SportDto toSportResponse(SportEntity sportEntity) {
-        return SportDto.builder()
-            .id_sport(sportEntity.getIdSport())
-            .n_sport(sportEntity.getNameSport())
-            .img_sport(sportEntity.getImgSport())
-            .slug_sport(sportEntity.getSlugSport())
-            .build();
+        if (detailed) {
+            builder
+                .sports(courtEntity.getSports().stream()
+                    .sorted((sport1, sport2) -> sport1.getIdSport().compareTo(sport2.getIdSport())) // Orden ascendente por id
+                    .map(sportAssembler::toSportResponse)
+                    .toList());
+        }
+
+        return builder.build();
     }
 
     private CourtDto.CourtWrapper buildResponse(List<CourtDto> courts, Number totalCourts) {

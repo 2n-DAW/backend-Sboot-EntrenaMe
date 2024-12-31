@@ -15,48 +15,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserAssembler {
     public UserDto toUserResponse(UserEntity userEntity) {
-        return UserDto.builder()
-            .id_user(userEntity.getIdUser())
-            .img_user(userEntity.getImg_user())
-            .email(userEntity.getEmail())
-            .username(userEntity.getUsername())
-            .name(userEntity.getName())
-            .surname(userEntity.getSurname())
-            .age(userEntity.getAge())
-            .bio(userEntity.getBio())
-            .password(userEntity.getPassword())
-            .type_user(userEntity.getTypeUser())
-            .is_active(userEntity.getIs_active())
-            .is_deleted(userEntity.getIs_deleted())
-            .admin(userEntity.getId_admin() != null ? toAdminResponse(userEntity.getId_admin()) : null) // Mapear datos del admin
-            .client(userEntity.getId_client() != null ? toClientResponse(userEntity.getId_client()) : null) // Mapear datos del cliente
-            .instructor(userEntity.getId_instructor() != null ? toInstructorResponse(userEntity.getId_instructor()) : null) // Mapear datos del instructor
-            .build();
+        return buildUser(userEntity, "user", null);
     }
 
-    public UserDto.UserWithToken toLoginResponse(UserEntity userEntity, String token) {
-        return UserDto.UserWithToken.builder()
-            .id_user(userEntity.getIdUser())
-            .img_user(userEntity.getImg_user())
-            .email(userEntity.getEmail())
-            .username(userEntity.getUsername())
-            .name(userEntity.getName())
-            .surname(userEntity.getSurname())
-            .age(userEntity.getAge())
-            .bio(userEntity.getBio())
-            .password(userEntity.getPassword())
-            .type_user(userEntity.getTypeUser())
-            .is_active(userEntity.getIs_active())
-            .is_deleted(userEntity.getIs_deleted())
-            .token(token != null ? token : null)
-            .admin(userEntity.getId_admin() != null ? toAdminResponse(userEntity.getId_admin()) : null) // Mapear datos del admin
-            .client(userEntity.getId_client() != null ? toClientResponse(userEntity.getId_client()) : null) // Mapear datos del cliente
-            .instructor(userEntity.getId_instructor() != null ? toInstructorResponse(userEntity.getId_instructor()) : null) // Mapear datos del instructor
-            .build();
+    public UserDto toLoginResponse(UserEntity userEntity, String token) {
+        return buildUser(userEntity, "login", token);
     }
 
-    public UserDto toCurrentUserResponse(UserEntity userEntity) {
-        return UserDto.builder()
+    public UserDto toUserWithoutPassResponse(UserEntity userEntity) {
+        return buildUser(userEntity, "withoutPass", null);
+    }
+
+    private UserDto buildUser(UserEntity userEntity, String typeResponse, String token) {
+        UserDto.UserDtoBuilder builder = UserDto.builder()
             .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .email(userEntity.getEmail())
@@ -70,12 +41,23 @@ public class UserAssembler {
             .is_deleted(userEntity.getIs_deleted())
             .admin(userEntity.getId_admin() != null ? toAdminResponse(userEntity.getId_admin()) : null) // Mapear datos del admin
             .client(userEntity.getId_client() != null ? toClientResponse(userEntity.getId_client()) : null) // Mapear datos del cliente
-            .instructor(userEntity.getId_instructor() != null ? toInstructorResponse(userEntity.getId_instructor()) : null) // Mapear datos del instructor
-            .build();
+            .instructor(userEntity.getId_instructor() != null ? toInstructorResponse(userEntity.getId_instructor()) : null); // Mapear datos del instructor
+
+        if (typeResponse.equals("user")) {
+            builder.password(userEntity.getPassword());
+        }
+
+        if (typeResponse.equals("login")) {
+            builder
+                .password(userEntity.getPassword())
+                .token(token);
+        }
+
+        return builder.build();
     }
 
     // Método para mapear los datos del admin
-    private AdminDto toAdminResponse(AdminEntity adminEntity) {
+    public AdminDto toAdminResponse(AdminEntity adminEntity) {
         return AdminDto.builder()
             .id_admin(adminEntity.getId_admin())
             .id_user(adminEntity.getId_user().getIdUser())
@@ -83,7 +65,7 @@ public class UserAssembler {
     }
 
     // Método para mapear los datos del cliente
-    private ClientDto toClientResponse(ClientEntity clientEntity) {
+    public ClientDto toClientResponse(ClientEntity clientEntity) {
         return ClientDto.builder()
             .id_client(clientEntity.getId_client())
             .id_user(clientEntity.getId_user().getIdUser())
@@ -93,7 +75,7 @@ public class UserAssembler {
     }
 
     // Método para mapear los datos del instructor
-    private InstructorDto toInstructorResponse(InstructorEntity instructorEntity) {
+    public InstructorDto toInstructorResponse(InstructorEntity instructorEntity) {
         return InstructorDto.builder()
             .id_instructor(instructorEntity.getId_instructor())
             .id_user(instructorEntity.getId_user().getIdUser())

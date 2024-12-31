@@ -1,10 +1,8 @@
 package com.springboot.entrename.api.inscription;
 
 import com.springboot.entrename.domain.inscription.InscriptionEntity;
-import com.springboot.entrename.domain.user.UserEntity;
-import com.springboot.entrename.domain.activity.ActivityEntity;
-import com.springboot.entrename.api.user.UserDto;
-import com.springboot.entrename.api.activity.ActivityDto;
+import com.springboot.entrename.api.user.UserAssembler;
+import com.springboot.entrename.api.activity.ActivityAssembler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +14,9 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class InscriptionAssembler {
+    private final UserAssembler userAssembler;
+    private final ActivityAssembler activityAssembler;
+
     public InscriptionDto.InscriptionWrapper toInscriptionsList(List<InscriptionEntity> inscriptionEntities) {
         var content = inscriptionEntities.stream()
             .map(this::toInscriptionResponse)
@@ -49,60 +50,29 @@ public class InscriptionAssembler {
     }
 
     public InscriptionDto toInscriptionResponse(InscriptionEntity inscriptionEntity) {
-        return InscriptionDto.builder()
-            .id_inscription(inscriptionEntity.getId_inscription())
-            .id_user_client(inscriptionEntity.getIdUserClient().getIdUser())
-            .id_activity(inscriptionEntity.getIdActivity().getIdActivity())
-            .date(inscriptionEntity.getDate())
-            .state(inscriptionEntity.getState())
-            .slug_inscription(inscriptionEntity.getSlugInscription())
-            .build();
+        return buildInscription(inscriptionEntity, false);
     }
 
     public InscriptionDto toInscriptiongWithUserAndActivityResponse(InscriptionEntity inscriptionEntity) {
-        return InscriptionDto.builder()
+        return buildInscription(inscriptionEntity, true);
+    }
+
+    private InscriptionDto buildInscription(InscriptionEntity inscriptionEntity, boolean detailed) {
+        InscriptionDto.InscriptionDtoBuilder builder = InscriptionDto.builder()
             .id_inscription(inscriptionEntity.getId_inscription())
             .id_user_client(inscriptionEntity.getIdUserClient().getIdUser())
             .id_activity(inscriptionEntity.getIdActivity().getIdActivity())
             .date(inscriptionEntity.getDate())
             .state(inscriptionEntity.getState())
-            .slug_inscription(inscriptionEntity.getSlugInscription())
-            .user(toUserResponse(inscriptionEntity.getIdUserClient()))
-            .activity(toActivityResponse(inscriptionEntity.getIdActivity()))
-            .build();
-    }
+            .slug_inscription(inscriptionEntity.getSlugInscription());
 
-    private UserDto toUserResponse(UserEntity userEntity) {
-        return UserDto.builder()
-            .id_user(userEntity.getIdUser())
-            .img_user(userEntity.getImg_user())
-            .email(userEntity.getEmail())
-            .username(userEntity.getUsername())
-            .name(userEntity.getName())
-            .surname(userEntity.getSurname())
-            .age(userEntity.getAge())
-            .bio(userEntity.getBio())
-            .type_user(userEntity.getTypeUser())
-            .is_active(userEntity.getIs_active())
-            .is_deleted(userEntity.getIs_deleted())
-            .build();
-    }
+        if (detailed) {
+            builder
+                .user(userAssembler.toUserWithoutPassResponse(inscriptionEntity.getIdUserClient()))
+                .activity(activityAssembler.toActivityWithInstructorAndSportResponse(inscriptionEntity.getIdActivity()));
+        }
 
-    //! Faltaria añadir info especifica para id_user_instructor, id_sport
-    private ActivityDto toActivityResponse(ActivityEntity activityEntity) {
-        return ActivityDto.builder()
-            .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
-            .id_sport(activityEntity.getIdSport().getIdSport())
-            .n_activity(activityEntity.getNameActivity())
-            .description(activityEntity.getDescription())
-            .week_day(activityEntity.getWeekDay())
-            .slot_hour(activityEntity.getSlotHour())
-            .img_activity(activityEntity.getImgActivity())
-            .spots(activityEntity.getSpots())
-            .spots_available(activityEntity.getSpots_available())
-            .slug_activity(activityEntity.getSlugActivity())
-            .build();
+        return builder.build();
     }
 
     private InscriptionDto.InscriptionWrapper buildResponse(List<InscriptionDto> inscriptions, Number totalInscriptions) {

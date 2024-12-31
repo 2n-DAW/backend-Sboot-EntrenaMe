@@ -9,10 +9,7 @@ import lombok.*;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
-// import com.fasterxml.jackson.annotation.JsonTypeInfo;
-// import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -39,6 +36,8 @@ public class UserDto {
     private TypeUser type_user;
     private Integer is_active;
     private Integer is_deleted;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String token;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private AdminDto admin;
@@ -103,32 +102,6 @@ public class UserDto {
             message = "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números"
         )
         private String password;
-    }
-
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class UserWithToken {
-        private UUID id_user;
-        private String img_user;
-        private String email;
-        private String username;
-        private String name;
-        private String surname;
-        private Integer age;
-        private String bio;
-        private String password;
-        private TypeUser type_user;
-        private Integer is_active;
-        private Integer is_deleted;
-        private String token;
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        private AdminDto admin;
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        private ClientDto client;
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        private InstructorDto instructor;
     }
 
     @Getter

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class SportAssembler {
+
     public SportDto.SportWrapper toSportsList(List<SportEntity> sportEntities) {
         var content = sportEntities.stream()
             .map(this::toSportResponse)
@@ -48,30 +49,34 @@ public class SportAssembler {
         return buildResponse(content, pageSports.getTotalElements());
     }
 
-    public SportDto toSportResponse(SportEntity entity) {
-        return SportDto.builder()
-            .id_sport(entity.getIdSport())
-            .n_sport(entity.getNameSport())
-            .img_sport(entity.getImgSport())
-            .slug_sport(entity.getSlugSport())
-            .build();
+    public SportDto toSportResponse(SportEntity sportEntity) {
+        return buildSport(sportEntity, false);
     }
 
     public SportDto toSportWithCourtsAndActivitiesResponse(SportEntity sportEntity) {
-        return SportDto.builder()
+        return buildSport(sportEntity, true);
+    }
+
+    private SportDto buildSport(SportEntity sportEntity, boolean detailed) {
+        SportDto.SportDtoBuilder builder = SportDto.builder()
             .id_sport(sportEntity.getIdSport())
             .n_sport(sportEntity.getNameSport())
             .img_sport(sportEntity.getImgSport())
-            .slug_sport(sportEntity.getSlugSport())
-            .courts(sportEntity.getCourts().stream()
-                .sorted((court1, court2) -> court1.getIdCourt().compareTo(court2.getIdCourt())) // Orden ascendente por id
-                .map(this::toCourtResponse)
-                .toList())
-            .activities(sportEntity.getActivities().stream()
-                .sorted((activity1, activity2) -> activity1.getIdActivity().compareTo(activity2.getIdActivity())) // Orden ascendente por id
-                .map(this::toActivityResponse)
-                .toList())
-            .build();
+            .slug_sport(sportEntity.getSlugSport());
+
+        if (detailed) {
+            builder
+                .courts(sportEntity.getCourts().stream()
+                    .sorted((court1, court2) -> court1.getIdCourt().compareTo(court2.getIdCourt())) // Orden ascendente por id
+                    .map(this::toCourtResponse)
+                    .toList())
+                .activities(sportEntity.getActivities().stream()
+                    .sorted((activity1, activity2) -> activity1.getIdActivity().compareTo(activity2.getIdActivity())) // Orden ascendente por id
+                    .map(this::toActivityResponse)
+                    .toList());
+        }
+
+        return builder.build();
     }
 
     private CourtDto toCourtResponse(CourtEntity courtEntity) {

@@ -1,12 +1,11 @@
 package com.springboot.entrename.api.courtHour;
 
-import com.springboot.entrename.domain.court.CourtEntity;
 import com.springboot.entrename.domain.courtHour.CourtHourEntity;
 import com.springboot.entrename.domain.hour.HourEntity;
 import com.springboot.entrename.domain.month.MonthEntity;
-import com.springboot.entrename.api.court.CourtDto;
 import com.springboot.entrename.api.hour.HourDto;
 import com.springboot.entrename.api.month.MonthDto;
+import com.springboot.entrename.api.court.CourtAssembler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +16,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CourtHourAssembler {
+    private final CourtAssembler courtAssembler;
+
     public CourtHourDto.CourtHourWrapper toCourtsHoursList(List<CourtHourEntity> courtHourEntities) {
         var content = courtHourEntities.stream()
             .map(this::toCourtHourResponse)
@@ -34,20 +35,15 @@ public class CourtHourAssembler {
     }
 
     public CourtHourDto toCourtHourResponse(CourtHourEntity courtHourEntity) {
-        return CourtHourDto.builder()
-            .id_court_hour(courtHourEntity.getIdCourtHour())
-            .id_court(courtHourEntity.getId_court().getIdCourt())
-            .id_hour(courtHourEntity.getId_hour().getIdHour())
-            .id_month(courtHourEntity.getId_month().getIdMonth())
-            .day_number(courtHourEntity.getDay_number())
-            .year(courtHourEntity.getYear())
-            .slug_court_hour(courtHourEntity.getSlug_court_hour())
-            .available(courtHourEntity.getAvailable())
-            .build();
+        return buildCourtHour(courtHourEntity, false);
     }
 
     public CourtHourDto toDetailedCourtHourResponse(CourtHourEntity courtHourEntity) {
-        return CourtHourDto.builder()
+        return buildCourtHour(courtHourEntity, true);
+    }
+
+    private CourtHourDto buildCourtHour(CourtHourEntity courtHourEntity, boolean detailed) {
+        CourtHourDto.CourtHourDtoBuilder builder = CourtHourDto.builder()
             .id_court_hour(courtHourEntity.getIdCourtHour())
             .id_court(courtHourEntity.getId_court().getIdCourt())
             .id_hour(courtHourEntity.getId_hour().getIdHour())
@@ -55,20 +51,16 @@ public class CourtHourAssembler {
             .day_number(courtHourEntity.getDay_number())
             .year(courtHourEntity.getYear())
             .slug_court_hour(courtHourEntity.getSlug_court_hour())
-            .available(courtHourEntity.getAvailable())
-            .court(toCourtResponse(courtHourEntity.getId_court()))
-            .hour(toHourResponse(courtHourEntity.getId_hour()))
-            .month(toMonthResponse(courtHourEntity.getId_month()))
-            .build();
-    }
+            .available(courtHourEntity.getAvailable());
 
-    private CourtDto toCourtResponse(CourtEntity courtEntity) {
-        return CourtDto.builder()
-            .id_court(courtEntity.getIdCourt())
-            .n_court(courtEntity.getNameCourt())
-            .img_court(courtEntity.getImgCourt())
-            .slug_court(courtEntity.getSlugCourt())
-            .build();
+        if (detailed) {
+            builder
+                .court(courtAssembler.toCourtResponse(courtHourEntity.getId_court()))
+                .hour(toHourResponse(courtHourEntity.getId_hour()))
+                .month(toMonthResponse(courtHourEntity.getId_month()));
+        }
+
+        return builder.build();
     }
 
     private HourDto toHourResponse(HourEntity hourEntity) {

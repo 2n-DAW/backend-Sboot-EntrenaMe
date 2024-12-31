@@ -1,10 +1,8 @@
 package com.springboot.entrename.api.activity;
 
 import com.springboot.entrename.domain.activity.ActivityEntity;
-import com.springboot.entrename.domain.user.UserEntity;
-import com.springboot.entrename.domain.sport.SportEntity;
-import com.springboot.entrename.api.user.UserDto;
-import com.springboot.entrename.api.sport.SportDto;
+import com.springboot.entrename.api.user.UserAssembler;
+import com.springboot.entrename.api.sport.SportAssembler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +14,9 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class ActivityAssembler {
+    private final UserAssembler userAssembler;
+    private final SportAssembler sportAssembler;
+
     public ActivityDto.ActivityWrapper toActivitiesList(List<ActivityEntity> activityEntities) {
         var content = activityEntities.stream()
             .map(this::toActivityResponse)
@@ -49,23 +50,15 @@ public class ActivityAssembler {
     }
 
     public ActivityDto toActivityResponse(ActivityEntity activityEntity) {
-        return ActivityDto.builder()
-            .id_activity(activityEntity.getIdActivity())
-            .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
-            .id_sport(activityEntity.getIdSport().getIdSport())
-            .n_activity(activityEntity.getNameActivity())
-            .description(activityEntity.getDescription())
-            .week_day(activityEntity.getWeekDay())
-            .slot_hour(activityEntity.getSlotHour())
-            .img_activity(activityEntity.getImgActivity())
-            .spots(activityEntity.getSpots())
-            .spots_available(activityEntity.getSpots_available())
-            .slug_activity(activityEntity.getSlugActivity())
-            .build();
+        return buildActivityResponse(activityEntity, false);
     }
 
     public ActivityDto toActivityWithInstructorAndSportResponse(ActivityEntity activityEntity) {
-        return ActivityDto.builder()
+        return buildActivityResponse(activityEntity, true);
+    }
+
+    private ActivityDto buildActivityResponse(ActivityEntity activityEntity, boolean detailed) {
+        ActivityDto.ActivityDtoBuilder builder = ActivityDto.builder()
             .id_activity(activityEntity.getIdActivity())
             .id_user_instructor(activityEntity.getIdUserInstructor().getIdUser())
             .id_sport(activityEntity.getIdSport().getIdSport())
@@ -76,30 +69,15 @@ public class ActivityAssembler {
             .img_activity(activityEntity.getImgActivity())
             .spots(activityEntity.getSpots())
             .spots_available(activityEntity.getSpots_available())
-            .slug_activity(activityEntity.getSlugActivity())
-            .instructor(toUserResponse(activityEntity.getIdUserInstructor()))
-            .sport(toSportResponse(activityEntity.getIdSport()))
-            .build();
-    }
+            .slug_activity(activityEntity.getSlugActivity());
 
-    private UserDto toUserResponse(UserEntity userEntity) {
-        return UserDto.builder()
-            .id_user(userEntity.getIdUser())
-            .img_user(userEntity.getImg_user())
-            .email(userEntity.getEmail())
-            .username(userEntity.getUsername())
-            .password(userEntity.getPassword())
-            .type_user(userEntity.getTypeUser())
-            .build();
-    }
+        if (detailed) {
+            builder
+                .instructor(userAssembler.toUserWithoutPassResponse(activityEntity.getIdUserInstructor()))
+                .sport(sportAssembler.toSportResponse(activityEntity.getIdSport()));
+        }
 
-    private SportDto toSportResponse(SportEntity sportEntity) {
-        return SportDto.builder()
-            .id_sport(sportEntity.getIdSport())
-            .n_sport(sportEntity.getNameSport())
-            .img_sport(sportEntity.getImgSport())
-            .slug_sport(sportEntity.getSlugSport())
-            .build();
+        return builder.build();
     }
 
     private ActivityDto.ActivityWrapper buildResponse(List<ActivityDto> activities, Number totalActivities) {

@@ -2,9 +2,8 @@ package com.springboot.entrename.api.booking;
 
 import com.springboot.entrename.domain.booking.BookingEntity;
 import com.springboot.entrename.domain.courtHour.CourtHourEntity;
-import com.springboot.entrename.domain.user.UserEntity;
 import com.springboot.entrename.api.courtHour.CourtHourDto;
-import com.springboot.entrename.api.user.UserDto;
+import com.springboot.entrename.api.user.UserAssembler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +15,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class BookingAssembler {
+    private final UserAssembler userAssembler;
+
     public BookingDto.BookingWrapper toBookingsList(List<BookingEntity> bookingEntities) {
         var content = bookingEntities.stream()
             .map(this::toBookingResponse)
@@ -49,43 +50,29 @@ public class BookingAssembler {
     }
 
     public BookingDto toBookingResponse(BookingEntity bookingEntity) {
-        return BookingDto.builder()
-            .id_booking(bookingEntity.getId_booking())
-            .id_user(bookingEntity.getIdUser().getIdUser())
-            .id_count_hours(bookingEntity.getId_count_hours().getIdCourtHour())
-            .date(bookingEntity.getDate())
-            .is_deleted(bookingEntity.getIsDeleted())
-            .slug_booking(bookingEntity.getSlugBooking())
-            .build();
+        return buildBooking(bookingEntity, false);
     }
 
     public BookingDto toBookingWithUserAndCourtHourResponse(BookingEntity bookingEntity) {
-        return BookingDto.builder()
+        return buildBooking(bookingEntity, true);
+    }
+
+    private BookingDto buildBooking(BookingEntity bookingEntity, boolean detailed) {
+        BookingDto.BookingDtoBuilder builder = BookingDto.builder()
             .id_booking(bookingEntity.getId_booking())
             .id_user(bookingEntity.getIdUser().getIdUser())
             .id_count_hours(bookingEntity.getId_count_hours().getIdCourtHour())
             .date(bookingEntity.getDate())
             .is_deleted(bookingEntity.getIsDeleted())
-            .slug_booking(bookingEntity.getSlugBooking())
-            .user(toUserResponse(bookingEntity.getIdUser()))
-            .court_hour(toCourtHourResponse(bookingEntity.getId_count_hours()))
-            .build();
-    }
+            .slug_booking(bookingEntity.getSlugBooking());
 
-    private UserDto toUserResponse(UserEntity userEntity) {
-        return UserDto.builder()
-            .id_user(userEntity.getIdUser())
-            .img_user(userEntity.getImg_user())
-            .email(userEntity.getEmail())
-            .username(userEntity.getUsername())
-            .name(userEntity.getName())
-            .surname(userEntity.getSurname())
-            .age(userEntity.getAge())
-            .bio(userEntity.getBio())
-            .type_user(userEntity.getTypeUser())
-            .is_active(userEntity.getIs_active())
-            .is_deleted(userEntity.getIs_deleted())
-            .build();
+        if (detailed) {
+            builder
+                .user(userAssembler.toUserWithoutPassResponse(bookingEntity.getIdUser()))
+                .court_hour(toCourtHourResponse(bookingEntity.getId_count_hours()));
+        }
+
+        return builder.build();
     }
 
     private CourtHourDto.Response toCourtHourResponse(CourtHourEntity courtHourEntity) {

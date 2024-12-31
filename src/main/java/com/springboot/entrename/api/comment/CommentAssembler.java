@@ -51,7 +51,7 @@ public class CommentAssembler {
 
         if (detailed) {
             builder
-                .user(userAssembler.toUserResponse(commentEntity.getIdUser()))
+                .user(userAssembler.toUserWithoutPassResponse(commentEntity.getIdUser()))
                 .activity(activityAssembler.toActivityResponse(commentEntity.getIdActivity()));
         }
 
