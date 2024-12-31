@@ -37,11 +37,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserDto.UserWithToken login(@RequestBody @Valid UserDto.Login login) {
+    public UserDto login(@RequestBody @Valid UserDto.Login login) {
         String typeUser = getTypeUser(login.getEmail());
         // System.out.println("TypeUser ========================================================\n" + typeUser);
 
-        UserDto.UserWithToken userWithToken  = "client".equals(typeUser) ? clientLogin(login) : laravelLogin(login);
+        UserDto userWithToken  = "client".equals(typeUser) ? clientLogin(login) : laravelLogin(login);
         return userWithToken;
     }
 
@@ -50,13 +50,13 @@ public class AuthController {
         return user.getTypeUser().name();
     }
 
-    private UserDto.UserWithToken clientLogin(@RequestBody @Valid UserDto.Login login) {
+    private UserDto clientLogin(@RequestBody @Valid UserDto.Login login) {
         var userWithToken  = authService.clientLogin(login);
         return userWithToken;
         
     }
 
-    private UserDto.UserWithToken laravelLogin(@RequestBody @Valid UserDto.Login login) {
+    private UserDto laravelLogin(@RequestBody @Valid UserDto.Login login) {
         var userWithToken  = authService.laravelLogin(login);
         return userWithToken;
     }

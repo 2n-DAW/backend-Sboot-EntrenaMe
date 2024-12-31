@@ -119,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional()
     @Override
-    public UserDto.UserWithToken clientLogin(final UserDto.Login login) {
+    public UserDto clientLogin(final UserDto.Login login) {
         
         var user = userRepository.findByEmail(login.getEmail())
             .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
@@ -155,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDto.UserWithToken laravelLogin(final UserDto.Login login) {
+    public UserDto laravelLogin(final UserDto.Login login) {
         System.out.println("Info login ============================================" + login.getEmail());
         try {
             ResponseEntity<Object> response = laravelWebClient.post()
@@ -167,7 +167,7 @@ public class AuthServiceImpl implements AuthService {
 
             System.out.println("Response WebClient ============================================" + response.getBody());
             // Convertir la respuesta al DTO esperado
-            return objectMapper.convertValue(response.getBody(), UserDto.UserWithToken.class);
+            return objectMapper.convertValue(response.getBody(), UserDto.class);
 
         } catch (WebClientResponseException e) {
             throw new AppException(Error.LOGIN_INFO_INVALID);
