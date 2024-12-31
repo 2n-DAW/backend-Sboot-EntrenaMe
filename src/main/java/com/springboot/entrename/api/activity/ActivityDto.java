@@ -32,8 +32,6 @@ public class ActivityDto {
     private String slug_activity;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserDto instructor;
-    // @JsonInclude(JsonInclude.Include.NON_NULL)
-    // private UserDto.Instructor instructor;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private SportDto sport;
 

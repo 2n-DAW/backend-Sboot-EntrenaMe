@@ -89,24 +89,9 @@ public class ActivityAssembler {
             .email(userEntity.getEmail())
             .username(userEntity.getUsername())
             .password(userEntity.getPassword())
-            .type_user(userEntity.getType_user())
+            .type_user(userEntity.getTypeUser())
             .build();
     }
-
-    // private UserDto.Instructor toUserResponse(UserEntity userEntity) {
-    //     return UserDto.Instructor.builder()
-    //         .id_user(userEntity.getIdUser())
-    //         .img_user(userEntity.getImgUser())
-    //         .email(userEntity.getEmail())
-    //         .username(userEntity.getUsername())
-    //         .password(userEntity.getPassword())
-    //         .type_user(userEntity.getTypeUser())
-    //         .id_instructor(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getIdInstructor() : null)
-    //         .nif(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getNif() : null)
-    //         .tlf(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getTlf() : null)
-    //         .address(userEntity.getIdInstructor() != null ? userEntity.getIdInstructor().getAddress() : null)
-    //         .build();
-    // }
 
     private SportDto toSportResponse(SportEntity sportEntity) {
         return SportDto.builder()

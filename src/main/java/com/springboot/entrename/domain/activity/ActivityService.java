@@ -9,8 +9,11 @@ import java.util.List;
 public interface ActivityService {
     List<ActivityEntity> getAllActivities();
 
-    // final indica que no se puede modificar dentro del cuerpo del método
     ActivityEntity getActivity(final String slug);
 
+    ActivityEntity getActivityById(final Long id);
+
     Page<ActivityEntity> getAllActivitiesFiltered(Specification<ActivityEntity> filter, Pageable pageable);
+
+    ActivityEntity updateSpotsAvilableActivity(final ActivityEntity activity, final int spot);
 }

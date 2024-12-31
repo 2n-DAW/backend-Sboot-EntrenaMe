@@ -61,10 +61,13 @@ public class ActivityEntity {
     @Column(name = "spots")
     private int spots;
 
+    @Column(name = "spots_available") 
+    private int spots_available;
+
     @Column(name = "slug_activity", length = 255)
     private String slugActivity;
 
-    @OneToMany(mappedBy = "id_activity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "idActivity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<InscriptionEntity> inscriptions = new ArrayList<>();
 
@@ -79,6 +82,7 @@ public class ActivityEntity {
         String slotHour,
         String imgActivity,
         int spots,
+        int spots_available,
         String slugActivity
     ) {
         this.idActivity = idActivity;
@@ -90,6 +94,7 @@ public class ActivityEntity {
         this.slotHour = slotHour;
         this.imgActivity = imgActivity;
         this.spots = spots;
+        this.spots_available = spots_available;
         this.slugActivity = slugActivity;
     }
 }
