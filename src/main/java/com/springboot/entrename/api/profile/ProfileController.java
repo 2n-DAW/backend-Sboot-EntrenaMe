@@ -2,15 +2,15 @@ package com.springboot.entrename.api.profile;
 
 import com.springboot.entrename.domain.user.UserService;
 import com.springboot.entrename.domain.profile.ProfileService;
-import com.springboot.entrename.api.security.authorization.CheckSecurity;
+import com.springboot.entrename.api.comment.CommentDto;
+import com.springboot.entrename.domain.comment.CommentService;
+import com.springboot.entrename.api.comment.CommentAssembler;
 import com.springboot.entrename.api.security.AuthUtils;
+import com.springboot.entrename.api.security.authorization.CheckSecurity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.validation.annotation.Validated;
-
-// import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/profiles")
@@ -20,11 +20,13 @@ public class ProfileController {
     private final UserService userService;
     private final ProfileService profileService;
     private final ProfileAssembler profileAssembler;
+    private final CommentService commentService;
+    private final CommentAssembler commentAssembler;
     private final AuthUtils authUtils;
 
     @GetMapping("/{username}")
     @CheckSecurity.Public.canRead
-    public ProfileDto getProfile(@PathVariable String username, WebRequest request) { // WebRequest: Representa la solicitud HTTP actual permitiendo acceder a encabezados, parámetros...
+    public ProfileDto getProfile(@PathVariable String username) {
         var profile = profileService.getProfile(username);
         
         if (authUtils.isAuthenticated()) {
@@ -35,5 +37,12 @@ public class ProfileController {
         }
 
         return profileAssembler.toPublicProfileResponse(profile);
+    }
+
+    @GetMapping("/{username}/comments")
+    @CheckSecurity.Profile.canManage
+    public CommentDto.CommentWrapper getAllCommentsByAuthor(@PathVariable String username) {
+        var comments = commentService.getAllCommentsByAuthor(username);
+        return commentAssembler.toCommentsList(comments);
     }
 }

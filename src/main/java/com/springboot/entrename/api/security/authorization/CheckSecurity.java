@@ -22,6 +22,13 @@ public @interface CheckSecurity {
         public @interface canManage {}
     }
 
+    public @interface Profile {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @PreAuthorize("@authorizationConfig.isProfileOwner(#username)")
+        public @interface canManage {}
+    }
+
     public @interface Comments {
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)

@@ -3,6 +3,7 @@ package com.springboot.entrename.domain.activity;
 import com.springboot.entrename.domain.user.UserEntity;
 import com.springboot.entrename.domain.inscription.InscriptionEntity;
 import com.springboot.entrename.domain.sport.SportEntity;
+import com.springboot.entrename.domain.comment.CommentEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,10 @@ public class ActivityEntity {
     @OneToMany(mappedBy = "idActivity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<InscriptionEntity> inscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idActivity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<CommentEntity> comments = new ArrayList<>();
 
     @Builder
     public ActivityEntity(

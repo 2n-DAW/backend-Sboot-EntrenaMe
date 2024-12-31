@@ -17,7 +17,6 @@ import java.util.UUID;
 public class ProfileDto {
     private UUID id_user;
     private String img_user;
-    @NotNull
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
     @NotNull

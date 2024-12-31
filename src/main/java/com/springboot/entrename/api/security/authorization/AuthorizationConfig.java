@@ -27,9 +27,19 @@ public class AuthorizationConfig {
         }
 
         var comment = commentService.getComment(slugComment);
-        var author = comment.getId_user().getIdUser();
+        var author = comment.getIdUser().getIdUser();
 
         return authenticatedUserEquals(author);
+    }
+
+    public boolean isProfileOwner(String username) {
+        if (!isAuthenticated()) {
+            return false;
+        }
+
+        var user = userService.getUserByUsername(username);
+
+        return authenticatedUserEquals(user.getIdUser());
     }
 
     private boolean authenticatedUserEquals(UUID user) {

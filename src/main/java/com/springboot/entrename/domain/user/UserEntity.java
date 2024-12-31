@@ -5,6 +5,7 @@ import com.springboot.entrename.domain.user.admin.AdminEntity;
 import com.springboot.entrename.domain.user.client.ClientEntity;
 import com.springboot.entrename.domain.user.instructor.InstructorEntity;
 import com.springboot.entrename.domain.booking.BookingEntity;
+import com.springboot.entrename.domain.comment.CommentEntity;
 import com.springboot.entrename.domain.inscription.InscriptionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -121,6 +122,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "idUserClient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<InscriptionEntity> inscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<CommentEntity> comments = new ArrayList<>();
 
     @Builder
     public UserEntity(

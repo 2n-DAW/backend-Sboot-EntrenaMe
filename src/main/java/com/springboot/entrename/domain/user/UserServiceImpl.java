@@ -35,6 +35,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public UserEntity getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserEntity getAdminUser() {
+        List<UserEntity> adminUsers = userRepository.findByTypeUser(UserEntity.TypeUser.admin);
+
+        if (!adminUsers.isEmpty()) {
+            return adminUsers.get(0);
+        } else {
+            throw new AppException(Error.USER_NOT_FOUND);
+        }
+    }
+
     @Override
     public UserEntity updateCurrentUser(UserDto.Update update) {
         var currentUser = getByEmail(authUtils.getCurrentUserEmail());
@@ -80,17 +98,5 @@ public class UserServiceImpl implements UserService {
 
         var updateUser = userRepository.save(currentUser);
         return updateUser;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserEntity getAdminUser() {
-        List<UserEntity> adminUsers = userRepository.findByTypeUser(UserEntity.TypeUser.admin);
-
-        if (!adminUsers.isEmpty()) {
-            return adminUsers.get(0);
-        } else {
-            throw new AppException(Error.USER_NOT_FOUND);
-        }
     }
 }

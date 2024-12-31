@@ -5,7 +5,9 @@ import com.springboot.entrename.api.user.UserDto;
 public interface UserService {
     UserEntity getCurrentUser();
 
-    UserEntity updateCurrentUser(final UserDto.Update update);
+    UserEntity getUserByUsername(final String username);
 
     UserEntity getAdminUser();
+
+    UserEntity updateCurrentUser(final UserDto.Update update);
 }
