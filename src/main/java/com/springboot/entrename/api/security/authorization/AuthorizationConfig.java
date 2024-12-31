@@ -1,18 +1,38 @@
 package com.springboot.entrename.api.security.authorization;
 
+import com.springboot.entrename.domain.user.UserService;
+import com.springboot.entrename.domain.comment.CommentService;
+import com.springboot.entrename.api.security.AuthUtils;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.springboot.entrename.api.security.AuthUtils;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class AuthorizationConfig {
     private final AuthUtils authUtils;
+    private final UserService userService;
+    private final CommentService commentService;
 
     public boolean isAuthenticated() {
         var isAuthenticated = authUtils.isAuthenticated();
-        // System.out.println("isAuthenticated ========================================================\n" + isAuthenticated);
         return isAuthenticated;
+    }
+
+    public boolean isCommentAuthor(String slugComment) {
+        if (!isAuthenticated()) {
+            return false;
+        }
+
+        var comment = commentService.getComment(slugComment);
+        var author = comment.getId_user().getIdUser();
+
+        return authenticatedUserEquals(author);
+    }
+
+    private boolean authenticatedUserEquals(UUID user) {
+        return userService.getCurrentUser().getIdUser().equals(user);
     }
 }

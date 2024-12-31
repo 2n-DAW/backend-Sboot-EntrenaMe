@@ -21,4 +21,11 @@ public @interface CheckSecurity {
         @PreAuthorize("@authorizationConfig.isAuthenticated")
         public @interface canManage {}
     }
+
+    public @interface Comments {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @PreAuthorize("@authorizationConfig.isCommentAuthor(#slugComment)")
+        public @interface canDelete {}
+    }
 }
