@@ -17,16 +17,17 @@ public enum Error {
     MALFORMED_TOKEN("Token mal formado", HttpStatus.UNAUTHORIZED),
     UNSUPPORTED_TOKEN("Token no compatible", HttpStatus.UNAUTHORIZED),
     ILLEGAL_ARGUMENT_TOKEN("Token está vacio o es nulo", HttpStatus.UNAUTHORIZED),
+    PASSWORD_INVALID("La contraseña en el login no es válida", HttpStatus.UNAUTHORIZED),
+    LOGIN_INFO_INVALID("Los datos del login no son correctos", HttpStatus.UNAUTHORIZED),
 
     // Errores de validación
     INVALID_INPUT("Entrada inválida", HttpStatus.BAD_REQUEST),
 
     // Errores de negocio
-    DUPLICATED_USERNAME("El nombre de usuario ya está en uso. Introduce otro", HttpStatus.UNPROCESSABLE_ENTITY),
-    DUPLICATED_EMAIL("El correo electrónico ya está en uso. Introduce otro", HttpStatus.UNPROCESSABLE_ENTITY),
-    PASSWORD_INVALID("La contraseña en el login no es válida", HttpStatus.UNPROCESSABLE_ENTITY),
-    LOGIN_INFO_INVALID("Los datos del login no son correctos", HttpStatus.UNPROCESSABLE_ENTITY),
-    ACTIVITY_FULL("No quedan plazas en la actividad", HttpStatus.UNPROCESSABLE_ENTITY),
+    DUPLICATED_USERNAME("El nombre de usuario ya está en uso. Introduce otro", HttpStatus.CONFLICT),
+    DUPLICATED_EMAIL("El correo electrónico ya está en uso. Introduce otro", HttpStatus.CONFLICT),
+    ACTIVITY_NOT_AVAILABLE("No quedan plazas en la actividad", HttpStatus.CONFLICT),
+    USER_ALREADY_INSCRIBED("Usuario ya inscrito en la actividad", HttpStatus.CONFLICT),
     // ALREADY_FOLLOWED_USER("already followed user", HttpStatus.UNPROCESSABLE_ENTITY),
     // ALREADY_FAVORITED_ARTICLE("already followed user", HttpStatus.UNPROCESSABLE_ENTITY),
 
@@ -46,7 +47,7 @@ public enum Error {
 
     // Error genérico del servidor
     INTERNAL_SERVER_ERROR("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR),
-    SERVICE_UNAVAILABLE("Error de conexión", HttpStatus.INTERNAL_SERVER_ERROR);
+    SERVICE_UNAVAILABLE("Error de conexión", HttpStatus.SERVICE_UNAVAILABLE);
 
     private final String message;
     private final HttpStatus status;

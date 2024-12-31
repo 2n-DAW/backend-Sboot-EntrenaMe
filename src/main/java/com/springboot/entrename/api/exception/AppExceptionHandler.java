@@ -1,6 +1,8 @@
 package com.springboot.entrename.api.exception;
 
 import com.springboot.entrename.domain.exception.AppException;
+import com.springboot.entrename.domain.exception.NotificationException;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 
@@ -27,23 +29,23 @@ public class AppExceptionHandler {
         );
     }
 
-    // Maneja errores transitorios
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseBody
-    public ResponseEntity<ErrorMessages> handleRuntimeException(RuntimeException exception) {
-        return responseErrorMessages(
-            Map.of("INTERNAL_SERVER_ERROR", exception.getMessage()), // Error code, Error message
-            HttpStatus.INTERNAL_SERVER_ERROR
-        );
-    }
-
     // Maneja errores específicos
     @ExceptionHandler({AppException.class, AuthenticationException.class, AccessDeniedException.class})
     @ResponseBody
     public ResponseEntity<ErrorMessages> handleAppException(AppException exception) {
         return responseErrorMessages(
-            Map.of(exception.getError().name(), exception.getMessage()), // Error code, Error message
-            exception.getError().getStatus() // Error http status
+            Map.of(exception.getError().name(), exception.getMessage()),
+            exception.getError().getStatus()
+        );
+    }
+
+    // Maneja errores del servidor de notificaciones
+    @ExceptionHandler(NotificationException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessages> handleNotificationException(NotificationException exception) {
+        return responseErrorMessages(
+            Map.of("NOTIFICATION_ERROR", exception.getMessage() + " - " + exception.getDetails()),
+            HttpStatus.valueOf(exception.getStatusCode())
         );
     }
 
