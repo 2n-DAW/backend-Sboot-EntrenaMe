@@ -21,20 +21,14 @@ import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
 
 import org.springframework.http.ResponseEntity;
-// import org.springframework.web.client.RestClient;
-// import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.util.retry.Retry;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-// import org.springframework.beans.factory.annotation.Value;
 
-import java.time.Duration;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -47,15 +41,10 @@ public class AuthServiceImpl implements AuthService {
     private final BlacklistTokenRepository blacklistTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtils;
     private final AuthUtils authUtils;
     private final WebClient laravelWebClient;
     private final ObjectMapper objectMapper;
-
-    // private final RestClient restClient;
-    // @Value("${laravel.api.endpoint}")
-    // private String laravelEndpoint;
 
     @Transactional
     @Override  // Indica que este método implementa la definición de la interfaz
@@ -81,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
             .age(register.getAge())
             .bio(register.getBio())
             .password(passwordEncoder.encode(register.getPassword()))
-            .type_user(register.getType_user())
+            .typeUser(register.getType_user())
             .is_active(0)
             .is_deleted(0);
     
@@ -145,17 +134,17 @@ public class AuthServiceImpl implements AuthService {
             userRepository.save(user);
         }
 
-        var accessToken = jwtUtils.generateJWT(user.getId_user(), user.getEmail(), user.getUsername(), user.getType_user(), "access");
-        var refreshToken = jwtUtils.generateJWT(user.getId_user(), user.getEmail(), user.getUsername(), user.getType_user(), "refresh");
+        var accessToken = jwtUtils.generateJWT(user.getIdUser(), user.getEmail(), user.getUsername(), user.getTypeUser(), "access");
+        var refreshToken = jwtUtils.generateJWT(user.getIdUser(), user.getEmail(), user.getUsername(), user.getTypeUser(), "refresh");
         System.out.println("AccessToken ========================================================\n" + accessToken);
         System.out.println("RefreshToken ========================================================\n" + refreshToken);
 
         // Inserta o actualiza el refreshToken en la base de datos
         if (refreshToken != null && refreshToken != "") {
-            var existingToken = refreshTokenRepository.findByIdUser(user.getId_user());
+            var existingToken = refreshTokenRepository.findByIdUser(user.getIdUser());
             RefreshTokenEntity refreshTokenEntity = existingToken.orElse(
                 RefreshTokenEntity.builder()
-                    .idUser(user.getId_user())
+                    .idUser(user.getIdUser())
                     .build()
             );
             refreshTokenEntity.setRefreshToken(refreshToken);
@@ -165,51 +154,28 @@ public class AuthServiceImpl implements AuthService {
     return userAssembler.toLoginResponse(user, accessToken);
     }
 
-    // @Override
-    // public UserDto.UserWithToken laravelLogin(final UserDto.Login login) {
-    //     try {
-    //         // Enviar las credenciales al endpoint de Laravel
-    //         ResponseEntity<Object> response = restClient.post()
-    //             .uri(laravelEndpoint + "/user/login")
-    //             .body(login) // Enviar el cuerpo de la petición con el DTO
-    //             .retrieve()
-    //             .toEntity(Object.class);
-    
-    //         // Si la solicitud no es exitosa o el cuerpo de la respuesta es nulo, lanza una excepción
-    //         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
-    //             throw new AppException(Error.LOGIN_INFO_INVALID);
-    //         }
-
-    //         // Convertir la respuesta a UserWithToken
-    //         return objectMapper.convertValue(response.getBody(), UserDto.UserWithToken.class);
-
-    //     } catch (RestClientException exception) {
-    //         // throw new AppException(Error.SERVICE_UNAVAILABLE);
-    //         throw new RuntimeException(exception);
-    //     }
-    // }
-
     @Override
     public UserDto.UserWithToken laravelLogin(final UserDto.Login login) {
+        System.out.println("Info login ============================================" + login.getEmail());
         try {
             ResponseEntity<Object> response = laravelWebClient.post()
                 .uri("/user/login")
                 .bodyValue(login) // Enviar cuerpo con las credenciales de inicio de sesión
                 .retrieve()
                 .toEntity(Object.class)
-                .retryWhen(Retry.backoff(3, Duration.ofSeconds(2))
-                    .doAfterRetry(retrySignal -> 
-                        System.out.println("Reintento número: " + (retrySignal.totalRetriesInARow() + 1))))
                 .block(); // Bloquea hasta recibir respuesta (útil para simplificar lógica)
 
+            System.out.println("Response WebClient ============================================" + response.getBody());
             // Convertir la respuesta al DTO esperado
             return objectMapper.convertValue(response.getBody(), UserDto.UserWithToken.class);
 
         } catch (WebClientResponseException e) {
             throw new AppException(Error.LOGIN_INFO_INVALID);
-        } catch (Exception e) {
-            throw new AppException(Error.SERVICE_UNAVAILABLE);
         }
+        //! Recordar volver habilitar excepción hasta corregir UUID en laravel
+        // } catch (Exception e) {
+        //     throw new AppException(Error.SERVICE_UNAVAILABLE);
+        // }
     }
 
     @Transactional()
@@ -223,7 +189,7 @@ public class AuthServiceImpl implements AuthService {
     public BlacklistTokenEntity saveBlacklistToken() {
         if (authUtils.isAuthenticated()) {
             var currentUser = userRepository.findByEmail(authUtils.getCurrentUserEmail()).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
-            Long idUser = currentUser.getId_user();
+            UUID idUser = currentUser.getIdUser();
 
             var refreshTokenEntity = refreshTokenRepository.findByIdUser(idUser).orElseThrow(() -> new AppException(Error.REFRESH_TOKEN_NOT_FOUND));
             String refresToken = refreshTokenEntity.getRefreshToken();

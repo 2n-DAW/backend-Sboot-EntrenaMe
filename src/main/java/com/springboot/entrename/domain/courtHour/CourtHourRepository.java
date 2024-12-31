@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface CourtHourRepository extends JpaRepository<CourtHourEntity, Long>, JpaSpecificationExecutor<CourtHourEntity> {
     @Query("SELECT c FROM CourtHourEntity c " +
         "WHERE c.id_court.idCourt = :id_court " +
-        "AND c.year = :year " +
+        "AND c.year >= :year " +
         "AND c.id_month.idMonth IN :id_months " +
         "AND c.day_number >= :day_number")
         // "AND c.id_hour.idHour >= :id_hour")
