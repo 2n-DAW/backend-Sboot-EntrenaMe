@@ -31,12 +31,12 @@ public class InscriptionEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_activity", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private ActivityEntity id_activity;
+    private ActivityEntity idActivity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user_client", nullable = false)
     @JsonManagedReference // Marca este lado como "propietario"
-    private UserEntity id_user_client;
+    private UserEntity idUserClient;
 
     @Column(name = "date", nullable = false)
     private Date date;
@@ -45,22 +45,22 @@ public class InscriptionEntity {
     private Integer state;
 
     @Column(name = "slug_inscription", length = 255)
-    private String slug_inscription;
+    private String slugInscription;
 
     @Builder
     public InscriptionEntity(
         Long id_inscription,
-        ActivityEntity id_activity,
-        UserEntity id_user_client,
+        ActivityEntity idActivity,
+        UserEntity idUserClient,
         Date date,
         Integer state,
-        String slug_inscription
+        String slugInscription
     ) {
         this.id_inscription = id_inscription;
-        this.id_activity = id_activity;
-        this.id_user_client = id_user_client;
+        this.idActivity = idActivity;
+        this.idUserClient = idUserClient;
         this.date = date;
         this.state = state;
-        this.slug_inscription = slug_inscription;
+        this.slugInscription = slugInscription;
     }
 }
