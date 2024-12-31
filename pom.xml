@@ -98,6 +98,12 @@
 			<artifactId>dotenv-java</artifactId>
 			<version>3.1.0</version>
 		</dependency>
+		<!-- Slugify para generar slugs -->
+		<dependency>
+			<groupId>com.github.slugify</groupId>
+			<artifactId>slugify</artifactId>
+			<version>3.0.3</version>
+		</dependency>
 		<!-- Hot Reload para desarrollo -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
