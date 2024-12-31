@@ -25,7 +25,7 @@ public class UserAssembler {
             .age(userEntity.getAge())
             .bio(userEntity.getBio())
             .password(userEntity.getPassword())
-            .type_user(userEntity.getType_user())
+            .type_user(userEntity.getTypeUser())
             .is_active(userEntity.getIs_active())
             .is_deleted(userEntity.getIs_deleted())
             .admin(userEntity.getId_admin() != null ? toAdminResponse(userEntity.getId_admin()) : null) // Mapear datos del admin
@@ -45,7 +45,7 @@ public class UserAssembler {
             .age(userEntity.getAge())
             .bio(userEntity.getBio())
             .password(userEntity.getPassword())
-            .type_user(userEntity.getType_user())
+            .type_user(userEntity.getTypeUser())
             .is_active(userEntity.getIs_active())
             .is_deleted(userEntity.getIs_deleted())
             .token(token != null ? token : null)
@@ -65,7 +65,7 @@ public class UserAssembler {
             .surname(userEntity.getSurname())
             .age(userEntity.getAge())
             .bio(userEntity.getBio())
-            .type_user(userEntity.getType_user())
+            .type_user(userEntity.getTypeUser())
             .is_active(userEntity.getIs_active())
             .is_deleted(userEntity.getIs_deleted())
             .admin(userEntity.getId_admin() != null ? toAdminResponse(userEntity.getId_admin()) : null) // Mapear datos del admin

@@ -82,7 +82,7 @@ public class BookingAssembler {
             .surname(userEntity.getSurname())
             .age(userEntity.getAge())
             .bio(userEntity.getBio())
-            .type_user(userEntity.getType_user())
+            .type_user(userEntity.getTypeUser())
             .is_active(userEntity.getIs_active())
             .is_deleted(userEntity.getIs_deleted())
             .build();

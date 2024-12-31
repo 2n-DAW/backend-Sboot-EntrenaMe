@@ -69,7 +69,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type_user", nullable = false)
-    private TypeUser type_user;
+    private TypeUser typeUser;
 
     @Column(name = "is_active", columnDefinition = "TINYINT") 
     private Integer is_active;
@@ -133,7 +133,7 @@ public class UserEntity {
         Integer age,
         String bio,
         String password,
-        TypeUser type_user,
+        TypeUser typeUser,
         Integer is_active,
         Integer is_deleted
     ){
@@ -146,7 +146,7 @@ public class UserEntity {
         this.age = age;
         this.bio = bio;
         this.password = password;
-        this.type_user = type_user;
+        this.typeUser = typeUser;
         this.is_active = is_active;
         this.is_deleted = is_deleted;
     }

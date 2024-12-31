@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// import java.util.List;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +80,17 @@ public class UserServiceImpl implements UserService {
 
         var updateUser = userRepository.save(currentUser);
         return updateUser;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserEntity getAdminUser() {
+        List<UserEntity> adminUsers = userRepository.findByTypeUser(UserEntity.TypeUser.admin);
+
+        if (!adminUsers.isEmpty()) {
+            return adminUsers.get(0);
+        } else {
+            throw new AppException(Error.USER_NOT_FOUND);
+        }
     }
 }
