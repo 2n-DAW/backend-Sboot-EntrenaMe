@@ -1,8 +1,8 @@
 package com.springboot.entrename.api.booking;
 
 import com.springboot.entrename.domain.booking.BookingService;
-import com.springboot.entrename.api.security.authorization.CheckSecurity;
 
+import com.springboot.entrename.api.security.authorization.CheckSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

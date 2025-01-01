@@ -1,5 +1,6 @@
 package com.springboot.entrename.api.sport;
 
+import com.springboot.entrename.api.security.authorization.CheckSecurity;
 import com.springboot.entrename.domain.sport.SportEntity;
 import com.springboot.entrename.domain.sport.SportService;
 
@@ -25,24 +26,28 @@ public class SportsController {
     private static final String DEFAULT_FILTER_OFFSET = "0";
 
     @GetMapping
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSports() {
         var sports = sportService.getAllSports();
         return sportAssembler.toSportsList(sports);
     }
 
     @GetMapping("/courts&activities")
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSportsWithCourts() {
         var sports = sportService.getAllSports();
         return sportAssembler.toSportsListWithCourtsAndActivities(sports);
     }
 
     @GetMapping("/{slug}")
+    @CheckSecurity.Public.canRead
     public SportDto getSport(@PathVariable String slug) {
         var sport = sportService.getSport(slug);
         return sportAssembler.toSportResponse(sport);
     }
 
     @GetMapping("/filtered")
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSportsFiltered(
             @Join(path = "courts", alias = "c")
             @And({
@@ -58,6 +63,7 @@ public class SportsController {
     }
 
     @GetMapping("/courts&activities/filtered")
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSportsWithCourtsAndActivitiesFiltered(
         @Join(path = "courts", alias = "c")
             @And({
