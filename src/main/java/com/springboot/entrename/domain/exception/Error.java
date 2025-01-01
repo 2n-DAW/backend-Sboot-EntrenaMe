@@ -19,6 +19,7 @@ public enum Error {
     ILLEGAL_ARGUMENT_TOKEN("Token está vacio o es nulo", HttpStatus.UNAUTHORIZED),
     PASSWORD_INVALID("La contraseña en el login no es válida", HttpStatus.UNAUTHORIZED),
     LOGIN_INFO_INVALID("Los datos del login no son correctos", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED_BOOKING("El usuario actual no es el autor de la reserva", HttpStatus.UNAUTHORIZED),
 
     // Errores de validación
     INVALID_INPUT("Entrada inválida", HttpStatus.BAD_REQUEST),

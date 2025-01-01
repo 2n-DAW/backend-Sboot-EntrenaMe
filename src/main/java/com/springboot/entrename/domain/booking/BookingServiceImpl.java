@@ -69,20 +69,10 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public BookingEntity updateBooking(String slug, BookingDto inscription) {
-
-        // Obtiene el usuario actual
-        UserEntity user = userService.getCurrentUser();
-
-        // Obtiene la reserva de pista actual
-        BookingEntity currentBooking = getBooking(slug);
+        // Elimina la reserva de pista actual
+        deleteBooking(slug);
         
-        // Obtiene el horario de pista actual
-        CourtHourEntity currentCourtHour = courtHourService.getCourtHourWithAvailability(currentBooking.getId_count_hours().getIdCourtHour(), 0);
-
-
-        // Cambia el estado del horario de la pista a disponible
-        currentCourtHour.setAvailable(1);
-        courtHourRepository.save(currentCourtHour);
+        UserEntity user = userService.getCurrentUser();
 
         // Comprueba que el nuevo horario de pista esté disponible
         CourtHourEntity newCourtHour = courtHourService.getCourtHourWithAvailability(inscription.getId_count_hours(), 1);
@@ -91,10 +81,6 @@ public class BookingServiceImpl implements BookingService {
         newCourtHour.setAvailable(0);
         courtHourRepository.save(newCourtHour);
 
-        // Marca como eliminada la reserva de pista actual
-        currentBooking.setIsDeleted(1);
-        bookingRepository.save(currentBooking);
-
         // Crea la nueva reserva de pista
         return create(user, newCourtHour);
     }
@@ -102,20 +88,27 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public BookingEntity deleteBooking(String slug) {
+        // Obtiene el usuario actual
+        UserEntity user = userService.getCurrentUser();
 
-        // Obtiene la reserva de pista
-        BookingEntity booking = getBooking(slug);
+        // Obtiene la reserva de pista actual
+        BookingEntity currentBooking = getBooking(slug);
+
+        // Usuarios tipo client o instructor solo podrán modificar la reserva si son autores de la misma
+        if (!user.getTypeUser().toString().equals("admin") && !currentBooking.getIdUser().getIdUser().equals(user.getIdUser())) {
+            throw new AppException(Error.UNAUTHORIZED_BOOKING);
+        }
 
         // Obtiene el horario de pista reservado
-        CourtHourEntity courtHour = courtHourService.getCourtHourWithAvailability(booking.getId_count_hours().getIdCourtHour(), 0);
+        CourtHourEntity courtHour = courtHourService.getCourtHourWithAvailability(currentBooking.getId_count_hours().getIdCourtHour(), 0);
 
         // Cambia el estado del horario de la pista a disponible
         courtHour.setAvailable(1);
         courtHourRepository.save(courtHour);
 
         // Marca como eliminada la reserva de pista actual
-        booking.setIsDeleted(1);
-        return bookingRepository.save(booking);
+        currentBooking.setIsDeleted(1);
+        return bookingRepository.save(currentBooking);
     }
 
     private BookingEntity create(UserEntity user, CourtHourEntity courtHour) {
