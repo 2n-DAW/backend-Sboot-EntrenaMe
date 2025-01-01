@@ -21,17 +21,6 @@ public class AuthorizationConfig {
         return isAuthenticated;
     }
 
-    public boolean isCommentAuthor(String slugComment) {
-        if (!isAuthenticated()) {
-            return false;
-        }
-
-        var comment = commentService.getComment(slugComment);
-        var author = comment.getIdUser().getIdUser();
-
-        return authenticatedUserEquals(author);
-    }
-
     public boolean isProfileOwner(String username) {
         if (!isAuthenticated()) {
             return false;
@@ -50,6 +39,30 @@ public class AuthorizationConfig {
         var user = userService.getUserByUsername(username);
 
         return !authenticatedUserEquals(user.getIdUser());
+    }
+
+    public boolean isCommentAuthor(String slugComment) {
+        if (!isAuthenticated()) {
+            return false;
+        }
+
+        var comment = commentService.getComment(slugComment);
+        var author = comment.getIdUser().getIdUser();
+
+        return authenticatedUserEquals(author);
+    }
+
+    public boolean ableBlacklisted() {
+        if (!isAuthenticated()) {
+            return false;
+        }
+
+        var typeUser = authUtils.getCurrentUserRole();
+        if (typeUser.toString().contains("admin")) {
+            return false;
+        }
+
+        return true;
     }
 
     private boolean authenticatedUserEquals(UUID user) {

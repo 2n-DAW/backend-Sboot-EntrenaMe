@@ -1,7 +1,6 @@
 package com.springboot.entrename.api.security;
 
 import com.springboot.entrename.domain.user.UserEntity;
-import com.springboot.entrename.domain.user.UserEntity.TypeUser;
 import com.springboot.entrename.api.user.UserDto;
 import com.springboot.entrename.api.user.UserAssembler;
 import com.springboot.entrename.domain.user.UserRepository;
@@ -49,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override  // Indica que este método implementa la definición de la interfaz
     public UserEntity register(final UserDto.Register register) {
+        UserEntity savedUser;
 
         // Verifica si ya existe un usuario con el mismo username
         userRepository.findByUsername(register.getUsername())
@@ -74,44 +74,24 @@ public class AuthServiceImpl implements AuthService {
             .is_active(0)
             .is_deleted(0);
     
-        // Dependiendo del tipo de usuario, establece el nombre de archivo de la imagen
-        if (register.getType_user() == TypeUser.admin) builder.img_user("admin.jpg");
-        if (register.getType_user() == TypeUser.client) builder.img_user("client.jpg");
-        if (register.getType_user() == TypeUser.instructor) builder.img_user("instructor.jpg");
-    
-        // Guarda el usuario en la base de datos
-        UserEntity savedUser = userRepository.save(builder.build());
-        
-        // Asigna el usuario al admin, dependiendo del tipo de usuario
-        if (register.getType_user() == TypeUser.admin) {
-            AdminEntity adminEntity = AdminEntity.builder()
-                .id_user(savedUser)
-                .build();
-            adminRepository.save(adminEntity);
-            savedUser.setId_admin(adminEntity); // Asignar el admin al user
-        }
-
-        // Asigna el usuario al cliente y añade sus datos, dependiendo del tipo de usuario
-        if (register.getType_user() == TypeUser.client && register.getClient() != null) {
-            ClientEntity clientEntity = ClientEntity.builder()
-                .id_user(savedUser)
-                .nif(register.getClient().getNif())
-                .tlf(register.getClient().getTlf())
-                .build();
-            clientRepository.save(clientEntity);
-            savedUser.setId_client(clientEntity); // Asignar el client al user
-        }
-
-        // Asigna el usuario al instructor y añade sus datos, dependiendo del tipo de usuario
-        if (register.getType_user() == TypeUser.instructor && register.getInstructor() != null) {
-            InstructorEntity instructorEntity = InstructorEntity.builder()
-                .id_user(savedUser)
-                .nif(register.getInstructor().getNif())
-                .tlf(register.getInstructor().getTlf())
-                .address(register.getInstructor().getAddress())
-                .build();
-            instructorRepository.save(instructorEntity);
-            savedUser.setId_instructor(instructorEntity); // Asignar el instructor al user
+        switch (register.getType_user()) {
+            case admin:
+                builder.img_user("admin.jpg");
+                savedUser = userRepository.save(builder.build());
+                saveAdmin(savedUser);
+                break;
+            case client:
+                builder.img_user("client.jpg");
+                savedUser = userRepository.save(builder.build());
+                saveClient(savedUser, register);
+                break;
+            case instructor:
+                builder.img_user("instructor.jpg");
+                savedUser = userRepository.save(builder.build());
+                saveInstructor(savedUser, register);
+                break;
+            default:
+                savedUser = userRepository.save(builder.build());
         }
 
         return savedUser;
@@ -119,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional()
     @Override
-    public UserDto clientLogin(final UserDto.Login login) {
+    public UserDto springbootLogin(final UserDto.Login login) {
         
         var user = userRepository.findByEmail(login.getEmail())
             .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
@@ -151,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
             refreshTokenRepository.saveAndFlush(refreshTokenEntity);
         }
 
-    return userAssembler.toLoginResponse(user, accessToken);
+        return userAssembler.toLoginResponse(user, accessToken);
     }
 
     @Override
@@ -187,24 +167,51 @@ public class AuthServiceImpl implements AuthService {
     @Transactional()
     @Override
     public BlacklistTokenEntity saveBlacklistToken() {
-        if (authUtils.isAuthenticated()) {
-            var currentUser = userRepository.findByEmail(authUtils.getCurrentUserEmail()).orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
-            UUID idUser = currentUser.getIdUser();
+        UUID idUser = authUtils.getCurrentUserId();
 
-            var refreshTokenEntity = refreshTokenRepository.findByIdUser(idUser).orElseThrow(() -> new AppException(Error.REFRESH_TOKEN_NOT_FOUND));
-            String refresToken = refreshTokenEntity.getRefreshToken();
+        var refreshTokenEntity = refreshTokenRepository.findByIdUser(idUser).orElseThrow(() -> new AppException(Error.REFRESH_TOKEN_NOT_FOUND));
+        String refresToken = refreshTokenEntity.getRefreshToken();
 
-            var blacklistToken  = blacklistTokenRepository.findByRefreshToken(refresToken);
-            // System.out.println("Token ========================================================\n" + refresToken);
-            // System.out.println("Query ========================================================\n" + blacklistToken);
-            if (blacklistToken.isEmpty()) {
-                BlacklistTokenEntity blacklistTokenEntity = BlacklistTokenEntity.builder()
-                    .refreshToken(refresToken)
-                    .build();
-                return blacklistTokenRepository.save(blacklistTokenEntity);
-            }
+        var blacklistToken  = blacklistTokenRepository.findByRefreshToken(refresToken);
+        if (blacklistToken.isEmpty()) {
+            BlacklistTokenEntity blacklistTokenEntity = BlacklistTokenEntity.builder()
+                .refreshToken(refresToken)
+                .build();
+            return blacklistTokenRepository.save(blacklistTokenEntity);
         }
 
         return null;
+    }
+
+    private void saveAdmin(UserEntity savedUser) {
+        AdminEntity adminEntity = AdminEntity.builder()
+            .id_user(savedUser)
+            .build();
+
+        adminRepository.save(adminEntity);
+        savedUser.setId_admin(adminEntity); // Asignar el admin al user
+    }
+
+    private void saveClient(UserEntity savedUser, UserDto.Register register) {
+        ClientEntity clientEntity = ClientEntity.builder()
+            .id_user(savedUser)
+            .nif(register.getClient().getNif())
+            .tlf(register.getClient().getTlf())
+            .build();
+
+        clientRepository.save(clientEntity);
+        savedUser.setId_client(clientEntity); // Asignar el client al user
+    }
+
+    private void saveInstructor(UserEntity savedUser, UserDto.Register register) {
+        InstructorEntity instructorEntity = InstructorEntity.builder()
+            .id_user(savedUser)
+            .nif(register.getInstructor().getNif())
+            .tlf(register.getInstructor().getTlf())
+            .address(register.getInstructor().getAddress())
+            .build();
+
+        instructorRepository.save(instructorEntity);
+        savedUser.setId_instructor(instructorEntity); // Asignar el instructor al user
     }
 }

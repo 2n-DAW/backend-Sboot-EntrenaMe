@@ -29,6 +29,7 @@ public class AuthController {
     // private static final Logger logger = LoggerFactory.getLogger(AuthController.class); // Para debugear en consola
 
     @PostMapping("/register")
+    @CheckSecurity.Public.canRead
     public UserDto register(@RequestBody @Valid UserDto.Register register) {
         // logger.debug("Received registration request: {}", register); // Para debugear en consola
         var user = authService.register(register);
@@ -37,32 +38,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @CheckSecurity.Public.canRead
     public UserDto login(@RequestBody @Valid UserDto.Login login) {
         String typeUser = getTypeUser(login.getEmail());
         // System.out.println("TypeUser ========================================================\n" + typeUser);
 
-        UserDto userWithToken  = "client".equals(typeUser) ? clientLogin(login) : laravelLogin(login);
-        return userWithToken;
-    }
-
-    private String getTypeUser(String email) {
-        UserEntity user = authService.getTypeUser(email);
-        return user.getTypeUser().name();
-    }
-
-    private UserDto clientLogin(@RequestBody @Valid UserDto.Login login) {
-        var userWithToken  = authService.clientLogin(login);
-        return userWithToken;
-        
-    }
-
-    private UserDto laravelLogin(@RequestBody @Valid UserDto.Login login) {
-        var userWithToken  = authService.laravelLogin(login);
+        UserDto userWithToken  = "admin".equals(typeUser) ? laravelLogin(login) : springbootLogin(login);
         return userWithToken;
     }
 
     @PostMapping("/logout")
-    @CheckSecurity.Protected.canManage
+    @CheckSecurity.Logout.canBlacklisted
     public ResponseEntity<Map<String, String>> logout() {
         var blacklistToken = authService.saveBlacklistToken();
 
@@ -74,5 +60,20 @@ public class AuthController {
         }
 
         throw new AppException(Error.BLACKLISTED_TOKEN);
+    }
+
+    private String getTypeUser(String email) {
+        UserEntity user = authService.getTypeUser(email);
+        return user.getTypeUser().name();
+    }
+
+    private UserDto springbootLogin(@RequestBody @Valid UserDto.Login login) {
+        var userWithToken  = authService.springbootLogin(login);
+        return userWithToken;
+    }
+
+    private UserDto laravelLogin(@RequestBody @Valid UserDto.Login login) {
+        var userWithToken  = authService.laravelLogin(login);
+        return userWithToken;
     }
 }

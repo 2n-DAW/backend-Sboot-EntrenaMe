@@ -8,7 +8,7 @@ public interface AuthService {
     // final indica que no se puede modificar dentro del cuerpo del método
     UserEntity register(final UserDto.Register register);
 
-    UserDto clientLogin(final UserDto.Login login);
+    UserDto springbootLogin(final UserDto.Login login);
 
     UserDto laravelLogin(final UserDto.Login login);
 
