@@ -28,7 +28,7 @@ public enum Error {
     DUPLICATED_EMAIL("El correo electrónico ya está en uso. Introduce otro", HttpStatus.CONFLICT),
     ACTIVITY_NOT_AVAILABLE("No quedan plazas en la actividad", HttpStatus.CONFLICT),
     USER_ALREADY_INSCRIBED("Usuario ya inscrito en la actividad", HttpStatus.CONFLICT),
-    // ALREADY_FOLLOWED_USER("already followed user", HttpStatus.UNPROCESSABLE_ENTITY),
+    ALREADY_FOLLOWED_USER("Usuario ya seguido", HttpStatus.CONFLICT),
     // ALREADY_FAVORITED_ARTICLE("already followed user", HttpStatus.UNPROCESSABLE_ENTITY),
 
     // Errores de recursos no encontrados
@@ -43,7 +43,7 @@ public enum Error {
     INSCRIPTION_NOT_FOUND("Inscripción de actividad no encontrada", HttpStatus.NOT_FOUND),
     REFRESH_TOKEN_NOT_FOUND("Refresh Token no encontrado", HttpStatus.NOT_FOUND),
     BLACKLIST_TOKEN_NOT_FOUND("Blacklist Token no encontrado", HttpStatus.NOT_FOUND),
-    // FOLLOW_NOT_FOUND("such follow not found", HttpStatus.NOT_FOUND),
+    FOLLOW_NOT_FOUND("Usuario seguido no encontrado", HttpStatus.NOT_FOUND),
     // FAVORITE_NOT_FOUND("favorite not found", HttpStatus.NOT_FOUND),
 
     // Error genérico del servidor

@@ -27,6 +27,11 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         @PreAuthorize("@authorizationConfig.isProfileOwner(#username)")
         public @interface canManage {}
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @PreAuthorize("@authorizationConfig.isProfileNonOwner(#username)")
+        public @interface canFollow {}
     }
 
     public @interface Comments {

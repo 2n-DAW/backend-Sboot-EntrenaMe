@@ -32,11 +32,12 @@ public class ProfileController {
         if (authUtils.isAuthenticated()) {
             var currentUser = userService.getCurrentUser();
             if (currentUser.getUsername().equals(username)) {
-                return profileAssembler.toProfileResponse(profile);
+                return profileAssembler.toProfileResponse(profile, null);
             };
         }
-
-        return profileAssembler.toPublicProfileResponse(profile);
+        
+        boolean isFollowed = profileService.isFollowed(username);
+        return profileAssembler.toPublicProfileResponse(profile, isFollowed);
     }
 
     @GetMapping("/{username}/comments")
@@ -44,5 +45,33 @@ public class ProfileController {
     public CommentDto.CommentWrapper getAllCommentsByAuthor(@PathVariable String username) {
         var comments = commentService.getAllCommentsByAuthor(username);
         return commentAssembler.toCommentsList(comments);
+    }
+
+    @GetMapping("/{username}/followings")
+    @CheckSecurity.Profile.canManage
+    public ProfileDto.ProfileWrapper getFollowings(@PathVariable String username) {
+        var profile = profileService.getFollowings(username);
+        return profileAssembler.toPublicProfilesList(profile);
+    }
+
+    @GetMapping("/{username}/followers")
+    @CheckSecurity.Profile.canManage
+    public ProfileDto.ProfileWrapper getFollowers(@PathVariable String username) {
+        var profile = profileService.getFollowers(username);
+        return profileAssembler.toPublicProfilesList(profile);
+    }
+
+    @PostMapping("/{username}/follow")
+    @CheckSecurity.Profile.canFollow
+    public ProfileDto followUser(@PathVariable String username) {
+        var profile = profileService.followUser(username);
+        return profileAssembler.toPublicProfileResponse(profile, true);
+    }
+
+    @PostMapping("/{username}/unfollow")
+    @CheckSecurity.Profile.canFollow
+    public ProfileDto unfollowUser(@PathVariable String username) {
+        var profile = profileService.unfollowUser(username);
+        return profileAssembler.toPublicProfileResponse(profile, false);
     }
 }

@@ -5,8 +5,9 @@ import com.springboot.entrename.domain.user.admin.AdminEntity;
 import com.springboot.entrename.domain.user.client.ClientEntity;
 import com.springboot.entrename.domain.user.instructor.InstructorEntity;
 import com.springboot.entrename.domain.booking.BookingEntity;
-import com.springboot.entrename.domain.comment.CommentEntity;
 import com.springboot.entrename.domain.inscription.InscriptionEntity;
+import com.springboot.entrename.domain.comment.CommentEntity;
+import com.springboot.entrename.domain.profile.FollowEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -33,11 +34,6 @@ import org.hibernate.type.SqlTypes;
 // Identificador único. Hace que otras entidades puedan referenciar a esta y viceversa sin entrar en bucle en la serialización
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idUser")
 public class UserEntity {
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // @Column(name = "id_user")
-    // private Long idUser;
-
     @Id
     @JdbcTypeCode(SqlTypes.VARCHAR) // Usa VARCHAR para almacenar el UUID como texto
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -126,6 +122,14 @@ public class UserEntity {
     @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<CommentEntity> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idFollower", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<FollowEntity> followings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idFollowed", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<FollowEntity> followers = new ArrayList<>();
 
     @Builder
     public UserEntity(

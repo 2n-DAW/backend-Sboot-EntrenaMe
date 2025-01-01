@@ -8,6 +8,8 @@ import lombok.*;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -38,4 +40,14 @@ public class ProfileDto {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private InstructorDto instructor;
+    private Boolean is_followed;
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProfileWrapper {
+        private List<ProfileDto> profiles;
+        private Number profiles_count;
+    }
 }

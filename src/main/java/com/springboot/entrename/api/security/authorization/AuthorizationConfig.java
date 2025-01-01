@@ -42,6 +42,16 @@ public class AuthorizationConfig {
         return authenticatedUserEquals(user.getIdUser());
     }
 
+    public boolean isProfileNonOwner(String username) {
+        if (!isAuthenticated()) {
+            return false;
+        }
+
+        var user = userService.getUserByUsername(username);
+
+        return !authenticatedUserEquals(user.getIdUser());
+    }
+
     private boolean authenticatedUserEquals(UUID user) {
         return userService.getCurrentUser().getIdUser().equals(user);
     }

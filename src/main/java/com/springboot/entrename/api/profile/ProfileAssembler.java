@@ -6,29 +6,45 @@ import com.springboot.entrename.api.user.UserAssembler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class ProfileAssembler {
     private final UserAssembler userAssembler;
 
-    public ProfileDto toProfileResponse(UserEntity userEntity) {
-        return buildProfile(userEntity, true);
+    public ProfileDto.ProfileWrapper toPublicProfilesList(List<UserEntity> userEntities) {
+        var content = userEntities.stream()
+            .map(this::toPublicProfileResponse)
+            .collect(Collectors.toList());
+
+        return buildResponse(content, userEntities.size());
+    }
+
+    public ProfileDto toProfileResponse(UserEntity userEntity, Boolean isFollowed) {
+        return buildProfile(userEntity, isFollowed, true);
+    }
+
+    public ProfileDto toPublicProfileResponse(UserEntity userEntity, boolean isFollowed) {
+        return buildProfile(userEntity, isFollowed, false);
     }
 
     public ProfileDto toPublicProfileResponse(UserEntity userEntity) {
-        return buildProfile(userEntity, false);
+        return buildProfile(userEntity, null, false);
     }
 
-    private ProfileDto buildProfile(UserEntity userEntity, boolean authenticated) {
+    private ProfileDto buildProfile(UserEntity userEntity, Boolean isFollowed, boolean isOwner) {
         ProfileDto.ProfileDtoBuilder builder = ProfileDto.builder()
             .id_user(userEntity.getIdUser())
             .img_user(userEntity.getImg_user())
             .username(userEntity.getUsername())
             .name(userEntity.getName())
             .surname(userEntity.getSurname())
-            .bio(userEntity.getBio());
+            .bio(userEntity.getBio())
+            .is_followed(isFollowed);
         
-        if (authenticated) {
+        if (isOwner) {
             builder
                 .email(userEntity.getEmail())
                 .age(userEntity.getAge())
@@ -38,5 +54,12 @@ public class ProfileAssembler {
         }
         
         return builder.build();
+    }
+
+    private ProfileDto.ProfileWrapper buildResponse(List<ProfileDto> profiles, Number totalProfiles) {
+        return ProfileDto.ProfileWrapper.builder()
+            .profiles(profiles)
+            .profiles_count(totalProfiles) 
+            .build();
     }
 }
