@@ -2,6 +2,7 @@ package com.springboot.entrename.api.security.authorization;
 
 import com.springboot.entrename.domain.user.UserService;
 import com.springboot.entrename.domain.comment.CommentService;
+import com.springboot.entrename.domain.inscription.InscriptionService;
 import com.springboot.entrename.api.security.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class AuthorizationConfig {
     private final AuthUtils authUtils;
     private final UserService userService;
     private final CommentService commentService;
+    private final InscriptionService inscriptionService;
 
     public boolean isAuthenticated() {
         var isAuthenticated = authUtils.isAuthenticated();
@@ -60,6 +62,22 @@ public class AuthorizationConfig {
         var typeUser = authUtils.getCurrentUserRole();
         if (typeUser.toString().contains("admin")) {
             return false;
+        }
+
+        return true;
+    }
+
+    public boolean ableModifyInscription(String slugInscription) {
+        if (!isAuthenticated()) {
+            return false;
+        }
+
+        var typeUser = authUtils.getCurrentUserRole();
+        if (typeUser.toString().contains("client")) {
+            var inscription = inscriptionService.getInscription(slugInscription);
+            var author = inscription.getIdUserClient().getIdUser();
+    
+            return authenticatedUserEquals(author);
         }
 
         return true;

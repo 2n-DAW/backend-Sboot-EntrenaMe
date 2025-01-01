@@ -57,10 +57,10 @@ public class InscriptionController {
         return inscriptionAssembler.toInscriptiongWithUserAndActivityResponse(inscription);
     }
 
-    @PutMapping("/delete/{slug}")
-    @CheckSecurity.Protected.canManage
-    public InscriptionDto deleteInscription(@PathVariable String slug) {
-        var inscription = inscriptionService.deleteInscription(slug);
+    @PutMapping("/delete/{slugInscription}")
+    @CheckSecurity.Inscriptions.canDelete
+    public InscriptionDto deleteInscription(@PathVariable String slugInscription) {
+        var inscription = inscriptionService.deleteInscription(slugInscription);
         return inscriptionAssembler.toInscriptiongWithUserAndActivityResponse(inscription);
     }
 }

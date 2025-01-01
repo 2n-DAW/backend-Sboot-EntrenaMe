@@ -47,4 +47,11 @@ public @interface CheckSecurity {
         @PreAuthorize("@authorizationConfig.isCommentAuthor(#slugComment)")
         public @interface canDelete {}
     }
+
+    public @interface Inscriptions {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @PreAuthorize("@authorizationConfig.ableModifyInscription(#slugInscription)")
+        public @interface canDelete {}
+    }
 }
