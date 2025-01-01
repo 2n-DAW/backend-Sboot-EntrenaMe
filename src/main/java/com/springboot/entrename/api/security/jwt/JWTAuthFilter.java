@@ -84,7 +84,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         final String expiredAccessTokenEmail = e.getClaims().get("email", String.class);
         final String typeUser = e.getClaims().get("typeUser", String.class);
 
-        if ("client".equals(typeUser)) {
+        if (!"admin".equals(typeUser)) {
             // Busca el refreshToken asociado
             final String refreshToken = getRefreshToken(idUser);
             // logger.info("Refresh Token: {}", refreshToken);
@@ -107,7 +107,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (AppException ex) {
-                if ("client".equals(typeUser)) blacklistTokenService.saveBlacklistToken(refreshToken);
+                if (!"admin".equals(typeUser)) blacklistTokenService.saveBlacklistToken(refreshToken);
                 logger.warn("Refresh Token inválido: {}", refreshToken);
                 handleAppException(request, response, filterChain, ex);
                 return;
