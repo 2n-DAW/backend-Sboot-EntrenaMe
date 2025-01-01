@@ -61,14 +61,6 @@ public class UserServiceImpl implements UserService {
             currentUser.setImg_user(update.getImg_user());
         }
 
-        //! Todas las busquedas hay que hacerlas con Id, y sub token con Id para evitar conflicto al cambiar email
-        if (update.getEmail() != null) {
-            userRepository.findByEmail(update.getEmail())
-                .filter(found -> !found.getIdUser().equals(currentUser.getIdUser()))
-                .ifPresent(found -> {throw new AppException(Error.DUPLICATED_EMAIL);});
-            currentUser.setEmail(update.getEmail());
-        }
-
         if (update.getUsername() != null) {
             userRepository.findByUsername(update.getUsername())
                 .filter(found -> !found.getIdUser().equals(currentUser.getIdUser()))
