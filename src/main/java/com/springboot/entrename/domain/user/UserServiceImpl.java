@@ -76,8 +76,8 @@ public class UserServiceImpl implements UserService {
             currentUser.setSurname(update.getSurname());
         }
 
-        if (update.getAge() != null) {
-            currentUser.setAge(update.getAge());
+        if (update.getBirthday() != null) {
+            currentUser.setBirthday(update.getBirthday());
         }
 
         if (update.getBio() != null) {

@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
             .email(register.getEmail())
             .name(register.getName())
             .surname(register.getSurname())
-            .age(register.getAge())
+            .birthday(register.getBirthday())
             .bio(register.getBio())
             .password(passwordEncoder.encode(register.getPassword()))
             .typeUser(register.getType_user())

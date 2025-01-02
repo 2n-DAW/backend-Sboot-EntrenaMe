@@ -11,6 +11,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.UUID;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class UserDto {
     private String name;
     @NotNull
     private String surname;
-    private Integer age;
+    private Date birthday;
     private String bio;
     @NotNull
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -69,7 +70,7 @@ public class UserDto {
         @NotNull(message = "Los apellidos del usuario no pueden ser nulos")
         private String surname;
 
-        private Integer age;
+        private Date birthday;
 
         private String bio;
 
@@ -133,7 +134,7 @@ public class UserDto {
         @NotNull(message = "Los apellidos del usuario no pueden ser nulos")
         private String surname;
 
-        private Integer age;
+        private Date birthday;
 
         private String bio;
 

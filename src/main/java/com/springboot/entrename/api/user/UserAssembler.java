@@ -34,7 +34,7 @@ public class UserAssembler {
             .username(userEntity.getUsername())
             .name(userEntity.getName())
             .surname(userEntity.getSurname())
-            .age(userEntity.getAge())
+            .birthday(userEntity.getBirthday())
             .bio(userEntity.getBio())
             .type_user(userEntity.getTypeUser())
             .is_active(userEntity.getIs_active())

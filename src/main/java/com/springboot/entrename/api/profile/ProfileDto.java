@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 import java.util.UUID;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -29,7 +30,7 @@ public class ProfileDto {
     private String surname;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer age;
+    private Date birthday;
     private String bio;
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)

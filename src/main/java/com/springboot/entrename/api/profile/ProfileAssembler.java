@@ -47,7 +47,7 @@ public class ProfileAssembler {
         if (isOwner) {
             builder
                 .email(userEntity.getEmail())
-                .age(userEntity.getAge())
+                .birthday(userEntity.getBirthday())
                 .admin(userEntity.getId_admin() != null ? userAssembler.toAdminResponse(userEntity.getId_admin()) : null) // Mapear datos del admin
                 .client(userEntity.getId_client() != null ? userAssembler.toClientResponse(userEntity.getId_client()) : null) // Mapear datos del cliente
                 .instructor(userEntity.getId_instructor() != null ? userAssembler.toInstructorResponse(userEntity.getId_instructor()) : null); // Mapear datos del instructor

@@ -22,6 +22,7 @@ import jakarta.persistence.*; // Contiene las clases y anotaciones necesarias pa
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.sql.Date;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -55,8 +56,8 @@ public class UserEntity {
     @Column(name = "surname", nullable = false, length = 255)
     private String surname;
 
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "birthday")
+    private Date birthday;
 
     @Column(name = "bio", length = 500)
     private String bio;
@@ -139,7 +140,7 @@ public class UserEntity {
         String username,
         String name,
         String surname,
-        Integer age,
+        Date birthday,
         String bio,
         String password,
         TypeUser typeUser,
@@ -152,7 +153,7 @@ public class UserEntity {
         this.username = username;
         this.name = name;
         this.surname = surname;
-        this.age = age;
+        this.birthday = birthday;
         this.bio = bio;
         this.password = password;
         this.typeUser = typeUser;
