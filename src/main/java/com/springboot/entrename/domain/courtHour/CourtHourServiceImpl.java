@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-// import java.time.LocalTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -33,19 +33,19 @@ public class CourtHourServiceImpl implements CourtHourService {
     @Override
     public List<CourtHourEntity> getAvailableCourtsHours(Long id_court) {
         int year = LocalDate.now().getYear();
-        // System.err.println("year ============================================ " + year);
+        // System.out.println("Year ====================================================== " + year);
         int currentMonth = LocalDate.now().getMonth().getValue()-1;
-        int nextMonth = currentMonth == 11 ? 1 : currentMonth++;
+        int nextMonth = currentMonth == 11 ? 1 : LocalDate.now().getMonth().getValue();
         List<Long> months = List.of((long) currentMonth, (long) nextMonth);
-        // System.err.println("currentMonth ============================================ " + currentMonth);
-        // System.err.println("nextMonth ============================================ " + nextMonth);
+        // System.out.println("Current month ====================================================== " + currentMonth);
+        // System.out.println("Next month ====================================================== " + nextMonth);
         int day_number = LocalDate.now().getDayOfMonth();
-        // System.err.println("currentDay ============================================ " + day_number);
-        // int hour = LocalTime.now().getHour();
-        // System.err.println("hour ============================================ " + hour);
-
-        List<CourtHourEntity> courtHours = courtHourRepository.findById_courtAndYearAndId_monthInAndDay_numberGreaterThanEqual(
-            id_court, year, months, day_number);
+        // System.out.println("Day of month ====================================================== " + day_number);
+        int id_hour = LocalTime.now().getHour();
+        // System.out.println("Hour ====================================================== " + id_hour);
+        
+        List<CourtHourEntity> courtHours = courtHourRepository.findHoursForCurrentAndNextMonth(
+            id_court, year, months, day_number, id_hour);
         
         if (courtHours.isEmpty()) {
             throw new AppException(Error.COURT_HOUR_NOT_FOUND);
