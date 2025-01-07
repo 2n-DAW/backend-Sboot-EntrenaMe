@@ -15,5 +15,5 @@ public interface CommentService {
 
     CommentEntity registerComment(final String slugActivity, final CommentDto.Register register);
 
-    void deleteComment(final String slugActivity, final String slugComment);
+    void deleteComment(final String slugComment);
 }

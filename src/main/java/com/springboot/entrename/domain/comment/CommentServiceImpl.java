@@ -71,11 +71,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public void deleteComment(String slugActivity, String slugComment) {
-        ActivityEntity activity = activityService.getActivity(slugActivity);
+    public void deleteComment(String slugComment) {
 
         CommentEntity comment = commentRepository.findBySlugComment(slugComment)
-            .filter(c -> c.getIdActivity().getIdActivity().equals(activity.getIdActivity()))
             .orElseThrow(() -> new AppException(Error.COMMENT_NOT_FOUND));
 
         commentRepository.delete(comment);

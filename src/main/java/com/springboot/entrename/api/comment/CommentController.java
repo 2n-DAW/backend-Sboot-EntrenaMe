@@ -59,10 +59,10 @@ public class CommentController {
         return commentAssembler.toCommentResponse(comment);
     }
 
-    @DeleteMapping("/{slugActivity}/comments/{slugComment}")
+    @DeleteMapping("/comments/{slugComment}")
     @CheckSecurity.Comments.canDelete
-    public ResponseEntity<Map<String, String>> deleteComment(@PathVariable String slugActivity, @PathVariable String slugComment) {
-        commentService.deleteComment(slugActivity, slugComment);
+    public ResponseEntity<Map<String, String>> deleteComment(@PathVariable String slugComment) {
+        commentService.deleteComment(slugComment);
         Map<String, String> response = Map.of("message", "Comentario eliminado correctamente");
         return ResponseEntity.ok(response);
     }
