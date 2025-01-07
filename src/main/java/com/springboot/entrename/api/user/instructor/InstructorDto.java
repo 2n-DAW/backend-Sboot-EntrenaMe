@@ -21,7 +21,7 @@ public class InstructorDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ClientUpdate {
+    public static class Update {
         @Nullable
         private String nif;
         @Nullable

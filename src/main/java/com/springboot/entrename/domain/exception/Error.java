@@ -23,6 +23,7 @@ public enum Error {
 
     // Errores de validación
     INVALID_INPUT("Entrada inválida", HttpStatus.BAD_REQUEST),
+    INVALID_TYPE_USER("Tipo de usuario inválido", HttpStatus.BAD_REQUEST),
 
     // Errores de negocio
     DUPLICATED_USERNAME("El nombre de usuario ya está en uso. Introduce otro", HttpStatus.CONFLICT),

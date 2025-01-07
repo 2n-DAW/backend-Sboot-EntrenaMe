@@ -144,5 +144,14 @@ public class UserDto {
             message = "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números"
         )
         private String password;
+
+        @Nullable
+        private String nif;
+
+        @Nullable
+        private String tlf;
+
+        @Nullable
+        private String address;
     }
 }

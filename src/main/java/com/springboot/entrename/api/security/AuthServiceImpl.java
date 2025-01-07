@@ -136,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDto laravelLogin(final UserDto.Login login) {
-        System.out.println("Info login ============================================" + login.getEmail());
+        // System.out.println("Email login ============================================" + login.getEmail());
         try {
             ResponseEntity<Object> response = laravelWebClient.post()
                 .uri("/user/login")
@@ -144,18 +144,16 @@ public class AuthServiceImpl implements AuthService {
                 .retrieve()
                 .toEntity(Object.class)
                 .block(); // Bloquea hasta recibir respuesta (útil para simplificar lógica)
+            // System.out.println("Response WebClient ============================================" + response.getBody());
 
-            System.out.println("Response WebClient ============================================" + response.getBody());
             // Convertir la respuesta al DTO esperado
             return objectMapper.convertValue(response.getBody(), UserDto.class);
 
         } catch (WebClientResponseException e) {
             throw new AppException(Error.LOGIN_INFO_INVALID);
+        } catch (Exception e) {
+            throw new AppException(Error.SERVICE_UNAVAILABLE);
         }
-        //! Recordar volver habilitar excepción hasta corregir UUID en laravel
-        // } catch (Exception e) {
-        //     throw new AppException(Error.SERVICE_UNAVAILABLE);
-        // }
     }
 
     @Transactional()
