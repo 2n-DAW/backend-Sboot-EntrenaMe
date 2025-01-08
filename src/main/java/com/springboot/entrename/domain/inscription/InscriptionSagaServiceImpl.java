@@ -6,6 +6,7 @@ import com.springboot.entrename.domain.activity.ActivityEntity;
 import com.springboot.entrename.domain.activity.ActivityService;
 import com.springboot.entrename.api.inscription.InscriptionDto;
 import com.springboot.entrename.api.notification.NotificationDto;
+import com.springboot.entrename.api.notification.NotificationAssembler;
 import com.springboot.entrename.domain.notification.NotificationService;
 import com.springboot.entrename.domain.exception.AppException;
 import com.springboot.entrename.domain.exception.Error;
@@ -24,6 +25,7 @@ public class InscriptionSagaServiceImpl implements InscriptionSagaService {
     private final ActivityService activityService;
     private final InscriptionService inscriptionService;
     private final NotificationService notificationService;
+    private final NotificationAssembler notificationAssembler;
     private UserEntity user;
     private ActivityEntity activity;
     private InscriptionEntity inscription;
@@ -57,7 +59,7 @@ public class InscriptionSagaServiceImpl implements InscriptionSagaService {
             activityService.updateSpotsAvilableActivity(activity, -1);
 
             // Paso 6: Notifica al profesor
-            NotificationDto instructorNotification = notificationService.buildNotification(
+            NotificationDto instructorNotification = notificationAssembler.buildNotification(
                 activity.getIdUserInstructor().getEmail(),
                 "Nueva inscripción en " + activity.getNameActivity(),
                 "instructor",
@@ -71,7 +73,7 @@ public class InscriptionSagaServiceImpl implements InscriptionSagaService {
             inscriptionService.updateInscriptionStatus(inscription, 2);
             
             // Paso 8: Notifica al usuario
-            NotificationDto clientNotification = notificationService.buildNotification(
+            NotificationDto clientNotification = notificationAssembler.buildNotification(
                 user.getEmail(),
                 "Confirmación inscripción en " + activity.getNameActivity(),
                 "client",
@@ -105,7 +107,7 @@ public class InscriptionSagaServiceImpl implements InscriptionSagaService {
             // Notifica al administrador
             UserEntity admin = userService.getAdminUser();
 
-            NotificationDto adminNotification = notificationService.buildNotification(
+            NotificationDto adminNotification = notificationAssembler.buildNotification(
                 admin.getEmail(),
                 "Fallo durante la inscripción en " + activity.getNameActivity(),
                 "admin",
