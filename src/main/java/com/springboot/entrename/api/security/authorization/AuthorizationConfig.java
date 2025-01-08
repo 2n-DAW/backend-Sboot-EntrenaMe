@@ -19,34 +19,23 @@ public class AuthorizationConfig {
     private final InscriptionService inscriptionService;
 
     public boolean isAuthenticated() {
-        var isAuthenticated = authUtils.isAuthenticated();
-        return isAuthenticated;
+        return authUtils.isAuthenticated();
     }
 
     public boolean isProfileOwner(String username) {
-        if (!isAuthenticated()) {
-            return false;
-        }
-
+        if (!isAuthenticated()) return false;
         var user = userService.getUserByUsername(username);
-
         return authenticatedUserEquals(user.getIdUser());
     }
 
     public boolean isProfileNonOwner(String username) {
-        if (!isAuthenticated()) {
-            return false;
-        }
-
+        if (!isAuthenticated()) return false;
         var user = userService.getUserByUsername(username);
-
         return !authenticatedUserEquals(user.getIdUser());
     }
 
     public boolean isCommentAuthor(String slugComment) {
-        if (!isAuthenticated()) {
-            return false;
-        }
+        if (!isAuthenticated()) return false;
 
         var comment = commentService.getComment(slugComment);
         var author = comment.getIdUser().getIdUser();
@@ -55,29 +44,24 @@ public class AuthorizationConfig {
     }
 
     public boolean ableBlacklisted() {
-        if (!isAuthenticated()) {
-            return false;
-        }
+        if (!isAuthenticated()) return false;
 
         var typeUser = authUtils.getCurrentUserRole();
-        if (typeUser.toString().contains("admin")) {
-            return false;
-        }
+        if (typeUser.toString().contains("admin")) return false;
 
         return true;
     }
 
     public boolean ableModifyInscription(String slugInscription) {
-        if (!isAuthenticated()) {
-            return false;
-        }
+        if (!isAuthenticated()) return false;
 
         var typeUser = authUtils.getCurrentUserRole();
-        if (typeUser.toString().contains("client")) {
+        if (typeUser.toString().contains("client")) return false;
+        if (typeUser.toString().contains("instructor")) {
             var inscription = inscriptionService.getInscription(slugInscription);
-            var author = inscription.getIdUserClient().getIdUser();
+            var activityInstructor = inscription.getIdActivity().getIdUserInstructor().getIdUser();
     
-            return authenticatedUserEquals(author);
+            return authenticatedUserEquals(activityInstructor);
         }
 
         return true;
