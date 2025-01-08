@@ -4,6 +4,8 @@ import com.springboot.entrename.domain.user.UserService;
 import com.springboot.entrename.domain.profile.ProfileService;
 import com.springboot.entrename.api.comment.CommentDto;
 import com.springboot.entrename.domain.comment.CommentService;
+import com.springboot.entrename.domain.exception.AppException;
+import com.springboot.entrename.domain.exception.Error;
 import com.springboot.entrename.api.comment.CommentAssembler;
 import com.springboot.entrename.api.security.AuthUtils;
 import com.springboot.entrename.api.security.authorization.CheckSecurity;
@@ -29,11 +31,13 @@ public class ProfileController {
     public ProfileDto getProfile(@PathVariable String username) {
         var profile = profileService.getProfile(username);
         
-        if (authUtils.isAuthenticated()) {
+        if (!authUtils.isAnonymousRole()) {
             var currentUser = userService.getCurrentUser();
             if (currentUser.getUsername().equals(username)) {
                 return profileAssembler.toProfileResponse(profile, null);
             };
+        } else {
+            return profileAssembler.toPublicProfileResponse(profile, null);
         }
         
         boolean isFollowed = profileService.isFollowed(username);

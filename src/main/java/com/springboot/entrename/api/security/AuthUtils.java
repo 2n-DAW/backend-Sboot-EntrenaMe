@@ -30,6 +30,11 @@ public class AuthUtils {
         return getAuthentication() != null;
     }
 
+    public  boolean isAnonymousRole() {
+        return getCurrentUserRole().stream()
+            .anyMatch(role -> role.getAuthority().equals("ROLE_ANONYMOUS"));
+    }
+
     private Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }

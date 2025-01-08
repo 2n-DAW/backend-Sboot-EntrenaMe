@@ -26,7 +26,7 @@ public class ProfileAssembler {
         return buildProfile(userEntity, isFollowed, true);
     }
 
-    public ProfileDto toPublicProfileResponse(UserEntity userEntity, boolean isFollowed) {
+    public ProfileDto toPublicProfileResponse(UserEntity userEntity, Boolean isFollowed) {
         return buildProfile(userEntity, isFollowed, false);
     }
 
