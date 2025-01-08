@@ -56,11 +56,14 @@ public class AuthorizationConfig {
         if (!isAuthenticated()) return false;
 
         var typeUser = authUtils.getCurrentUserRole();
-        if (typeUser.toString().contains("client")) return false;
+        var inscription = inscriptionService.getInscription(slugInscription);
+
+        if (typeUser.toString().contains("client")) {
+            var author = inscription.getIdUserClient().getIdUser();
+            return authenticatedUserEquals(author);
+        }
         if (typeUser.toString().contains("instructor")) {
-            var inscription = inscriptionService.getInscription(slugInscription);
             var activityInstructor = inscription.getIdActivity().getIdUserInstructor().getIdUser();
-    
             return authenticatedUserEquals(activityInstructor);
         }
 
