@@ -4,12 +4,9 @@ import com.springboot.entrename.domain.user.UserEntity;
 import com.springboot.entrename.api.user.UserDto;
 import com.springboot.entrename.api.user.UserAssembler;
 import com.springboot.entrename.domain.user.UserRepository;
-import com.springboot.entrename.domain.user.admin.AdminEntity;
-import com.springboot.entrename.domain.user.admin.AdminRepository;
-import com.springboot.entrename.domain.user.client.ClientEntity;
-import com.springboot.entrename.domain.user.client.ClientRepository;
-import com.springboot.entrename.domain.user.instructor.InstructorEntity;
-import com.springboot.entrename.domain.user.instructor.InstructorRepository;
+import com.springboot.entrename.domain.user.admin.AdminService;
+import com.springboot.entrename.domain.user.client.ClientService;
+import com.springboot.entrename.domain.user.instructor.InstructorService;
 import com.springboot.entrename.domain.blacklistToken.BlacklistTokenEntity;
 import com.springboot.entrename.domain.blacklistToken.BlacklistTokenRepository;
 import com.springboot.entrename.domain.refreshToken.RefreshTokenEntity;
@@ -33,9 +30,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
-    private final AdminRepository adminRepository;
-    private final ClientRepository clientRepository;
-    private final InstructorRepository instructorRepository;
+    private final AdminService adminService;
+    private final ClientService clientService;
+    private final InstructorService instructorService;
     private final UserAssembler userAssembler;
     private final BlacklistTokenRepository blacklistTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -78,17 +75,17 @@ public class AuthServiceImpl implements AuthService {
             case admin:
                 builder.img_user("admin.jpg");
                 savedUser = userRepository.save(builder.build());
-                saveAdmin(savedUser);
+                adminService.saveAdmin(savedUser);
                 break;
             case client:
                 builder.img_user("client.jpg");
                 savedUser = userRepository.save(builder.build());
-                saveClient(savedUser, register);
+                clientService.saveClient(savedUser, register);
                 break;
             case instructor:
                 builder.img_user("instructor.jpg");
                 savedUser = userRepository.save(builder.build());
-                saveInstructor(savedUser, register);
+                instructorService.saveInstructor(savedUser, register);
                 break;
             default:
                 savedUser = userRepository.save(builder.build());
@@ -179,37 +176,5 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return null;
-    }
-
-    private void saveAdmin(UserEntity savedUser) {
-        AdminEntity adminEntity = AdminEntity.builder()
-            .id_user(savedUser)
-            .build();
-
-        adminRepository.save(adminEntity);
-        savedUser.setId_admin(adminEntity); // Asignar el admin al user
-    }
-
-    private void saveClient(UserEntity savedUser, UserDto.Register register) {
-        ClientEntity clientEntity = ClientEntity.builder()
-            .id_user(savedUser)
-            .nif(register.getClient().getNif())
-            .tlf(register.getClient().getTlf())
-            .build();
-
-        clientRepository.save(clientEntity);
-        savedUser.setId_client(clientEntity); // Asignar el client al user
-    }
-
-    private void saveInstructor(UserEntity savedUser, UserDto.Register register) {
-        InstructorEntity instructorEntity = InstructorEntity.builder()
-            .id_user(savedUser)
-            .nif(register.getInstructor().getNif())
-            .tlf(register.getInstructor().getTlf())
-            .address(register.getInstructor().getAddress())
-            .build();
-
-        instructorRepository.save(instructorEntity);
-        savedUser.setId_instructor(instructorEntity); // Asignar el instructor al user
     }
 }
