@@ -4,8 +4,6 @@ import com.springboot.entrename.domain.user.UserService;
 import com.springboot.entrename.domain.profile.ProfileService;
 import com.springboot.entrename.api.comment.CommentDto;
 import com.springboot.entrename.domain.comment.CommentService;
-import com.springboot.entrename.domain.exception.AppException;
-import com.springboot.entrename.domain.exception.Error;
 import com.springboot.entrename.api.comment.CommentAssembler;
 import com.springboot.entrename.api.security.AuthUtils;
 import com.springboot.entrename.api.security.authorization.CheckSecurity;

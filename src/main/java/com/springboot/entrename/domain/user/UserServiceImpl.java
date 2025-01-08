@@ -63,11 +63,13 @@ public class UserServiceImpl implements UserService {
     public UserEntity updateCurrentUser(UserDto.Update update) {
         UserEntity currentUser = getByEmail(authUtils.getCurrentUserEmail());
 
-        switch (currentUser.getTypeUser()) {
-            case admin -> {}
-            case client -> clientService.updateClient(currentUser.getId_client(), clientAssembler.toClientUpdate(update));
-            case instructor -> instructorService.updateInstructor(currentUser.getId_instructor(), instructorAssembler.toInstructorUpdate(update));
-            default -> throw new AppException(Error.INVALID_TYPE_USER);
+        if (update.getNif() != null || update.getTlf() != null || update.getAddress() != null) {
+            switch (currentUser.getTypeUser()) {
+                case admin -> {}
+                case client -> clientService.updateClient(currentUser.getId_client(), clientAssembler.toClientUpdate(update));
+                case instructor -> instructorService.updateInstructor(currentUser.getId_instructor(), instructorAssembler.toInstructorUpdate(update));
+                default -> throw new AppException(Error.INVALID_TYPE_USER);
+            }
         }
 
         if (update.getUsername() != null) {
