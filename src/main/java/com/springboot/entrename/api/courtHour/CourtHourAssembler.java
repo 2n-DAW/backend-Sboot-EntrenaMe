@@ -1,11 +1,9 @@
 package com.springboot.entrename.api.courtHour;
 
 import com.springboot.entrename.domain.courtHour.CourtHourEntity;
-import com.springboot.entrename.domain.hour.HourEntity;
-import com.springboot.entrename.domain.month.MonthEntity;
-import com.springboot.entrename.api.hour.HourDto;
-import com.springboot.entrename.api.month.MonthDto;
 import com.springboot.entrename.api.court.CourtAssembler;
+import com.springboot.entrename.api.hour.HourAssembler;
+import com.springboot.entrename.api.month.MonthAssembler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +15,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CourtHourAssembler {
     private final CourtAssembler courtAssembler;
+    private final HourAssembler hourAssembler;
+    private final MonthAssembler monthAssembler;
 
     public CourtHourDto.CourtHourWrapper toCourtsHoursList(List<CourtHourEntity> courtHourEntities) {
         var content = courtHourEntities.stream()
@@ -56,26 +56,11 @@ public class CourtHourAssembler {
         if (detailed) {
             builder
                 .court(courtAssembler.toCourtResponse(courtHourEntity.getId_court()))
-                .hour(toHourResponse(courtHourEntity.getId_hour()))
-                .month(toMonthResponse(courtHourEntity.getId_month()));
+                .hour(hourAssembler.toHourResponse(courtHourEntity.getId_hour()))
+                .month(monthAssembler.toMonthResponse(courtHourEntity.getId_month()));
         }
 
         return builder.build();
-    }
-
-    private HourDto toHourResponse(HourEntity hourEntity) {
-        return HourDto.builder()
-            .id_hour(hourEntity.getIdHour())
-            .slot_hour(hourEntity.getSlotHour())
-            .build();
-    }
-
-    private MonthDto toMonthResponse(MonthEntity monthEntity) {
-        return MonthDto.builder()
-            .id_month(monthEntity.getIdMonth())
-            .n_month(monthEntity.getNameMonth())
-            .slug_month(monthEntity.getSlugMonth())
-            .build();
     }
 
     private CourtHourDto.CourtHourWrapper buildResponse(List<CourtHourDto> courtsHours, Number totalCourtsHours) {
