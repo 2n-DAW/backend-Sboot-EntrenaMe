@@ -1,8 +1,14 @@
 package com.springboot.entrename.domain.activity;
 
 import com.springboot.entrename.domain.user.UserEntity;
+import com.springboot.entrename.domain.inscription.InscriptionEntity;
 import com.springboot.entrename.domain.sport.SportEntity;
+import com.springboot.entrename.domain.comment.CommentEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -56,8 +62,19 @@ public class ActivityEntity {
     @Column(name = "spots")
     private int spots;
 
+    @Column(name = "spots_available") 
+    private int spots_available;
+
     @Column(name = "slug_activity", length = 255)
     private String slugActivity;
+
+    @OneToMany(mappedBy = "idActivity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<InscriptionEntity> inscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idActivity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<CommentEntity> comments = new ArrayList<>();
 
     @Builder
     public ActivityEntity(
@@ -70,6 +87,7 @@ public class ActivityEntity {
         String slotHour,
         String imgActivity,
         int spots,
+        int spots_available,
         String slugActivity
     ) {
         this.idActivity = idActivity;
@@ -81,6 +99,7 @@ public class ActivityEntity {
         this.slotHour = slotHour;
         this.imgActivity = imgActivity;
         this.spots = spots;
+        this.spots_available = spots_available;
         this.slugActivity = slugActivity;
     }
 }

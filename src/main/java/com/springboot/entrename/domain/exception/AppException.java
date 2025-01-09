@@ -10,4 +10,9 @@ public class AppException extends RuntimeException {
         super(error.getMessage());
         this.error = error;
     }
+
+    public AppException(Error error, Throwable cause) {
+        super(error.getMessage(), cause);
+        this.error = error;
+    }
 }

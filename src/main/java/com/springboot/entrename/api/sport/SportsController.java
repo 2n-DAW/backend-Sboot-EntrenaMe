@@ -1,5 +1,6 @@
 package com.springboot.entrename.api.sport;
 
+import com.springboot.entrename.api.security.authorization.CheckSecurity;
 import com.springboot.entrename.domain.sport.SportEntity;
 import com.springboot.entrename.domain.sport.SportService;
 
@@ -21,32 +22,37 @@ public class SportsController {
     private final SportService sportService;
     private final SportAssembler sportAssembler;
 
-    private static final String DEFAULT_FILTER_LIMIT = "5";
+    private static final String DEFAULT_FILTER_LIMIT = "2";
     private static final String DEFAULT_FILTER_OFFSET = "0";
 
     @GetMapping
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSports() {
         var sports = sportService.getAllSports();
         return sportAssembler.toSportsList(sports);
     }
 
-    @GetMapping("/&courts")
+    @GetMapping("/courts&activities")
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSportsWithCourts() {
         var sports = sportService.getAllSports();
-        return sportAssembler.toSportsListWithCourts(sports);
+        return sportAssembler.toSportsListWithCourtsAndActivities(sports);
     }
 
     @GetMapping("/{slug}")
+    @CheckSecurity.Public.canRead
     public SportDto getSport(@PathVariable String slug) {
         var sport = sportService.getSport(slug);
         return sportAssembler.toSportResponse(sport);
     }
 
     @GetMapping("/filtered")
+    @CheckSecurity.Public.canRead
     public SportDto.SportWrapper getAllSportsFiltered(
             @Join(path = "courts", alias = "c")
             @And({
                 @Spec(path = "c.nameCourt", params = "court", spec = Like.class),
+                @Spec(path = "nameSport", params = "sport", spec = Like.class),
             }) Specification<SportEntity> filter,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_OFFSET) int offset) {
@@ -56,17 +62,19 @@ public class SportsController {
         return sportAssembler.toSportsListFiltered(sports);
     }
 
-    @GetMapping("/&courts/filtered")
-    public SportDto.SportWrapper getAllSportsWithCourtsFiltered(
+    @GetMapping("/courts&activities/filtered")
+    @CheckSecurity.Public.canRead
+    public SportDto.SportWrapper getAllSportsWithCourtsAndActivitiesFiltered(
         @Join(path = "courts", alias = "c")
             @And({
                 @Spec(path = "c.nameCourt", params = "court", spec = Like.class),
+                @Spec(path = "nameSport", params = "sport", spec = Like.class),
             }) Specification<SportEntity> filter,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = DEFAULT_FILTER_OFFSET) int offset) {
         
         Pageable pageable = PageRequest.of(offset, limit);
         var sports = sportService.getAllSportsFiltered(filter, pageable);
-        return sportAssembler.toSportsListWithCourtsFiltered(sports);
+        return sportAssembler.toSportsListWithCourtsAndActivitiesFiltered(sports);
     }
 }

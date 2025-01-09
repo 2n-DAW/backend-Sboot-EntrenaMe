@@ -18,21 +18,35 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepository activityRepository;
 
     @Transactional(readOnly = true)
-    @Override  // Indica que este método implementa la definición de la interfaz
+    @Override
     public List<ActivityEntity> getAllActivities() {
         return activityRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    @Override // Indica que este método implementa la definición de la interfaz
+    @Override
     public ActivityEntity getActivity(String slug) {
         return activityRepository.findBySlugActivity(slug)
             .orElseThrow(() -> new AppException(Error.ACTIVITY_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
-    @Override  // Indica que este método implementa la definición de la interfaz
+    @Override
+    public ActivityEntity getActivityById(Long id) {
+        return activityRepository.findByIdActivity(id)
+            .orElseThrow(() -> new AppException(Error.ACTIVITY_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Page<ActivityEntity> getAllActivitiesFiltered(Specification<ActivityEntity> filter, Pageable pageable) {
         return activityRepository.findAll(filter, pageable);
+    }
+
+    @Transactional
+    @Override
+    public ActivityEntity updateSpotsAvilableActivity(ActivityEntity activity, int spot) {
+        activity.setSpots_available(activity.getSpots_available() + spot);
+        return activityRepository.save(activity);
     }
 }
